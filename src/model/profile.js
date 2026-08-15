@@ -13,6 +13,13 @@ import { DateRangeError, InputError } from '../core/errors.js';
 
 export const MODEL_VERSION = '1.0.0';
 
+/**
+ * Верхний предел числа точек ряда. Обоснование: 5000 точек считаются ~213 мс,
+ * что уже заметно; предел защищает интерфейс от зависания на случайном вводе.
+ * Это ограничение ПРОИЗВОДИТЕЛЬНОСТИ, а не расчётной модели.
+ */
+export const MAX_SERIES_POINTS = 1200;
+
 /** Проверка ввода до расчёта: понятные ошибки вместо NaN в глубине движка. */
 export function validateInput(birth, tables) {
   const r = tables.dateRange;
@@ -88,8 +95,36 @@ export function buildProfile(birth, tables, options = {}) {
 }
 
 /** Временной ряд для графиков. */
+/**
+ * Проверка параметров временного ряда.
+ * BUG-03: раньше проверялась только дата рождения, а count и from приходили
+ * в движок без контроля. Ряд из нуля точек и год за пределами объявленного
+ * диапазона считались молча — при том, что для даты рождения тот же выход
+ * за диапазон отвергался. Устраняем это расхождение.
+ */
+export function validateSeriesOptions(options, tables) {
+  const { count, from, scale } = options;
+  const SCALES = ['decade', 'year', 'month', 'day', 'hour'];
+  if (scale !== undefined && scale !== null && !SCALES.includes(scale)) {
+    throw new InputError(`Неизвестный масштаб «${scale}». Допустимы: ${SCALES.join(', ')}`);
+  }
+  if (count !== undefined && count !== null) {
+    if (!Number.isFinite(count)) throw new InputError('Количество точек должно быть числом');
+    if (count < 1) throw new InputError('Количество точек должно быть не меньше 1');
+    if (count > MAX_SERIES_POINTS) {
+      throw new InputError(`Количество точек не должно превышать ${MAX_SERIES_POINTS}`);
+    }
+  }
+  if (from !== undefined && from !== null) {
+    const r = tables.dateRange;
+    if (!Number.isFinite(from)) throw new InputError('Начальный год должен быть числом');
+    if (from < r.from || from > r.to) throw new DateRangeError(from, r.from, r.to);
+  }
+}
+
 export function buildTimeSeries(birth, tables, options = {}) {
   validateInput(birth, tables);
+  validateSeriesOptions(options, tables);
   const ts = computeTimeSeries(birth, tables, options);
   return {
     modelVersion: MODEL_VERSION,

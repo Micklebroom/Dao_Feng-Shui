@@ -163,6 +163,14 @@ export function renderLineChart(svg, cfg) {
   svg.appendChild(overlay);
 
   overlay.addEventListener('mousemove', (ev) => {
+    // BUG-02: при пустом ряде индекс наведения вычислялся как -1, и в onHover
+    // уходила несуществующая точка (points[-1] === undefined). Наводиться не на
+    // что — сообщаем об отсутствии точки тем же способом, что и при уходе мыши.
+    if (!points.length) {
+      hoverLine.setAttribute('visibility', 'hidden');
+      if (cfg.onHover) cfg.onHover(null);
+      return;
+    }
     const r = svg.getBoundingClientRect();
     const scale = W / r.width;
     const mx = (ev.clientX - r.left) * scale;

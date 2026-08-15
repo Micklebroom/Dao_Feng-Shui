@@ -381,6 +381,15 @@ const starEl = (n) => T.luoshu.stars.find((s) => s.number === n).element;
 
 function renderMeridianTable() {
   const pts = state.result.points;
+  // BUG-01: при пустом ряде Math.min(length-1, ...) даёт -1, а pts[-1] —
+  // undefined. Пустой ряд не ошибка расчёта, поэтому таблица показывает
+  // причину, а не падает и не подставляет вымышленные значения.
+  if (!pts.length) {
+    $('#meridian-table').innerHTML =
+      '<div class="note">Нет данных для таблицы: временной ряд пуст. '
+      + 'Задайте количество точек больше нуля.</div>';
+    return;
+  }
   const cur = pts[Math.min(pts.length - 1, Math.floor(pts.length / 2))];
   // Полосы интерпретации INFERRED и живут в indicators.json (проекция weights).
   const bandRu = (id) => T.weights.interpretationBands.find((b) => b.id === id).ru;

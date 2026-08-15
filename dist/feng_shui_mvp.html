@@ -339,8 +339,8 @@ svg.chart { display: block; width: 100%; background: #ece9e4; }
           <label><input type="radio" name="scale" value="day"> дни</label>
           <label><input type="radio" name="scale" value="hour"> часы</label>
           <span class="sep"></span>
-          <span>с</span><input type="number" id="s-from" value="2000" style="width:56px">
-          <span>кол-во</span><input type="number" id="s-count" value="30" style="width:46px">
+          <span>с</span><input type="number" id="s-from" value="2000" min="1700" max="2200" title="начальный год ряда (1700–2200)" style="width:56px">
+          <span>кол-во</span><input type="number" id="s-count" value="30" min="1" max="1200" title="количество точек (1–1200)" style="width:46px">
           <label title="Учитывать слияния стихий"><input type="checkbox" id="chk-combos" checked> слияния</label>
         </div>
         <svg id="main-chart" class="chart" height="300"></svg>
@@ -2112,6 +2112,14 @@ function renderLineChart(svg, cfg) {
   svg.appendChild(overlay);
 
   overlay.addEventListener('mousemove', (ev) => {
+    // BUG-02: при пустом ряде индекс наведения вычислялся как -1, и в onHover
+    // уходила несуществующая точка (points[-1] === undefined). Наводиться не на
+    // что — сообщаем об отсутствии точки тем же способом, что и при уходе мыши.
+    if (!points.length) {
+      hoverLine.setAttribute('visibility', 'hidden');
+      if (cfg.onHover) cfg.onHover(null);
+      return;
+    }
     const r = svg.getBoundingClientRect();
     const scale = W / r.width;
     const mx = (ev.clientX - r.left) * scale;
@@ -2524,6 +2532,13 @@ const { INDICATOR_CATALOG, tripleBurner, healthIndex } = __M["src/model/indicato
 const { DateRangeError, InputError } = __M["src/core/errors.js"];
 const MODEL_VERSION = '1.0.0';
 
+/**
+ * Верхний предел числа точек ряда. Обоснование: 5000 точек считаются ~213 мс,
+ * что уже заметно; предел защищает интерфейс от зависания на случайном вводе.
+ * Это ограничение ПРОИЗВОДИТЕЛЬНОСТИ, а не расчётной модели.
+ */
+const MAX_SERIES_POINTS = 1200;
+
 /** Проверка ввода до расчёта: понятные ошибки вместо NaN в глубине движка. */
 function validateInput(birth, tables) {
   const r = tables.dateRange;
@@ -2599,8 +2614,35 @@ function buildProfile(birth, tables, options = {}) {
 }
 
 /** Временной ряд для графиков. */
+/**
+ * Проверка параметров временного ряда.
+ * BUG-03: раньше проверялась только дата рождения, а count и from приходили
+ * в движок без контроля. Ряд из нуля точек и год за пределами объявленного
+ * диапазона считались молча — при том, что для даты рождения тот же выход
+ * за диапазон отвергался. Устраняем это расхождение.
+ */
+function validateSeriesOptions(options, tables) {
+  const { count, from, scale } = options;
+  const SCALES = ['decade', 'year', 'month', 'day', 'hour'];
+  if (scale !== undefined && scale !== null && !SCALES.includes(scale)) {
+    throw new InputError(`Неизвестный масштаб «${scale}». Допустимы: ${SCALES.join(', ')}`);
+  }
+  if (count !== undefined && count !== null) {
+    if (!Number.isFinite(count)) throw new InputError('Количество точек должно быть числом');
+    if (count < 1) throw new InputError('Количество точек должно быть не меньше 1');
+    if (count > MAX_SERIES_POINTS) {
+      throw new InputError(`Количество точек не должно превышать ${MAX_SERIES_POINTS}`);
+    }
+  }
+  if (from !== undefined && from !== null) {
+    const r = tables.dateRange;
+    if (!Number.isFinite(from)) throw new InputError('Начальный год должен быть числом');
+    if (from < r.from || from > r.to) throw new DateRangeError(from, r.from, r.to);
+  }
+}
 function buildTimeSeries(birth, tables, options = {}) {
   validateInput(birth, tables);
+  validateSeriesOptions(options, tables);
   const ts = computeTimeSeries(birth, tables, options);
   return {
     modelVersion: MODEL_VERSION,
@@ -2618,8 +2660,10 @@ function buildTimeSeries(birth, tables, options = {}) {
 }
 
 __E["MODEL_VERSION"] = MODEL_VERSION;
+__E["MAX_SERIES_POINTS"] = MAX_SERIES_POINTS;
 __E["validateInput"] = validateInput;
 __E["buildProfile"] = buildProfile;
+__E["validateSeriesOptions"] = validateSeriesOptions;
 __E["buildTimeSeries"] = buildTimeSeries;
 
 
@@ -3008,6 +3052,15 @@ const starEl = (n) => T.luoshu.stars.find((s) => s.number === n).element;
 
 function renderMeridianTable() {
   const pts = state.result.points;
+  // BUG-01: при пустом ряде Math.min(length-1, ...) даёт -1, а pts[-1] —
+  // undefined. Пустой ряд не ошибка расчёта, поэтому таблица показывает
+  // причину, а не падает и не подставляет вымышленные значения.
+  if (!pts.length) {
+    $('#meridian-table').innerHTML =
+      '<div class="note">Нет данных для таблицы: временной ряд пуст. '
+      + 'Задайте количество точек больше нуля.</div>';
+    return;
+  }
   const cur = pts[Math.min(pts.length - 1, Math.floor(pts.length / 2))];
   // Полосы интерпретации INFERRED и живут в indicators.json (проекция weights).
   const bandRu = (id) => T.weights.interpretationBands.find((b) => b.id === id).ru;

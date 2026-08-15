@@ -381,10 +381,11 @@ for (const [mode, exp] of [['meridians', 10], ['elements', 5], ['index', 3], ['y
 {
   const r = calcWith({ tz: 3, hour: 12, year: 1967, month: 6, day: 5 });
   setVal('#s-count', -10); const rr = attempt(() => fire('#s-count'));
+  const stNeg = statusText();
   record('QA-13-4', 'negative: отрицательное число точек графика', 'кол-во = −10',
-    'нет исключения, график в осмысленном состоянии',
-    `линий: ${pathCount()}, статус «${statusText().slice(0, 40)}»`,
-    !rr.threw, rr.threw ? rr.threw.message : '');
+    'понятная ошибка, исключение не покидает обработчик (BUG-01)',
+    `исключение: ${rr.threw ? 'ЕСТЬ' : 'нет'}, статус «${stNeg}»`,
+    !rr.threw && /не меньше 1/.test(stNeg), rr.threw ? rr.threw.message : '');
   setVal('#s-count', 30); fire('#s-count');
 }
 
@@ -411,11 +412,18 @@ for (const [mode, exp] of [['meridians', 10], ['elements', 5], ['index', 3], ['y
     r.threw ? 'исключение вышло в UI' : '');
 }
 {
+  calcWith({});                       // вернуть заведомо корректную дату
   setVal('#s-count', 0); const rr = attempt(() => fire('#s-count'));
+  const st0 = statusText();
   record('QA-14-4', 'zero: ноль точек графика', 'кол-во = 0',
-    'нет исключения', `линий: ${pathCount()}, ошибок консоли: ${rr.newErrors.length}`,
-    !rr.threw, rr.threw ? rr.threw.message : rr.newErrors.join(' | '));
+    'понятная ошибка, исключение не покидает обработчик',
+    `исключение: ${rr.threw ? 'ЕСТЬ' : 'нет'}, статус «${st0}»`,
+    !rr.threw && /не меньше 1/.test(st0), rr.threw ? rr.threw.message : '');
   setVal('#s-count', 30); fire('#s-count');
+  record('QA-14-5', 'zero: восстановление после ошибки', 'вернуть кол-во = 30',
+    'график и таблица снова заполнены',
+    `линий: ${pathCount()}, строк таблицы: ${$$('#meridian-table table tr').length}`,
+    pathCount() === 10 && $$('#meridian-table table tr').length === 11);
 }
 
 /* ================= 15. INVALID INPUTS ================= */

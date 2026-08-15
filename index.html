@@ -106,8 +106,8 @@
           <label><input type="radio" name="scale" value="day"> дни</label>
           <label><input type="radio" name="scale" value="hour"> часы</label>
           <span class="sep"></span>
-          <span>с</span><input type="number" id="s-from" value="2000" style="width:56px">
-          <span>кол-во</span><input type="number" id="s-count" value="30" style="width:46px">
+          <span>с</span><input type="number" id="s-from" value="2000" min="1700" max="2200" title="начальный год ряда (1700–2200)" style="width:56px">
+          <span>кол-во</span><input type="number" id="s-count" value="30" min="1" max="1200" title="количество точек (1–1200)" style="width:46px">
           <label title="Учитывать слияния стихий"><input type="checkbox" id="chk-combos" checked> слияния</label>
         </div>
         <svg id="main-chart" class="chart" height="300"></svg>
