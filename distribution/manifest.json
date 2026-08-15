@@ -32,8 +32,8 @@
     {
       "file": "FENG_SHUI_MVP.zip",
       "role": "полный пакет исходников, тестов и документации",
-      "bytes": 514587,
-      "sha256": "f5bbf7c90805fcd47a5dd8cda98c80c794e572233a27d0f8e3fe0fb3043f1079"
+      "bytes": 529736,
+      "sha256": "c0c2c04a832f80b5fd7512684cab83ace311cf4862bc2cc1a4a267a275014ac1"
     },
     {
       "file": "README.md",
@@ -62,7 +62,7 @@
   "archive": {
     "file": "FENG_SHUI_MVP.zip",
     "rootDirectory": "FENG_SHUI_MVP",
-    "entryCount": 106,
+    "entryCount": 108,
     "includes": [
       "app/",
       "src/",
@@ -104,6 +104,7 @@
     "ARCHITECTURE.md",
     "BUG_FIX_REPORT.md",
     "CONFLICTS.md",
+    "DEPLOYMENT_REPORT.md",
     "DISTRIBUTION_QA.md",
     "FINAL_QA.md",
     "GRAPH_CATALOG.md",

@@ -6,3 +6,4 @@ image-search/
 tools/.qa-results.json
 tools/.dist-results.json
 .dist-check/
+tools/.deploy-results.json

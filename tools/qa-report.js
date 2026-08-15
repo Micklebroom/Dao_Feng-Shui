@@ -19,7 +19,8 @@ const steps = [
   ['STANDALONE (автономный HTML)', ['node', ['tools/standalone-test.js']]],
   ['RED TEAM   (аудит доктрины)', ['node', ['tools/red-team.js']]],
   ['DISTRIBUTION(пакет поставки)', ['node', ['tools/distribution-test.js']]],
-  ['HTTP       (выгрузки с сервера)', ['node', ['tools/download-http-test.js']]]
+  ['HTTP       (выгрузки с сервера)', ['node', ['tools/download-http-test.js']]],
+  ['VISUAL QA  (интерфейс, 20 групп)', ['node', ['tools/qa-browser.mjs']]]
 ];
 
 const results = [];
@@ -35,7 +36,10 @@ for (const [name, [cmd, args]] of steps) {
   const tap = out.match(/# tests (\d+)[\s\S]*?# pass (\d+)[\s\S]*?# fail (\d+)/);
   const own = out.match(/ИТОГО[^:]*: (?:пройдено|проверок) (\d+),\s*(?:провалено|нарушений) (\d+)/);
   const val = out.match(/ИТОГО: ошибок (\d+), предупреждений (\d+)/);
-  if (tap) stat = `тестов ${tap[1]}, провалено ${tap[3]}`;
+  // Формат qa-browser.mjs: «ИТОГО: 71/71 PASS, 0 FAIL».
+  const qab = out.match(/ИТОГО: (\d+)\/(\d+) PASS, (\d+) FAIL/);
+  if (qab) stat = `проверок ${qab[2]}, провалено ${qab[3]}`;
+  else if (tap) stat = `тестов ${tap[1]}, провалено ${tap[3]}`;
   else if (own) stat = `проверок ${own[1]}, провалено ${own[2]}`;
   else if (val) stat = `ошибок ${val[1]}, предупреждений ${val[2]}`;
   results.push({ name, code, stat });
