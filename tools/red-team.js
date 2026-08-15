@@ -142,7 +142,12 @@ for (const anchor of ['day-star', 'luck-start-age', 'hidden-stem-weights', 'late
 ok('все якоря конфликтов, упомянутые в коде, присутствуют в документации');
 
 console.log('\n[RED TEAM 6] Проект не объявлен production-ready');
-const textFiles = files.filter((f) => /\.(md|html|json|js)$/.test(f) && !f.includes('red-team'));
+const textFiles = files.filter((f) => /\.(md|html|json|js)$/.test(f)
+  && !f.includes('red-team')
+  // Валидаторы содержат сам текст правила в сообщениях об ошибках —
+  // исключаем их, иначе детектор ловит собственную диагностику.
+  && !f.includes('validate-spec')
+  && !f.includes('qa-report'));
 // Ищем УТВЕРЖДЕНИЕ о готовности, а не простое упоминание термина.
 // Отрицания и метаупоминания («отсутствие заявлений о production-ready»,
 // «НЕ production-ready») нарушением не являются.

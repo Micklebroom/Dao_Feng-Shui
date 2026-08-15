@@ -1,0 +1,1730 @@
+{
+  "$schema": "golden_cases.v1",
+  "specVersion": "1.0.0",
+  "phase": "PHASE 3 — GOLDEN TESTS",
+  "purpose": "Детерминированные эталонные случаи для критических VERIFIED алгоритмов. Ожидаемые значения взяты из внешних опубликованных источников либо являются структурными инвариантами, доказуемыми независимо от реализации.",
+  "policy": {
+    "noSelfConfirmation": "Значения expected_output НЕ берутся из вывода нашего кода, если только это не структурный инвариант. Для астрономии и звёздных карт используются опубликованные эталоны.",
+    "toleranceRule": "Для величин с объявленной ограниченной точностью (моменты солнечных терминов) указывается tolerance; сравнение по допуску, а не на точное равенство.",
+    "notVerifiedExcluded": "Для алгоритмов со статусом NOT_VERIFIED golden-тесты НЕ создаются: сравнивать не с чем. Вместо этого проверяются только контракты (см. contractTests)."
+  },
+  "statusLegend": {
+    "GOLDEN": "эталон из внешнего опубликованного источника",
+    "INVARIANT": "структурный инвариант, доказуемый независимо от реализации",
+    "REGRESSION": "закрепляет исправленный дефект"
+  },
+  "cases": [
+    {
+      "id": "GT-A1-01",
+      "algorithm": "A1",
+      "name": "Юлианская дата: пример Meeus 7.a",
+      "input": {
+        "year": 1957,
+        "month": 10,
+        "day": 4,
+        "hour": 19,
+        "minute": 26,
+        "second": 24
+      },
+      "expected_output": {
+        "jd": 2436116.31
+      },
+      "tolerance": 1e-05,
+      "source": "Meeus, Astronomical Algorithms 2nd ed., example 7.a (запуск Спутника-1)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-A1-02",
+      "algorithm": "A1",
+      "name": "Юлианская дата: эпоха J2000.0",
+      "input": {
+        "year": 2000,
+        "month": 1,
+        "day": 1,
+        "hour": 12,
+        "minute": 0,
+        "second": 0
+      },
+      "expected_output": {
+        "jd": 2451545.0
+      },
+      "tolerance": 0,
+      "source": "Определение эпохи J2000.0 (IAU)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-A1-03",
+      "algorithm": "A1",
+      "name": "Юлианская дата: полночь 1999-01-01",
+      "input": {
+        "year": 1999,
+        "month": 1,
+        "day": 1,
+        "hour": 0,
+        "minute": 0,
+        "second": 0
+      },
+      "expected_output": {
+        "jd": 2451179.5
+      },
+      "tolerance": 0,
+      "source": "Meeus ch.7 (проверочная таблица)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-A1-04",
+      "algorithm": "A1",
+      "name": "Обратимость JD на широком диапазоне",
+      "input": {
+        "roundTripDates": [
+          [
+            1900,
+            1,
+            1
+          ],
+          [
+            1987,
+            6,
+            19
+          ],
+          [
+            2024,
+            2,
+            4
+          ],
+          [
+            2099,
+            12,
+            31
+          ]
+        ],
+        "hour": 12
+      },
+      "expected_output": {
+        "allRoundTripsExact": true
+      },
+      "source": "Структурный инвариант: utcFromJulianDay(julianDay(d)) == d",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-A2-01",
+      "algorithm": "A2",
+      "name": "Видимая долгота Солнца: пример Meeus 25.a",
+      "input": {
+        "jdTT": 2448908.5
+      },
+      "expected_output": {
+        "apparentLongitudeDeg": 199.90895
+      },
+      "tolerance": 0.001,
+      "source": "Meeus, Astronomical Algorithms 2nd ed., example 25.a (1992-10-13.0 TD)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-A2-02",
+      "algorithm": "A2",
+      "name": "Долгота Солнца проходит полный оборот ровно один раз за год",
+      "input": {
+        "startDate": [
+          2025,
+          1,
+          1
+        ],
+        "days": 365
+      },
+      "expected_output": {
+        "wrapArounds": 1,
+        "alwaysInRange": true
+      },
+      "source": "Структурный инвариант годичного движения",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-A6-01",
+      "algorithm": "A6",
+      "name": "deltaT: контрольные значения",
+      "input": {
+        "years": [
+          1900,
+          2000,
+          2025
+        ]
+      },
+      "expected_output": {
+        "1900": -2.8,
+        "2000": 63.8,
+        "2025": 72.0
+      },
+      "tolerance": 5.0,
+      "source": "Espenak & Meeus, NASA Polynomial Expressions for Delta T",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-A3-01",
+      "algorithm": "A3",
+      "name": "Весеннее равноденствие 2025 (UTC)",
+      "input": {
+        "year": 2025,
+        "longitude": 0
+      },
+      "expected_output": {
+        "utc": "2025-03-20T09:01Z"
+      },
+      "tolerance": {
+        "minutes": 20
+      },
+      "source": "Астрономические таблицы (USNO / timeanddate) на 2025 год",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-A3-02",
+      "algorithm": "A3",
+      "name": "Летнее солнцестояние 2025 (UTC)",
+      "input": {
+        "year": 2025,
+        "longitude": 90
+      },
+      "expected_output": {
+        "utc": "2025-06-21T02:42Z"
+      },
+      "tolerance": {
+        "minutes": 20
+      },
+      "source": "Астрономические таблицы (USNO / timeanddate) на 2025 год",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-A3-03",
+      "algorithm": "A3",
+      "name": "Осеннее равноденствие 2025 (UTC)",
+      "input": {
+        "year": 2025,
+        "longitude": 180
+      },
+      "expected_output": {
+        "utc": "2025-09-22T18:19Z"
+      },
+      "tolerance": {
+        "minutes": 20
+      },
+      "source": "Астрономические таблицы (USNO / timeanddate) на 2025 год",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-A3-04",
+      "algorithm": "A3",
+      "name": "Зимнее солнцестояние 2025 (UTC)",
+      "input": {
+        "year": 2025,
+        "longitude": 270
+      },
+      "expected_output": {
+        "utc": "2025-12-21T15:03Z"
+      },
+      "tolerance": {
+        "minutes": 20
+      },
+      "source": "Астрономические таблицы (USNO / timeanddate) на 2025 год",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-A3-05",
+      "algorithm": "A3",
+      "name": "Ли Чунь всегда попадает на 3-5 февраля",
+      "input": {
+        "yearsFrom": 1900,
+        "yearsTo": 2099,
+        "step": 7,
+        "longitude": 315
+      },
+      "expected_output": {
+        "monthAlways": 2,
+        "dayInRange": [
+          3,
+          5
+        ]
+      },
+      "source": "Структурный инвариант китайского солнечного календаря (CAL-2)",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-B1-01",
+      "algorithm": "B1",
+      "name": "Столп года: якорь 1984 = 甲子",
+      "input": {
+        "solarYear": 1984
+      },
+      "expected_output": {
+        "sexagenary": 0,
+        "han": "甲子",
+        "stem": 0,
+        "branch": 0
+      },
+      "source": "masterseanchan.com/bazi-60-jiazi («Cycle anchor: 1984 = 甲子»)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-B1-02",
+      "algorithm": "B1",
+      "name": "Столп года: 2024 = 甲辰 (год Дракона)",
+      "input": {
+        "solarYear": 2024
+      },
+      "expected_output": {
+        "sexagenary": 40,
+        "han": "甲辰"
+      },
+      "source": "Общеизвестное соответствие; en.wikipedia.org/wiki/Sexagenary_cycle",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-B1-03",
+      "algorithm": "B1",
+      "name": "Столп года: 2026 = 丙午 (Огненная Лошадь)",
+      "input": {
+        "solarYear": 2026
+      },
+      "expected_output": {
+        "sexagenary": 42,
+        "han": "丙午"
+      },
+      "source": "discoveringrncp.hk («2026 是丙午年»)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-B1-04",
+      "algorithm": "B1",
+      "name": "Столп года: цикличность 60",
+      "input": {
+        "years": [
+          1924,
+          1984,
+          2044
+        ]
+      },
+      "expected_output": {
+        "allEqual": true,
+        "sexagenary": 0
+      },
+      "source": "Структурный инвариант 60-летнего цикла",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-B2-01",
+      "algorithm": "B2",
+      "name": "Правило «пяти тигров»: все 10 стволов года",
+      "input": {
+        "monthOrdinal": 0,
+        "yearStems": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "expected_output": {
+        "monthStems": [
+          2,
+          4,
+          6,
+          8,
+          0,
+          2,
+          4,
+          6,
+          8,
+          0
+        ]
+      },
+      "source": "五虎遁: 甲己→丙, 乙庚→戊, 丙辛→庚, 丁壬→壬, 戊癸→甲 (pdfcoffee Zi Wei Dou Shu, travelchinaguide)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-B2-02",
+      "algorithm": "B2",
+      "name": "Ветви месяцев отсчитываются от 寅",
+      "input": {
+        "monthOrdinals": [
+          0,
+          1,
+          10,
+          11
+        ]
+      },
+      "expected_output": {
+        "monthBranches": [
+          2,
+          3,
+          0,
+          1
+        ]
+      },
+      "source": "CAL-4; nouahsark.com (таблица соответствия месяцев и ветвей)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-B2-03",
+      "algorithm": "B2",
+      "name": "Столп месяца циклически замыкается на 60",
+      "input": {
+        "yearStem": 0,
+        "monthOrdinals": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      "expected_output": {
+        "allPairsDistinct": true,
+        "count": 12
+      },
+      "source": "Структурный инвариант",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-B3-01",
+      "algorithm": "B3",
+      "name": "Столп дня: якорь 2019-01-27 = 甲子",
+      "input": {
+        "localYear": 2019,
+        "localMonth": 1,
+        "localDay": 27,
+        "localHour": 12
+      },
+      "expected_output": {
+        "sexagenary": 0,
+        "han": "甲子"
+      },
+      "source": "ytliu0.github.io/ChineseCalendar/sexagenary.html (JD_noon 2458511, S = 1)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-B3-02",
+      "algorithm": "B3",
+      "name": "Столп дня: якорь 2000-03-01 = 戊午 (№55)",
+      "input": {
+        "localYear": 2000,
+        "localMonth": 3,
+        "localDay": 1,
+        "localHour": 12
+      },
+      "expected_output": {
+        "sexagenary": 54,
+        "han": "戊午"
+      },
+      "source": "baike.baidu.com Day Pillar Formula («March 1st, 2000 is a Wu-Wu day, sequence number 55»)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-B3-03",
+      "algorithm": "B3",
+      "name": "Столп дня: поздний час Цзы переносит день",
+      "input": {
+        "localYear": 2024,
+        "localMonth": 5,
+        "localDay": 10,
+        "hours": [
+          22,
+          23
+        ],
+        "lateZiNewDay": true
+      },
+      "expected_output": {
+        "differByOne": true
+      },
+      "source": "BND-3, правило 晚子 (переключаемое)",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-B3-04",
+      "algorithm": "B3",
+      "name": "РЕГРЕССИЯ (AUDIT A-08): часовой пояс влияет на столп дня",
+      "input": {
+        "civil": {
+          "year": 2024,
+          "month": 5,
+          "day": 10,
+          "hour": 1,
+          "minute": 0
+        },
+        "tzOffsetHoursA": 12,
+        "tzOffsetHoursB": -12
+      },
+      "expected_output": {
+        "dayPillarsMustDiffer": true,
+        "note": "Моменты различаются почти на сутки; при единой шкале времени (TZ-2..TZ-4) столпы дня обязаны отличаться. Прежняя реализация давала одинаковый результат."
+      },
+      "source": "AUDIT A-08 (дефект несогласованных шкал времени)",
+      "status": "REGRESSION"
+    },
+    {
+      "id": "GT-B4-01",
+      "algorithm": "B4",
+      "name": "Границы ветвей часа",
+      "input": {
+        "hours": [
+          23,
+          0,
+          1,
+          3,
+          12,
+          22
+        ]
+      },
+      "expected_output": {
+        "hourBranches": [
+          0,
+          0,
+          1,
+          2,
+          6,
+          11
+        ]
+      },
+      "source": "Классическая таблица двухчасовок (AFSI AS101, travelchinaguide)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-B4-02",
+      "algorithm": "B4",
+      "name": "Правило «пяти крыс»: час 子 для всех 10 стволов дня",
+      "input": {
+        "hourBranch": 0,
+        "dayStems": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "expected_output": {
+        "hourStems": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          0,
+          2,
+          4,
+          6,
+          8
+        ]
+      },
+      "source": "五鼠遁: 甲己→甲子, 乙庚→丙子, 丙辛→戊子, 丁壬→庚子, 戊癸→壬子",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-B4-03",
+      "algorithm": "B4",
+      "name": "Двенадцать часовых столпов суток различны",
+      "input": {
+        "dayStem": 0,
+        "allHourBranches": true
+      },
+      "expected_output": {
+        "distinctCount": 12
+      },
+      "source": "Структурный инвариант",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-B7-01",
+      "algorithm": "B7",
+      "name": "Направление столпов Удачи: мужчина в ян-год → вперёд",
+      "input": {
+        "yearStem": 0,
+        "gender": "male"
+      },
+      "expected_output": {
+        "forward": true
+      },
+      "source": "minglifenxi.cn, deeporacle.ai («阳年生男…顺排»)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-B7-02",
+      "algorithm": "B7",
+      "name": "Направление столпов Удачи: все четыре комбинации",
+      "input": {
+        "combinations": [
+          {
+            "yearStemYang": true,
+            "gender": "male"
+          },
+          {
+            "yearStemYang": true,
+            "gender": "female"
+          },
+          {
+            "yearStemYang": false,
+            "gender": "male"
+          },
+          {
+            "yearStemYang": false,
+            "gender": "female"
+          }
+        ]
+      },
+      "expected_output": {
+        "forward": [
+          true,
+          false,
+          false,
+          true
+        ]
+      },
+      "source": "阳年生男/阴年生女顺排; 阴年生男/阳年生女逆排 (m.k366.com, minglifenxi.cn)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-B7-03",
+      "algorithm": "B7",
+      "name": "Возраст старта ограничен длиной солнечного месяца",
+      "input": {
+        "anyBirth": true
+      },
+      "expected_output": {
+        "startAgeRange": [
+          0,
+          10.5
+        ],
+        "reason": "макс. ~31 сут / 3 ≈ 10.33 года"
+      },
+      "source": "Структурный инвариант пропорции 3 суток = 1 год",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-B7-04",
+      "algorithm": "B7",
+      "name": "Сумма расстояний вперёд и назад равна длине солнечного месяца",
+      "input": {
+        "birth": {
+          "year": 1967,
+          "month": 6,
+          "day": 5,
+          "hour": 12,
+          "tzOffsetHours": 3
+        }
+      },
+      "expected_output": {
+        "sumDeltaDaysRange": [
+          27,
+          32
+        ]
+      },
+      "source": "Структурный инвариант: расстояния до предыдущей и следующей границы 節 в сумме дают длину месяца",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-B8-01",
+      "algorithm": "B8",
+      "name": "Скрытые стволы: суммы долей равны 100 для всех 12 ветвей",
+      "input": {
+        "allBranches": true
+      },
+      "expected_output": {
+        "everyBranchSumsTo": 100
+      },
+      "source": "Структурный инвариант таблицы 藏干",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-B8-02",
+      "algorithm": "B8",
+      "name": "Скрытые стволы: чистые ветви содержат ровно один ствол",
+      "input": {
+        "branches": [
+          "zi",
+          "mao",
+          "you"
+        ]
+      },
+      "expected_output": {
+        "hidden": {
+          "zi": [
+            "gui"
+          ],
+          "mao": [
+            "yi"
+          ],
+          "you": [
+            "xin"
+          ]
+        }
+      },
+      "source": "ba-zi.ai/en/blog/tian-gan-di-zhi (таблица главных скрытых стволов)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-C-01",
+      "algorithm": "C1_C6",
+      "name": "Столкновения строго на 180° по индексу ветви",
+      "input": {
+        "allClashes": true
+      },
+      "expected_output": {
+        "everyPairIndexDelta": 6,
+        "count": 6
+      },
+      "source": "Структурный инвариант 六沖",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-C-02",
+      "algorithm": "C1_C6",
+      "name": "Каждая ветвь входит ровно в один треугольник 三合",
+      "input": {
+        "allBranches": true
+      },
+      "expected_output": {
+        "membershipCountPerBranch": 1,
+        "groups": 4
+      },
+      "source": "Структурный инвариант 三合 (4 группы × 3 ветви = 12)",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-C-03",
+      "algorithm": "C1_C6",
+      "name": "Слияния небесных стволов: пять пар",
+      "input": {
+        "allStemCombinations": true
+      },
+      "expected_output": {
+        "pairs": [
+          [
+            "jia",
+            "ji",
+            "earth"
+          ],
+          [
+            "yi",
+            "geng",
+            "metal"
+          ],
+          [
+            "bing",
+            "xin",
+            "water"
+          ],
+          [
+            "ding",
+            "ren",
+            "wood"
+          ],
+          [
+            "wu",
+            "gui",
+            "fire"
+          ]
+        ]
+      },
+      "source": "天干五合 (divinefs.weebly.com, классические таблицы)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-C-04",
+      "algorithm": "C1_C6",
+      "name": "Обнаружение взаимодействия в конкретном наборе столпов",
+      "input": {
+        "pillars": [
+          {
+            "stem": 0,
+            "branch": 0,
+            "role": "year"
+          },
+          {
+            "stem": 6,
+            "branch": 6,
+            "role": "day"
+          }
+        ]
+      },
+      "expected_output": {
+        "clashes": [
+          "zi_wu"
+        ],
+        "clashCount": 1
+      },
+      "source": "六沖: 子 ↔ 午 (индексы 0 и 6)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-C-05",
+      "algorithm": "C11",
+      "name": "Три Ша для года Лошади (午, 2026)",
+      "input": {
+        "yearBranch": 6
+      },
+      "expected_output": {
+        "threeShaDirection": "N",
+        "taiSui": "wu",
+        "suiPo": "zi"
+      },
+      "source": "三煞: год огненного треугольника 寅午戌 → Три Ша на Севере; 歲破 напротив 太歲",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-C-06",
+      "algorithm": "C11",
+      "name": "Тай Суй и Суй По противоположны для всех 12 ветвей",
+      "input": {
+        "allYearBranches": true
+      },
+      "expected_output": {
+        "alwaysOpposite": true,
+        "mountainIndexDelta": 12
+      },
+      "source": "Структурный инвариант",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-H12-01",
+      "algorithm": "H12",
+      "name": "Гуа: мужчина 1984",
+      "input": {
+        "solarYear": 1984,
+        "gender": "male"
+      },
+      "expected_output": {
+        "gua": 7,
+        "group": "west"
+      },
+      "source": "Правило веков: last2=84 → 8+4=12 → 3; 10−3=7 (paramarsh.app, astroccult.net)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H12-02",
+      "algorithm": "H12",
+      "name": "Гуа: женщина 1984",
+      "input": {
+        "solarYear": 1984,
+        "gender": "female"
+      },
+      "expected_output": {
+        "gua": 8,
+        "group": "west"
+      },
+      "source": "3+5=8 (правило до 2000); bethgracefengshui.com приводит именно этот пример",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H12-03",
+      "algorithm": "H12",
+      "name": "Гуа: мужчина 2002 (правило XXI века)",
+      "input": {
+        "solarYear": 2002,
+        "gender": "male"
+      },
+      "expected_output": {
+        "gua": 7
+      },
+      "source": "paramarsh.app («Born 2002 → 0+2 = 2 → 9 − 2 = 7»)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H12-04",
+      "algorithm": "H12",
+      "name": "Гуа: мужчина 2012 и женщина 2012",
+      "input": {
+        "solarYear": 2012,
+        "genders": [
+          "male",
+          "female"
+        ]
+      },
+      "expected_output": {
+        "male": 6,
+        "female": 9
+      },
+      "source": "fengshui-expert.fr («2012: 1+2=3; муж 9−3=6; жен 6+3=9»)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H12-05",
+      "algorithm": "H12",
+      "name": "Гуа никогда не равно 5 и покрывает 1900-2099",
+      "input": {
+        "yearsFrom": 1900,
+        "yearsTo": 2099,
+        "bothGenders": true
+      },
+      "expected_output": {
+        "neverFive": true,
+        "allInSet": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          7,
+          8,
+          9
+        ],
+        "matchesCenturyRule": true,
+        "casesChecked": 400
+      },
+      "source": "AUDIT A-04: численная сверка с каноническим правилом веков, 0 расхождений",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-H1-01",
+      "algorithm": "H1",
+      "name": "Полёт вперёд из центра 1",
+      "input": {
+        "startNumber": 1,
+        "forward": true
+      },
+      "expected_output": {
+        "C": 1,
+        "NW": 2,
+        "W": 3,
+        "NE": 4,
+        "S": 5,
+        "N": 6,
+        "SW": 7,
+        "E": 8,
+        "SE": 9
+      },
+      "source": "en.wikibooks.org/wiki/Feng_Shui (Yang Direction: 9 5 7 / 8 1 3 / 4 6 2)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H1-02",
+      "algorithm": "H1",
+      "name": "Полёт назад из центра 1",
+      "input": {
+        "startNumber": 1,
+        "forward": false
+      },
+      "expected_output": {
+        "C": 1,
+        "NW": 9,
+        "W": 8,
+        "NE": 7,
+        "S": 6,
+        "N": 5,
+        "SW": 4,
+        "E": 3,
+        "SE": 2
+      },
+      "source": "en.wikibooks.org/wiki/Feng_Shui (Yin Direction: 2 6 4 / 3 1 8 / 7 5 9)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H1-03",
+      "algorithm": "H1",
+      "name": "Полёт вперёд из 5 воспроизводит базовый квадрат Ло Шу",
+      "input": {
+        "startNumber": 5,
+        "forward": true
+      },
+      "expected_output": {
+        "SE": 4,
+        "S": 9,
+        "SW": 2,
+        "E": 3,
+        "C": 5,
+        "W": 7,
+        "NE": 8,
+        "N": 1,
+        "NW": 6,
+        "allRowsColsDiagonalsSumTo": 15
+      },
+      "source": "Классический магический квадрат Ло Шу 洛書",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H2-01",
+      "algorithm": "H2",
+      "name": "ЭТАЛОН Wikibooks: период 9, сидение S2 / фасад N2",
+      "input": {
+        "period": 9,
+        "sittingMountain": "S2"
+      },
+      "expected_output": {
+        "gridOrder": [
+          "SE",
+          "S",
+          "SW",
+          "E",
+          "C",
+          "W",
+          "NE",
+          "N",
+          "NW"
+        ],
+        "encoding": "mountain|base|water",
+        "grid": [
+          "386",
+          "841",
+          "168",
+          "277",
+          "495",
+          "623",
+          "732",
+          "959",
+          "514"
+        ]
+      },
+      "source": "en.wikibooks.org/wiki/Feng_Shui/Flying_Star_Feng_Shui/Period_9",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H2-02",
+      "algorithm": "H2",
+      "name": "ЭТАЛОН Wikibooks: период 8, сидение NW3 / фасад SE3",
+      "input": {
+        "period": 8,
+        "sittingMountain": "NW3"
+      },
+      "expected_output": {
+        "gridOrder": [
+          "SE",
+          "S",
+          "SW",
+          "E",
+          "C",
+          "W",
+          "NE",
+          "N",
+          "NW"
+        ],
+        "encoding": "mountain|base|water",
+        "grid": [
+          "178",
+          "533",
+          "351",
+          "269",
+          "987",
+          "715",
+          "624",
+          "442",
+          "896"
+        ]
+      },
+      "source": "en.wikibooks.org/wiki/Feng_Shui/Flying_Star_Feng_Shui/Period_8",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H2-03",
+      "algorithm": "H2",
+      "name": "ЭТАЛОН Wikibooks: период 5, сидение W3 / фасад E3",
+      "input": {
+        "period": 5,
+        "sittingMountain": "W3"
+      },
+      "expected_output": {
+        "gridOrder": [
+          "SE",
+          "S",
+          "SW",
+          "E",
+          "C",
+          "W",
+          "NE",
+          "N",
+          "NW"
+        ],
+        "encoding": "mountain|base|water",
+        "grid": [
+          "844",
+          "398",
+          "126",
+          "935",
+          "753",
+          "571",
+          "489",
+          "217",
+          "662"
+        ]
+      },
+      "source": "en.wikibooks.org/wiki/Feng_Shui/Flying_Star_Feng_Shui/Period_5",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H2-04",
+      "algorithm": "H2",
+      "name": "Инварианты карты для всех 24 гор × 9 периодов",
+      "input": {
+        "allPeriods": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "allMountains": 24
+      },
+      "expected_output": {
+        "eachGridContainsAllNineNumbersExactlyOnce": true,
+        "sittingOppositeFacing": true,
+        "casesChecked": 216
+      },
+      "source": "Структурный инвариант полёта по девяти дворцам",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-H3-01",
+      "algorithm": "H3",
+      "name": "РЕГРЕССИЯ: полярность звезды 5 берётся по номеру периода",
+      "input": {
+        "period": 9,
+        "facingDegrees": 0
+      },
+      "expected_output": {
+        "waterCenter": 5,
+        "mountainCenter": 4,
+        "waterForward": false,
+        "note": "Период 9 → дворец 9 (Юг), триада «небо» → гора S2 (午) → инь → полёт назад"
+      },
+      "source": "AUDIT: en.wikipedia.org/wiki/Flying_Star_Feng_Shui («go by the polarity of the Period number»); численно подтверждено картой Wikibooks",
+      "status": "REGRESSION"
+    },
+    {
+      "id": "GT-H3-02",
+      "algorithm": "H3",
+      "name": "РЕГРЕССИЯ: звезда 5 без номера периода обязана вызывать ошибку",
+      "input": {
+        "starNumber": 5,
+        "triad": "heaven",
+        "periodNumber": null
+      },
+      "expected_output": {
+        "throws": true,
+        "mustNotReturnDefault": true,
+        "note": "Прежняя реализация молча возвращала forward=true — источник дефекта"
+      },
+      "source": "AUDIT: регрессия к устранённому дефекту",
+      "status": "REGRESSION"
+    },
+    {
+      "id": "GT-H4-01",
+      "algorithm": "H4",
+      "name": "Годовая звезда 2026 = 1 (независимый источник)",
+      "input": {
+        "solarYear": 2026
+      },
+      "expected_output": {
+        "annualStar": 1
+      },
+      "source": "fengshuibalanz.com («Annual Feng Shui Flying Star 1 in the CENTRAL Palace» для 2026)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H4-02",
+      "algorithm": "H4",
+      "name": "Раскладка годовых звёзд 2026 по дворцам",
+      "input": {
+        "solarYear": 2026
+      },
+      "expected_output": {
+        "C": 1,
+        "E": 8,
+        "NW": 2,
+        "S": 5,
+        "SW": 7,
+        "W": 3
+      },
+      "source": "fengshuibalanz.com (перечень секторов 2026: 8 на востоке, 2 на СЗ, 5 на юге, 7 на ЮЗ, 3 на западе)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H4-03",
+      "algorithm": "H4",
+      "name": "Якоря правила трёх юаней",
+      "input": {
+        "years": [
+          1864,
+          1924,
+          1984,
+          2044
+        ]
+      },
+      "expected_output": {
+        "annualStars": [
+          1,
+          4,
+          7,
+          1
+        ]
+      },
+      "source": "csdn.net 年紫白口诀 («上元一、四、七»): 上元甲子→1白, 中元甲子→4綠, 下元甲子→7赤",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H4-04",
+      "algorithm": "H4",
+      "name": "Тождественность непрерывного счёта правилу трёх юаней (весь цикл 180 лет)",
+      "input": {
+        "yearsFrom": 1864,
+        "yearsTo": 2043
+      },
+      "expected_output": {
+        "mismatches": 0,
+        "note": "60 лет ≡ 6 (mod 9); смещение юаня (+3) компенсирует остаток"
+      },
+      "source": "AUDIT A-11, разрешено в PHASE 3 численной сверкой",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-H5-01",
+      "algorithm": "H5",
+      "name": "Месячная звезда: три группы ветви года при месяце 寅",
+      "input": {
+        "monthOrdinal": 0,
+        "yearBranchGroups": {
+          "ziWuMaoYou": [
+            0,
+            3,
+            6,
+            9
+          ],
+          "chenXuChouWei": [
+            1,
+            4,
+            7,
+            10
+          ],
+          "yinShenSiHai": [
+            2,
+            5,
+            8,
+            11
+          ]
+        }
+      },
+      "expected_output": {
+        "ziWuMaoYou": 8,
+        "chenXuChouWei": 5,
+        "yinShenSiHai": 2
+      },
+      "source": "csdn.net 月入中飞星 («子午卯酉八白求，辰戌丑未五宫游，四孟之年从二黑»)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H5-02",
+      "algorithm": "H5",
+      "name": "Месячные звёзды 2026 (год 午) по месяцам",
+      "input": {
+        "yearBranch": 6,
+        "monthOrdinals": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "expected_output": {
+        "stars": [
+          8,
+          7,
+          6,
+          5,
+          4,
+          3,
+          2
+        ]
+      },
+      "source": "fengshuibalanz.com (визиты месячных звёзд 2026: март 7, май 5, июнь 4, июль 3, август 2)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H5-03",
+      "algorithm": "H5",
+      "name": "Месячная звезда убывает и имеет период 9",
+      "input": {
+        "yearBranch": 0,
+        "allMonths": true
+      },
+      "expected_output": {
+        "monotonicDescendingMod9": true
+      },
+      "source": "Структурный инвариант (逆寻月份)",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-H6-01",
+      "algorithm": "H6",
+      "name": "Дневная звезда: непрерывность внутри полупериода",
+      "input": {
+        "year": 2025,
+        "month": 3,
+        "daysFrom": 1,
+        "daysTo": 28,
+        "method": "jiazi"
+      },
+      "expected_output": {
+        "stepAlwaysPlusOneMod9": true,
+        "allInRange": [
+          1,
+          9
+        ]
+      },
+      "source": "Структурный инвариант правила 陽遁 (счёт вверх между солнцестояниями)",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-H6-02",
+      "algorithm": "H6",
+      "name": "Дневная звезда: направление счёта меняется на солнцестояниях",
+      "input": {
+        "dates": [
+          [
+            2025,
+            1,
+            15
+          ],
+          [
+            2025,
+            7,
+            15
+          ]
+        ],
+        "method": "jiazi"
+      },
+      "expected_output": {
+        "yangDun": [
+          true,
+          false
+        ]
+      },
+      "source": "陽遁 от зимнего солнцестояния до летнего; 陰遁 от летнего до зимнего (fengshuidiy.com)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H7-01",
+      "algorithm": "H7",
+      "name": "Границы периодов Сань Юань",
+      "input": {
+        "years": [
+          1864,
+          1984,
+          2003,
+          2004,
+          2023,
+          2024,
+          2043
+        ]
+      },
+      "expected_output": {
+        "periods": [
+          1,
+          7,
+          7,
+          8,
+          8,
+          9,
+          9
+        ]
+      },
+      "source": "en.wikipedia.org/wiki/Flying_Star_Feng_Shui (таблица периодов)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H7-02",
+      "algorithm": "H7",
+      "name": "Период циклически повторяется через 180 лет",
+      "input": {
+        "yearPairs": [
+          [
+            1864,
+            2044
+          ],
+          [
+            1984,
+            2164
+          ]
+        ]
+      },
+      "expected_output": {
+        "allEqual": true
+      },
+      "source": "Структурный инвариант 三元九運",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-H16-01",
+      "algorithm": "H16",
+      "name": "Определение горы: кардинальные азимуты",
+      "input": {
+        "degrees": [
+          0,
+          90,
+          180,
+          270
+        ]
+      },
+      "expected_output": {
+        "codes": [
+          "N2",
+          "E2",
+          "S2",
+          "W2"
+        ]
+      },
+      "source": "en.wikipedia.org/wiki/Flying_Star_Feng_Shui (таблица 24 гор)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H16-02",
+      "algorithm": "H16",
+      "name": "Определение горы: границы секторов",
+      "input": {
+        "degrees": [
+          337.5,
+          352.5,
+          7.5,
+          22.5,
+          359.9
+        ]
+      },
+      "expected_output": {
+        "codes": [
+          "N1",
+          "N2",
+          "N3",
+          "NE1",
+          "N2"
+        ]
+      },
+      "source": "Границы 7.5 + k*15; интервалы полуоткрыты [start, end) (BND-2)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-H16-03",
+      "algorithm": "H16",
+      "name": "Гора и противоположная расходятся ровно на 12 индексов",
+      "input": {
+        "allMountains": true
+      },
+      "expected_output": {
+        "oppositeIndexDelta": 12,
+        "count": 24
+      },
+      "source": "Структурный инвариант компаса 24 гор",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-F2-01",
+      "algorithm": "F2",
+      "name": "Агрегация «Хронические» = среднее",
+      "input": {
+        "samples": [
+          10,
+          20,
+          30,
+          40
+        ],
+        "mode": "chronic"
+      },
+      "expected_output": {
+        "value": 25
+      },
+      "source": "feng-shui.net.ru/progV4_2.htm («изменение СРЕДНЕЙ силы элементов на данный период»)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-F2-02",
+      "algorithm": "F2",
+      "name": "Агрегация «Острые» = максимальное отклонение от среднего",
+      "input": {
+        "samples": [
+          10,
+          20,
+          30,
+          100
+        ],
+        "mode": "acute"
+      },
+      "expected_output": {
+        "value": 100,
+        "mean": 40,
+        "note": "|100−40|=60 максимально"
+      },
+      "source": "feng-shui.net.ru/progV4_2.htm («МАКСИМАЛЬНОЕ ОТКЛОНЕНИЕ ОТ СРЕДНЕГО в меньшую или большую сторону»)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-F2-03",
+      "algorithm": "F2",
+      "name": "Агрегация: вырожденные случаи",
+      "input": {
+        "cases": [
+          {
+            "samples": [
+              7
+            ],
+            "mode": "chronic"
+          },
+          {
+            "samples": [
+              7
+            ],
+            "mode": "acute"
+          },
+          {
+            "samples": [
+              5,
+              5,
+              5
+            ],
+            "mode": "acute"
+          }
+        ]
+      },
+      "expected_output": {
+        "values": [
+          7,
+          7,
+          5
+        ]
+      },
+      "source": "Структурный инвариант: для константного ряда оба режима дают ту же константу",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-F1-01",
+      "algorithm": "F1",
+      "name": "Состав меридианов: ровно 10, по 2 на стихию, 5 Инь и 5 Ян",
+      "input": {
+        "table": "meridians"
+      },
+      "expected_output": {
+        "count": 10,
+        "perElement": 2,
+        "yinCount": 5,
+        "yangCount": 5,
+        "excluded": [
+          "pericardium",
+          "tripleBurner"
+        ]
+      },
+      "source": "AUDIT A-02; feng-shui.net.ru/progV4_2.htm (прямое перечисление автором)",
+      "status": "REGRESSION"
+    },
+    {
+      "id": "GT-F6-01",
+      "algorithm": "F6",
+      "name": "Три обогревателя: группы покрывают все 10 меридианов без пересечений",
+      "input": {
+        "grouping": "tripleBurner"
+      },
+      "expected_output": {
+        "upper": [
+          "heart",
+          "lung"
+        ],
+        "middle": [
+          "gallbladder",
+          "liver",
+          "stomach",
+          "spleenPancreas"
+        ],
+        "lower": [
+          "smallIntestine",
+          "largeIntestine",
+          "bladder",
+          "kidney"
+        ],
+        "unionSize": 10,
+        "intersectionsEmpty": true
+      },
+      "source": "feng-shui.net.ru/progV4_2.htm (дословный состав групп)",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-E2-01",
+      "algorithm": "E2",
+      "name": "Классификация сезонной силы: весна (месяц 寅, Дерево)",
+      "input": {
+        "monthBranch": "yin",
+        "seasonElement": "wood"
+      },
+      "expected_output": {
+        "wood": "wang",
+        "fire": "xiang",
+        "water": "xiu",
+        "metal": "qiu",
+        "earth": "si"
+      },
+      "source": "Классическая схема 旺相休囚死",
+      "status": "GOLDEN"
+    },
+    {
+      "id": "GT-E2-02",
+      "algorithm": "E2",
+      "name": "Классификация покрывает все 5 классов ровно по разу для любого сезона",
+      "input": {
+        "allSeasonElements": [
+          "wood",
+          "fire",
+          "earth",
+          "metal",
+          "water"
+        ]
+      },
+      "expected_output": {
+        "eachSeasonAssignsAllFiveClassesExactlyOnce": true
+      },
+      "source": "Структурный инвариант",
+      "status": "INVARIANT"
+    },
+    {
+      "id": "GT-D1-01",
+      "algorithm": "D1",
+      "name": "Фазы Ци: конфликт школ зафиксирован, обе таблицы доступны",
+      "input": {
+        "schools": [
+          "kubni",
+          "igelnik"
+        ]
+      },
+      "expected_output": {
+        "phaseCount": 12,
+        "differingSignsCount": 5,
+        "bothTablesPresent": true,
+        "conflictStatus": "UNRESOLVED"
+      },
+      "source": "feng-shui.net.ru/progV4_3.htm (таблица опубликована самим автором референса)",
+      "status": "INVARIANT"
+    }
+  ],
+  "contractTests": {
+    "note": "Для NOT_VERIFIED алгоритмов проверяются только контракты, а не значения.",
+    "cases": [
+      {
+        "id": "CT-PH-01",
+        "placeholder": "PH-E1",
+        "expects": {
+          "status": "NOT_VERIFIED",
+          "mustNotProduceNumbersPresentedAsVerified": true,
+          "outputShapeMatches": "ElementVector"
+        }
+      },
+      {
+        "id": "CT-PH-02",
+        "placeholder": "PH-F1",
+        "expects": {
+          "status": "NOT_VERIFIED",
+          "anyStrategyMustBeLabelled": "INFERRED"
+        }
+      },
+      {
+        "id": "CT-PH-03",
+        "placeholder": "PH-F3",
+        "expects": {
+          "status": "NOT_VERIFIED",
+          "mustNotClaimScaleValidation": true,
+          "auditRef": "A-09"
+        }
+      },
+      {
+        "id": "CT-PH-04",
+        "placeholder": "PH-DESIRES",
+        "expects": {
+          "status": "NOT_VERIFIED",
+          "mustNotBeImplemented": true,
+          "reason": "как отдельные графики в референсе не подтверждены"
+        }
+      },
+      {
+        "id": "CT-PH-05",
+        "placeholder": "PH-TZDB",
+        "expects": {
+          "status": "NOT_VERIFIED",
+          "fallback": "пользовательский ручной ввод смещения"
+        }
+      }
+    ]
+  },
+  "coverage": {
+    "verifiedAlgorithmsWithGoldenTests": [
+      "A1",
+      "A2",
+      "A3",
+      "A6",
+      "B1",
+      "B2",
+      "B3",
+      "B4",
+      "B7",
+      "B8",
+      "C11",
+      "C1_C6",
+      "D1",
+      "E2",
+      "F1",
+      "F2",
+      "F6",
+      "H1",
+      "H12",
+      "H16",
+      "H2",
+      "H3",
+      "H4",
+      "H5",
+      "H6",
+      "H7"
+    ],
+    "totalCases": 74,
+    "byStatus": {
+      "GOLDEN": 47,
+      "INVARIANT": 23,
+      "REGRESSION": 4
+    },
+    "notVerifiedExcludedFromGolden": [
+      "PH-E1",
+      "PH-F1",
+      "PH-F3",
+      "PH-F4",
+      "PH-F5",
+      "PH-F6",
+      "PH-D3",
+      "PH-C8",
+      "PH-B9",
+      "PH-B5",
+      "PH-B6",
+      "PH-E3",
+      "PH-E4",
+      "PH-E5",
+      "PH-G1",
+      "PH-G2",
+      "PH-G3",
+      "PH-H11",
+      "PH-TZDB",
+      "PH-EOT",
+      "PH-G10",
+      "PH-DESIRES"
+    ]
+  }
+}

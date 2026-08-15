@@ -1,0 +1,2327 @@
+{
+  "$schema": "calculation_spec.v1",
+  "specVersion": "1.0.0",
+  "phase": "PHASE 3 — CALCULATION SPECIFICATION",
+  "projectStatus": "MVP / experimental. НЕ production-ready.",
+  "basedOn": [
+    "docs/RESEARCH.md",
+    "docs/ALGORITHM_STATUS.md",
+    "docs/GRAPH_CATALOG.md",
+    "docs/RESEARCH_AUDIT.md",
+    "research_summary.json"
+  ],
+  "conventions": {
+    "idStyle": "стабильные латинские ID; русские названия — только display labels; китайские термины в отдельных полях han/pinyin",
+    "indexBase": "все индексы стволов, ветвей и сексагенарного цикла 0-based",
+    "angleUnit": "градусы",
+    "timeScale": "JD (юлианская дата), шкала UTC, если явно не указано иное",
+    "determinism": "все алгоритмы обязаны быть чистыми функциями входа; чтение системного времени в ядре запрещено",
+    "statusValues": [
+      "VERIFIED",
+      "PARTIALLY VERIFIED",
+      "INFERRED",
+      "NOT_VERIFIED"
+    ],
+    "compositeStatusForbidden": "составные статусы в одном поле запрещены (AUDIT A-05); использовать раздельные поля *Status"
+  },
+  "commonTypes": {
+    "CivilDateTime": {
+      "type": "object",
+      "required": [
+        "year",
+        "month",
+        "day"
+      ],
+      "properties": {
+        "year": {
+          "type": "integer",
+          "minimum": 1900,
+          "maximum": 2099
+        },
+        "month": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "day": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31
+        },
+        "hour": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 23,
+          "default": 12
+        },
+        "minute": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 59,
+          "default": 0
+        },
+        "tzOffsetHours": {
+          "type": "number",
+          "minimum": -12,
+          "maximum": 14,
+          "default": 0
+        },
+        "longitude": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -180,
+          "maximum": 180,
+          "default": null
+        },
+        "useTrueSolarTime": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "Pillar": {
+      "type": "object",
+      "required": [
+        "stem",
+        "branch"
+      ],
+      "properties": {
+        "stem": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9
+        },
+        "branch": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 11
+        },
+        "sexagenary": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 59
+        }
+      }
+    },
+    "ElementVector": {
+      "type": "object",
+      "required": [
+        "wood",
+        "fire",
+        "earth",
+        "metal",
+        "water"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "wood": {
+          "type": "number"
+        },
+        "fire": {
+          "type": "number"
+        },
+        "earth": {
+          "type": "number"
+        },
+        "metal": {
+          "type": "number"
+        },
+        "water": {
+          "type": "number"
+        }
+      }
+    },
+    "StarGrid": {
+      "type": "object",
+      "description": "Карта направление -> номер звезды 1..9",
+      "required": [
+        "C",
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "additionalProperties": false,
+      "patternProperties": {
+        "^(C|N|NE|E|SE|S|SW|W|NW)$": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9
+        }
+      }
+    }
+  },
+  "globalRules": {
+    "calendarRules": {
+      "id": "CAL",
+      "status": "VERIFIED",
+      "rules": [
+        {
+          "id": "CAL-1",
+          "rule": "Календарь пролептический григорианский на всём диапазоне."
+        },
+        {
+          "id": "CAL-2",
+          "rule": "Солнечный год начинается в момент Ли Чунь (立春, апп. долгота Солнца = 315°), НЕ в лунный Новый год и НЕ 1 января."
+        },
+        {
+          "id": "CAL-3",
+          "rule": "Солнечный месяц начинается в момент сектантского термина 節 (jie). Средние термины 氣 (qi) границ не задают."
+        },
+        {
+          "id": "CAL-4",
+          "rule": "Месяц, начинающийся на Ли Чунь, имеет ветвь 寅 (индекс 2) и порядковый номер ordinal = 0."
+        },
+        {
+          "id": "CAL-5",
+          "rule": "Месяцы 子 (ordinal 10) и 丑 (ordinal 11), попадающие на декабрь-январь-начало февраля, принадлежат ПРЕДЫДУЩЕМУ солнечному году."
+        }
+      ],
+      "source": [
+        "GB/T 33661-2017",
+        "nouahsark.com/four_pillar",
+        "travelchinaguide.com"
+      ]
+    },
+    "timezoneRules": {
+      "id": "TZ",
+      "status": "VERIFIED",
+      "auditRef": "A-08",
+      "criticalNote": "Аудит A-08 обнаружил дефект прежней реализации: столпы года/месяца брались из UTC-момента, а дня/часа — из локальных чисел. Две шкалы в одной модели. Спецификация ниже устраняет это.",
+      "rules": [
+        {
+          "id": "TZ-1",
+          "rule": "Вход всегда трактуется как МЕСТНОЕ ГРАЖДАНСКОЕ время места события."
+        },
+        {
+          "id": "TZ-2",
+          "rule": "Единый момент: instantJD = julianDay(local) - tzOffsetHours/24 [+ поправка истинного солнечного времени, если включена]."
+        },
+        {
+          "id": "TZ-3",
+          "rule": "ВСЕ четыре столпа определяются из ОДНОГО instantJD. Смешение шкал запрещено."
+        },
+        {
+          "id": "TZ-4",
+          "rule": "Локальная гражданская дата для столпа дня восстанавливается обратно из instantJD: localJD = instantJD + tzOffsetHours/24. Столп дня берётся по календарной дате localJD."
+        },
+        {
+          "id": "TZ-5",
+          "rule": "Историческая база часовых поясов и летнего времени НЕ реализуется в MVP; смещение задаёт пользователь. См. NOT_VERIFIED-заглушку TZDB."
+        },
+        {
+          "id": "TZ-6",
+          "rule": "Поправка истинного солнечного времени (опция): deltaMinutes = (longitude - tzOffsetHours*15) * 4. Уравнение времени НЕ применяется (заглушка EOT)."
+        }
+      ]
+    },
+    "boundaryRules": {
+      "id": "BND",
+      "status": "PARTIALLY VERIFIED",
+      "rules": [
+        {
+          "id": "BND-1",
+          "rule": "Границы солнечных терминов полуоткрыты: момент термина принадлежит НОВОМУ месяцу/году. Условие: instantJD >= termJD.",
+          "status": "VERIFIED"
+        },
+        {
+          "id": "BND-2",
+          "rule": "Границы 24 гор полуоткрыты: [start, end). Гора N2 пересекает 0°, обрабатывается специально.",
+          "status": "VERIFIED"
+        },
+        {
+          "id": "BND-3",
+          "rule": "Поздний час Цзы (23:00-23:59) относится к СЛЕДУЮЩЕМУ дню (晚子). Переключаемо флагом lateZiNewDay.",
+          "status": "PARTIALLY VERIFIED",
+          "conflictRef": "K4"
+        },
+        {
+          "id": "BND-4",
+          "rule": "Точность моментов терминов ±15 минут. При попадании термина в окрестность полуночи дата может сместиться на сутки. Ограничение объявлено, не скрыто.",
+          "status": "PARTIALLY VERIFIED"
+        },
+        {
+          "id": "BND-5",
+          "rule": "Диапазон применимости движка: 1900-2099. Вне его формула Гуа некорректна (AUDIT A-04), точность ΔT падает.",
+          "status": "VERIFIED"
+        }
+      ]
+    }
+  },
+  "algorithms": [
+    {
+      "id": "A1",
+      "name": "julianDay",
+      "ru": "Юлианская дата",
+      "system": "astronomy",
+      "status": "VERIFIED",
+      "input": {
+        "$ref": "#/commonTypes/CivilDateTime",
+        "note": "трактуется как UTC"
+      },
+      "normalization": "Если month <= 2, то year -= 1 и month += 12.",
+      "lookupTables": [],
+      "rules": [
+        "Пролептический григорианский календарь",
+        "B = 2 - A + floor(A/4), где A = floor(year/100)"
+      ],
+      "formula": "JD = floor(365.25*(Y+4716)) + floor(30.6001*(M+1)) + D + dayFraction + B - 1524.5",
+      "output": {
+        "type": "number",
+        "description": "JD"
+      },
+      "dependencies": [],
+      "validationMethod": "Опубликованные примеры Meeus 7.a/7.b; проверка обратимости на 1900-2100.",
+      "source": [
+        "Meeus, Astronomical Algorithms, 2nd ed., ch.7"
+      ],
+      "goldenTests": [
+        "GT-A1-01",
+        "GT-A1-02",
+        "GT-A1-03",
+        "GT-A1-04"
+      ]
+    },
+    {
+      "id": "A2",
+      "name": "apparentSolarLongitude",
+      "ru": "Видимая долгота Солнца",
+      "system": "astronomy",
+      "status": "VERIFIED",
+      "input": {
+        "type": "object",
+        "properties": {
+          "jdTT": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "jdTT"
+        ]
+      },
+      "normalization": "T = (jdTT - 2451545.0) / 36525",
+      "lookupTables": [],
+      "rules": [
+        "L0 = 280.46646 + 36000.76983*T + 0.0003032*T^2 (средняя долгота)",
+        "M = 357.52911 + 35999.05029*T - 0.0001537*T^2 (средняя аномалия)",
+        "C = (1.914602 - 0.004817*T - 0.000014*T^2)*sin(M) + (0.019993 - 0.000101*T)*sin(2M) + 0.000289*sin(3M)",
+        "Omega = 125.04 - 1934.136*T"
+      ],
+      "formula": "lambda = (L0 + C - 0.00569 - 0.00478*sin(Omega)) mod 360",
+      "trigonometryJustification": "sin/cos применяются исключительно потому, что видимое движение Солнца по эклиптике физически описывается тригонометрическим рядом с опубликованными коэффициентами. Это НЕ имитация формы графика фэн-шуй.",
+      "output": {
+        "type": "number",
+        "minimum": 0,
+        "exclusiveMaximum": 360
+      },
+      "dependencies": [
+        "A1"
+      ],
+      "validationMethod": "Пример Meeus 25.a: ожидание 199.90895°, допуск 0.001°.",
+      "source": [
+        "Meeus ch.25"
+      ],
+      "goldenTests": [
+        "GT-A2-01",
+        "GT-A2-02"
+      ]
+    },
+    {
+      "id": "A3",
+      "name": "solarTermInstant",
+      "ru": "Момент солнечного термина",
+      "system": "calendar",
+      "status": "PARTIALLY VERIFIED",
+      "statusReason": "Точность ряда ~0.01° ≈ ±15 минут времени (BND-4).",
+      "input": {
+        "type": "object",
+        "required": [
+          "year",
+          "longitude"
+        ],
+        "properties": {
+          "year": {
+            "type": "integer"
+          },
+          "longitude": {
+            "type": "number",
+            "enum": [
+              0,
+              15,
+              30,
+              45,
+              60,
+              75,
+              90,
+              105,
+              120,
+              135,
+              150,
+              165,
+              180,
+              195,
+              210,
+              225,
+              240,
+              255,
+              270,
+              285,
+              300,
+              315,
+              330,
+              345
+            ]
+          }
+        }
+      },
+      "normalization": "Начальное приближение: approxDoy = ((longitude - 280) mod 360)/0.9856 + 1; jdGuess = JD(year,1,1) + approxDoy + deltaT/86400.",
+      "lookupTables": [
+        "solar-terms"
+      ],
+      "rules": [
+        "Детерминированный метод Ньютона с численной производной (шаг h=0.02 сут), максимум 60 итераций, критерий |f| < 1e-9.",
+        "Разность углов разворачивается в диапазон (-180, 180].",
+        "Результат переводится из шкалы TT в UTC вычитанием deltaT."
+      ],
+      "formula": "solve lambda(jdTT) = targetLongitude; jdUTC = jdTT - deltaT(year)/86400",
+      "output": {
+        "type": "number",
+        "description": "JD в шкале UTC"
+      },
+      "dependencies": [
+        "A1",
+        "A2",
+        "A6"
+      ],
+      "validationMethod": "Сверка 4 точек 2025 года (равноденствия и солнцестояния) с астрономическими таблицами, допуск 20 минут; проверка, что Ли Чунь попадает на 3-5 февраля для 1900-2100.",
+      "source": [
+        "Meeus ch.25",
+        "GB/T 33661-2017",
+        "US Naval Observatory / timeanddate (эталонные моменты)"
+      ],
+      "goldenTests": [
+        "GT-A3-01",
+        "GT-A3-02",
+        "GT-A3-03",
+        "GT-A3-04",
+        "GT-A3-05"
+      ]
+    },
+    {
+      "id": "A6",
+      "name": "deltaT",
+      "ru": "Разность TT - UT",
+      "system": "astronomy",
+      "status": "PARTIALLY VERIFIED",
+      "statusReason": "Полиномы опубликованы, но точность падает вне 1600-2150.",
+      "input": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer"
+          },
+          "month": {
+            "type": "integer",
+            "default": 6
+          }
+        }
+      },
+      "normalization": "y = year + (month - 0.5)/12",
+      "lookupTables": [],
+      "rules": [
+        "Кусочно-полиномиальный набор Espenak & Meeus по интервалам года"
+      ],
+      "formula": "см. интервальные полиномы Espenak & Meeus",
+      "output": {
+        "type": "number",
+        "description": "секунды"
+      },
+      "dependencies": [],
+      "validationMethod": "Контрольные значения: deltaT(2000) ≈ 63.8 с; deltaT(1900) ≈ -2.8 с; 60 < deltaT(2025) < 80.",
+      "source": [
+        "Espenak & Meeus, NASA Polynomial Expressions for Delta T"
+      ],
+      "goldenTests": [
+        "GT-A6-01"
+      ]
+    },
+    {
+      "id": "A5",
+      "name": "variableDoubleHours",
+      "ru": "Переменные двухчасовки",
+      "system": "calendar",
+      "status": "PARTIALLY VERIFIED",
+      "statusReason": "Принцип описан референсом явно и однозначно, но требует расчёта восхода/захода с учётом рефракции и углового радиуса диска, который в MVP не реализован.",
+      "input": {
+        "$ref": "#/commonTypes/CivilDateTime",
+        "note": "плюс широта и долгота"
+      },
+      "normalization": "—",
+      "lookupTables": [
+        "branches"
+      ],
+      "rules": [
+        "Светлое время суток делится на 6 равных дневных двухчасовок, тёмное — на 6 ночных.",
+        "Восход/заход рассчитываются по верхнему краю диска Солнца с учётом атмосферной рефракции."
+      ],
+      "formula": "PLACEHOLDER PH-A5 — требует модуля восхода/захода Солнца",
+      "output": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "minItems": 12,
+        "maxItems": 12
+      },
+      "dependencies": [
+        "A1",
+        "A2"
+      ],
+      "implementationStatus": "NOT_IMPLEMENTED_IN_MVP",
+      "validationMethod": "Не определён до реализации.",
+      "source": [
+        "feng-shui.net.ru/prog_new.htm (v2.0)"
+      ],
+      "goldenTests": []
+    },
+    {
+      "id": "B1",
+      "name": "yearPillar",
+      "ru": "Столп года",
+      "system": "bazi",
+      "status": "VERIFIED",
+      "input": {
+        "type": "object",
+        "required": [
+          "solarYear"
+        ],
+        "properties": {
+          "solarYear": {
+            "type": "integer"
+          }
+        }
+      },
+      "normalization": "solarYear определяется правилом CAL-2 (смена на Ли Чунь).",
+      "lookupTables": [
+        "stems",
+        "branches"
+      ],
+      "rules": [
+        "Якорь: 1984 = 甲子 = сексагенарный индекс 0."
+      ],
+      "formula": "sexagenary = (solarYear - 1984) mod 60; stem = sexagenary mod 10; branch = sexagenary mod 12",
+      "output": {
+        "$ref": "#/commonTypes/Pillar"
+      },
+      "dependencies": [
+        "A3"
+      ],
+      "validationMethod": "Контрольные годы 1984=甲子, 2024=甲辰, 2025=乙巳, 2026=丙午.",
+      "source": [
+        "masterseanchan.com/bazi-60-jiazi",
+        "aa.quae.nl/en/reken/juliaansedag.html"
+      ],
+      "goldenTests": [
+        "GT-B1-01",
+        "GT-B1-02",
+        "GT-B1-03",
+        "GT-B1-04"
+      ]
+    },
+    {
+      "id": "B2",
+      "name": "monthPillar",
+      "ru": "Столп месяца",
+      "system": "bazi",
+      "status": "VERIFIED",
+      "input": {
+        "type": "object",
+        "required": [
+          "yearStem",
+          "monthOrdinal"
+        ],
+        "properties": {
+          "yearStem": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9
+          },
+          "monthOrdinal": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 11,
+            "description": "0 = месяц 寅"
+          }
+        }
+      },
+      "normalization": "monthOrdinal определяется по последнему пройденному сектантскому термину (CAL-3, CAL-4).",
+      "lookupTables": [
+        "stems",
+        "branches",
+        "solar-terms"
+      ],
+      "rules": [
+        "Правило «пяти тигров» 五虎遁: год 甲/己 → месяц 寅 имеет ствол 丙(2); 乙/庚 → 戊(4); 丙/辛 → 庚(6); 丁/壬 → 壬(8); 戊/癸 → 甲(0)."
+      ],
+      "formula": "monthStem = (yearStem*2 + monthOrdinal + 2) mod 10; monthBranch = (monthOrdinal + 2) mod 12",
+      "output": {
+        "$ref": "#/commonTypes/Pillar"
+      },
+      "dependencies": [
+        "A3",
+        "B1"
+      ],
+      "validationMethod": "Проверка правила «пяти тигров» для всех 10 стволов года при monthOrdinal=0.",
+      "source": [
+        "pdfcoffee Zi Wei Dou Shu (таблица стволов месяцев)",
+        "travelchinaguide.com"
+      ],
+      "goldenTests": [
+        "GT-B2-01",
+        "GT-B2-02",
+        "GT-B2-03"
+      ]
+    },
+    {
+      "id": "B3",
+      "name": "dayPillar",
+      "ru": "Столп дня",
+      "system": "bazi",
+      "status": "VERIFIED",
+      "auditRef": "A-08",
+      "input": {
+        "type": "object",
+        "required": [
+          "localYear",
+          "localMonth",
+          "localDay"
+        ],
+        "properties": {
+          "localYear": {
+            "type": "integer"
+          },
+          "localMonth": {
+            "type": "integer"
+          },
+          "localDay": {
+            "type": "integer"
+          },
+          "localHour": {
+            "type": "integer",
+            "default": 12
+          },
+          "lateZiNewDay": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      },
+      "normalization": "Локальная дата восстанавливается из единого instantJD по правилу TZ-4. Если lateZiNewDay и localHour >= 23, то JDN += 1.",
+      "lookupTables": [
+        "stems",
+        "branches"
+      ],
+      "rules": [
+        "JDN берётся на полдень локальной даты.",
+        "BND-3 (поздний Цзы)."
+      ],
+      "formula": "sexagenary = (JDN_noon - 11) mod 60",
+      "output": {
+        "$ref": "#/commonTypes/Pillar"
+      },
+      "dependencies": [
+        "A1",
+        "TZ"
+      ],
+      "validationMethod": "Два независимых якоря: 1900-01-27 не применим; 2019-01-27 = 甲子 (индекс 0) и 2000-03-01 = 戊午 (индекс 54).",
+      "source": [
+        "ytliu0.github.io/ChineseCalendar/sexagenary.html",
+        "baike.baidu.com Day Pillar Formula"
+      ],
+      "goldenTests": [
+        "GT-B3-01",
+        "GT-B3-02",
+        "GT-B3-03",
+        "GT-B3-04"
+      ]
+    },
+    {
+      "id": "B4",
+      "name": "hourPillar",
+      "ru": "Столп часа",
+      "system": "bazi",
+      "status": "VERIFIED",
+      "input": {
+        "type": "object",
+        "required": [
+          "dayStem",
+          "localHour"
+        ],
+        "properties": {
+          "dayStem": {
+            "type": "integer"
+          },
+          "localHour": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 23
+          }
+        }
+      },
+      "normalization": "—",
+      "lookupTables": [
+        "stems",
+        "branches"
+      ],
+      "rules": [
+        "Ветвь 子 охватывает 23:00-00:59, далее каждая ветвь по 2 часа.",
+        "Правило «пяти крыс» 五鼠遁: день 甲/己 → час 子 имеет ствол 甲(0); 乙/庚 → 丙(2); и т.д."
+      ],
+      "formula": "hourBranch = floor((localHour + 1)/2) mod 12; hourStem = (dayStem*2 + hourBranch) mod 10",
+      "output": {
+        "$ref": "#/commonTypes/Pillar"
+      },
+      "dependencies": [
+        "B3"
+      ],
+      "validationMethod": "Границы 23:00 → 子, 01:00 → 丑, 12:00 → 午; правило «пяти крыс» для всех 10 стволов дня.",
+      "source": [
+        "travelchinaguide.com",
+        "American Feng Shui Institute AS101"
+      ],
+      "goldenTests": [
+        "GT-B4-01",
+        "GT-B4-02",
+        "GT-B4-03"
+      ]
+    },
+    {
+      "id": "B7",
+      "name": "luckPillars",
+      "ru": "Столпы Удачи",
+      "system": "bazi",
+      "status": "VERIFIED",
+      "statusScope": "направление и пропорция пересчёта",
+      "auditRef": "A-06",
+      "partiallyVerifiedAspects": [
+        "практика округления возраста старта до целых лет"
+      ],
+      "notVerifiedAspects": [
+        "авторский метод референса «с точностью до дня» (v2.0) — не опубликован"
+      ],
+      "input": {
+        "type": "object",
+        "required": [
+          "instantJD",
+          "yearStem",
+          "gender",
+          "monthPillar"
+        ],
+        "properties": {
+          "instantJD": {
+            "type": "number"
+          },
+          "yearStem": {
+            "type": "integer"
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female"
+            ]
+          },
+          "monthPillar": {
+            "$ref": "#/commonTypes/Pillar"
+          },
+          "count": {
+            "type": "integer",
+            "default": 10
+          },
+          "rounding": {
+            "type": "string",
+            "enum": [
+              "exact",
+              "floor",
+              "round"
+            ],
+            "default": "exact"
+          }
+        }
+      },
+      "normalization": "—",
+      "lookupTables": [
+        "stems",
+        "branches",
+        "solar-terms"
+      ],
+      "rules": [
+        "Направление: forward = (gender == 'male') XNOR (yearStem чётный, т.е. янский). Мужчина в ян-год и женщина в инь-год → вперёд; иначе назад.",
+        "Расстояние считается до ближайшей границы 節 (сектантского термина), НЕ 氣.",
+        "Пропорция: 3 суток = 1 год. Эквивалентные формы: 1 сутки = 4 месяца, 1 时辰 (2 часа) = 10 дней, 1 час = 5 дней — это одна и та же пропорция (AUDIT A-06).",
+        "Каждый последующий столп смещается на ±1 в сексагенарном цикле от столпа месяца и длится 10 лет."
+      ],
+      "formula": "deltaDays = forward ? (nextJieJD - instantJD) : (instantJD - prevJieJD); startAge = deltaDays / 3; pillar_i.stem = (monthStem ± i) mod 10; pillar_i.branch = (monthBranch ± i) mod 12",
+      "output": {
+        "type": "object",
+        "properties": {
+          "forward": {
+            "type": "boolean"
+          },
+          "startAge": {
+            "type": "number"
+          },
+          "deltaDays": {
+            "type": "number"
+          },
+          "pillars": {
+            "type": "array",
+            "items": {
+              "$ref": "#/commonTypes/Pillar"
+            }
+          }
+        }
+      },
+      "dependencies": [
+        "A3",
+        "B1",
+        "B2"
+      ],
+      "validationMethod": "Направление для 4 комбинаций пол×полярность года; инвариант: startAge ∈ [0, 10.5]; сумма расстояний вперёд и назад = длина солнечного месяца (~29-31 сут).",
+      "source": [
+        "minglifenxi.cn/article/dayun-paifa",
+        "deeporacle.ai/bazi/blog/bazi-luck-pillars-guide",
+        "m.k366.com/bazi/36266.htm"
+      ],
+      "rejectedSources": [
+        {
+          "url": "zhuanlan.zhihu.com/p/508348049",
+          "reason": "AUDIT A-07: внутренне противоречив, ошибочно называет 壬 иньским стволом"
+        }
+      ],
+      "goldenTests": [
+        "GT-B7-01",
+        "GT-B7-02",
+        "GT-B7-03",
+        "GT-B7-04"
+      ]
+    },
+    {
+      "id": "B8",
+      "name": "hiddenStems",
+      "ru": "Скрытые небесные стволы",
+      "system": "bazi",
+      "compositionStatus": "VERIFIED",
+      "weightsStatus": "PARTIALLY VERIFIED",
+      "status": "PARTIALLY VERIFIED",
+      "statusReason": "Состав скрытых стволов инвариантен во всех источниках; числовые доли школозависимы (60/30/10 и 70/30 против схем по числу дней владения).",
+      "conflictRef": "K5",
+      "input": {
+        "type": "object",
+        "required": [
+          "branch"
+        ],
+        "properties": {
+          "branch": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 11
+          }
+        }
+      },
+      "normalization": "—",
+      "lookupTables": [
+        "branches"
+      ],
+      "rules": [
+        "Сумма долей каждой ветви строго равна 100."
+      ],
+      "formula": "lookup branches[branch].hidden -> [{stem, share}]",
+      "output": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "stem": {
+              "type": "string"
+            },
+            "share": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "dependencies": [],
+      "validationMethod": "Статическая проверка: для всех 12 ветвей сумма долей = 100; все ID стволов существуют.",
+      "source": [
+        "American Feng Shui Institute AS101",
+        "ba-zi.ai/en/blog/tian-gan-di-zhi"
+      ],
+      "goldenTests": [
+        "GT-B8-01",
+        "GT-B8-02"
+      ]
+    },
+    {
+      "id": "C1_C6",
+      "name": "interactions",
+      "ru": "Взаимодействия стволов и ветвей",
+      "system": "interactions",
+      "status": "VERIFIED",
+      "subAlgorithms": [
+        {
+          "id": "C1",
+          "ru": "Слияния небесных стволов 天干五合",
+          "count": 5
+        },
+        {
+          "id": "C2",
+          "ru": "Шесть слияний ветвей 六合",
+          "count": 6,
+          "conflictRef": "K3"
+        },
+        {
+          "id": "C3a",
+          "ru": "Треугольники 三合",
+          "count": 4
+        },
+        {
+          "id": "C3b",
+          "ru": "Сезонные группы 三會",
+          "count": 4
+        },
+        {
+          "id": "C4",
+          "ru": "Столкновения 六沖",
+          "count": 6
+        },
+        {
+          "id": "C5",
+          "ru": "Вред 六害",
+          "count": 6
+        },
+        {
+          "id": "C6",
+          "ru": "Наказания 三刑",
+          "count": 7
+        }
+      ],
+      "input": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "stem": {
+              "type": "integer"
+            },
+            "branch": {
+              "type": "integer"
+            },
+            "role": {
+              "type": "string",
+              "enum": [
+                "year",
+                "month",
+                "day",
+                "hour",
+                "luck",
+                "annual",
+                "monthly",
+                "daily"
+              ]
+            }
+          }
+        }
+      },
+      "normalization": "Столпы приводятся к списку {stemId, branchId, role}.",
+      "lookupTables": [
+        "interactions"
+      ],
+      "rules": [
+        "Комбинация засчитывается, если ВСЕ её участники присутствуют в наборе (с учётом кратности).",
+        "Каждый участник может быть использован в проверке каждой комбинации только один раз (потребление из пула).",
+        "Приоритет при конкуренции комбинаций НЕ определён — см. заглушку PH-C8."
+      ],
+      "formula": "детерминированный перебор таблиц с потреблением из пула участников",
+      "output": {
+        "type": "object",
+        "properties": {
+          "stemCombinations": {
+            "type": "array"
+          },
+          "sixCombinations": {
+            "type": "array"
+          },
+          "threeHarmonies": {
+            "type": "array"
+          },
+          "directionalCombinations": {
+            "type": "array"
+          },
+          "clashes": {
+            "type": "array"
+          },
+          "harms": {
+            "type": "array"
+          },
+          "punishments": {
+            "type": "array"
+          }
+        }
+      },
+      "dependencies": [
+        "B1",
+        "B2",
+        "B3",
+        "B4"
+      ],
+      "validationMethod": "Структурные инварианты: столкновения строго на 180° по индексу ветви; каждая ветвь ровно в одном треугольнике и одной сезонной группе; 6/6/4/4/6/6/7 элементов.",
+      "source": [
+        "American Feng Shui Institute AS101",
+        "классические таблицы Ба-цзы"
+      ],
+      "goldenTests": [
+        "GT-C-01",
+        "GT-C-02",
+        "GT-C-03",
+        "GT-C-04"
+      ]
+    },
+    {
+      "id": "C11",
+      "name": "yearAfflictions",
+      "ru": "Три Ша, Тай Суй, Суй По",
+      "system": "interactions",
+      "status": "VERIFIED",
+      "statusScope": "для года",
+      "partiallyVerifiedAspects": [
+        "Три Ша месяца и дня — референс их отображает, правило для них не проверялось"
+      ],
+      "input": {
+        "type": "object",
+        "required": [
+          "yearBranch"
+        ],
+        "properties": {
+          "yearBranch": {
+            "type": "integer"
+          }
+        }
+      },
+      "normalization": "—",
+      "lookupTables": [
+        "interactions",
+        "mountains24"
+      ],
+      "rules": [
+        "Три Ша определяются треугольником 三合, в который входит ветвь года; Ша занимает три горы сектора, противоположного стихии треугольника.",
+        "Тай Суй занимает гору, соответствующую ветви года.",
+        "Суй По — гора, противоположная Тай Суй (индекс + 12 из 24)."
+      ],
+      "formula": "sha = threeSha[triad containing yearBranch]; taiSui = mountain(yearBranch); suiPo = mountains24[(taiSui.index + 12) mod 24]",
+      "output": {
+        "type": "object",
+        "properties": {
+          "threeSha": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "taiSui": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "suiPo": {
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        }
+      },
+      "dependencies": [
+        "B1"
+      ],
+      "validationMethod": "Для всех 12 ветвей года: Ша определён, Тай Суй и Суй По противоположны.",
+      "source": [
+        "классические таблицы 三煞/太歲/歲破"
+      ],
+      "goldenTests": [
+        "GT-C-05",
+        "GT-C-06"
+      ]
+    },
+    {
+      "id": "H12",
+      "name": "mingGua",
+      "ru": "Число Гуа и восемь домов",
+      "system": "bazhai",
+      "status": "VERIFIED",
+      "statusScope": "диапазон 1900-2099",
+      "notVerifiedAspects": [
+        "годы вне 1900-2099 — формула цифрового корня расходится с правилом веков (AUDIT A-04)"
+      ],
+      "auditRef": "A-04",
+      "conflictRef": "K8",
+      "input": {
+        "type": "object",
+        "required": [
+          "solarYear",
+          "gender"
+        ],
+        "properties": {
+          "solarYear": {
+            "type": "integer",
+            "minimum": 1900,
+            "maximum": 2099
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female"
+            ]
+          }
+        }
+      },
+      "normalization": "Год берётся СОЛНЕЧНЫЙ (граница Ли Чунь, CAL-2). Конфликт K8: меньшинство школ использует лунный Новый год.",
+      "lookupTables": [
+        "gua"
+      ],
+      "rules": [
+        "s = цифровой корень всех четырёх цифр года, приведённый к 1..9.",
+        "Мужчины: gua = 11 - s (привести в 1..9); если 5, то 2.",
+        "Женщины: gua = s + 4 (привести в 1..9); если 5, то 8.",
+        "ДОКАЗАНО (AUDIT A-04): на 1900-2099 эквивалентно каноническому правилу веков, поскольку digitRoot(19xx)=digitRoot(last2)+1 и digitRoot(20xx)=digitRoot(last2)+2 (mod 9)."
+      ],
+      "formula": "male: g = 11 - digitRoot(year), wrap to 1..9, 5→2; female: g = digitRoot(year) + 4, wrap to 1..9, 5→8",
+      "output": {
+        "type": "object",
+        "properties": {
+          "gua": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              6,
+              7,
+              8,
+              9
+            ]
+          },
+          "group": {
+            "type": "string",
+            "enum": [
+              "east",
+              "west"
+            ]
+          },
+          "directions": {
+            "type": "object"
+          }
+        }
+      },
+      "dependencies": [
+        "B1"
+      ],
+      "validationMethod": "Численная сверка 402 пар (год × пол) на 1900-2099 против канонического правила веков: 0 расхождений. Инвариант: Гуа никогда не равно 5.",
+      "source": [
+        "paramarsh.app",
+        "fengshuitime.ie",
+        "astroccult.net",
+        "bethgracefengshui.com",
+        "fengshui-expert.fr"
+      ],
+      "goldenTests": [
+        "GT-H12-01",
+        "GT-H12-02",
+        "GT-H12-03",
+        "GT-H12-04",
+        "GT-H12-05"
+      ]
+    },
+    {
+      "id": "H1",
+      "name": "flyStars",
+      "ru": "Полёт звёзд по Ло Шу",
+      "system": "xuankong",
+      "status": "VERIFIED",
+      "input": {
+        "type": "object",
+        "required": [
+          "startNumber",
+          "forward"
+        ],
+        "properties": {
+          "startNumber": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9
+          },
+          "forward": {
+            "type": "boolean"
+          }
+        }
+      },
+      "normalization": "—",
+      "lookupTables": [
+        "luoshu"
+      ],
+      "rules": [
+        "Путь полёта фиксирован: C → NW → W → NE → S → N → SW → E → SE.",
+        "Номера циклически приводятся в 1..9."
+      ],
+      "formula": "grid[path[k]] = wrap9(startNumber + (forward ? k : -k)), k = 0..8",
+      "output": {
+        "$ref": "#/commonTypes/StarGrid"
+      },
+      "dependencies": [],
+      "validationMethod": "Полёт вперёд из 5 воспроизводит базовый магический квадрат Ло Шу; полёт вперёд/назад из 1 совпадает с опубликованными раскладками.",
+      "source": [
+        "en.wikibooks.org/wiki/Feng_Shui",
+        "en.wikipedia.org/wiki/Flying_Star_Feng_Shui"
+      ],
+      "goldenTests": [
+        "GT-H1-01",
+        "GT-H1-02",
+        "GT-H1-03"
+      ]
+    },
+    {
+      "id": "H2",
+      "name": "geomanticChart",
+      "ru": "Геомантическая карта (три карты)",
+      "system": "xuankong",
+      "status": "VERIFIED",
+      "input": {
+        "type": "object",
+        "required": [
+          "period",
+          "facingDegrees"
+        ],
+        "properties": {
+          "period": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9
+          },
+          "facingDegrees": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMaximum": 360
+          }
+        }
+      },
+      "normalization": "Гора фасада определяется по азимуту (BND-2); гора сидения = азимут + 180°.",
+      "lookupTables": [
+        "luoshu",
+        "mountains24"
+      ],
+      "rules": [
+        "1. Звезда периода в центр, полёт вперёд → земная основа 地盤.",
+        "2. Число основы в дворце СИДЕНИЯ → центр горной карты 山盤.",
+        "3. Число основы в дворце ФАСАДА → центр водной карты 向盤.",
+        "4. Направление полёта каждой карты определяется полярностью той горы, которая соответствует полученному числу, взятой в ТОЙ ЖЕ триаде (земля/небо/человек), что и измеренный азимут.",
+        "5. Если полученное число = 5 (нет своего дворца), полярность берётся по номеру ПЕРИОДА (H3)."
+      ],
+      "formula": "earthBase = flyStars(period, true); mountainStars = flyStars(earthBase[sittingSector], polarity(sittingBaseNum, sittingTriad, period)); waterStars = flyStars(earthBase[facingSector], polarity(facingBaseNum, facingTriad, period))",
+      "output": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "integer"
+          },
+          "facing": {
+            "type": "object"
+          },
+          "sitting": {
+            "type": "object"
+          },
+          "earthBase": {
+            "$ref": "#/commonTypes/StarGrid"
+          },
+          "mountainStars": {
+            "$ref": "#/commonTypes/StarGrid"
+          },
+          "waterStars": {
+            "$ref": "#/commonTypes/StarGrid"
+          }
+        }
+      },
+      "dependencies": [
+        "H1",
+        "H3",
+        "H16"
+      ],
+      "validationMethod": "ГЛАВНАЯ ВНЕШНЯЯ ВАЛИДАЦИЯ: поэлементная сверка с 22 опубликованными картами Wikibooks (периоды 2,5,7,8,9) — 594 значения звёзд. Инварианты: каждая карта содержит все 9 номеров ровно по разу; сидение строго напротив фасада.",
+      "source": [
+        "en.wikibooks.org/wiki/Feng_Shui/Flying_Star_Feng_Shui/Period_N",
+        "fengshuied.com/flying-star-natal-charts"
+      ],
+      "goldenTests": [
+        "GT-H2-01",
+        "GT-H2-02",
+        "GT-H2-03",
+        "GT-H2-04"
+      ]
+    },
+    {
+      "id": "H3",
+      "name": "starFivePolarity",
+      "ru": "Полярность звезды 5 в центре",
+      "system": "xuankong",
+      "status": "VERIFIED",
+      "input": {
+        "type": "object",
+        "required": [
+          "periodNumber",
+          "triad"
+        ],
+        "properties": {
+          "periodNumber": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9
+          },
+          "triad": {
+            "type": "string",
+            "enum": [
+              "earth",
+              "heaven",
+              "man"
+            ]
+          }
+        }
+      },
+      "normalization": "—",
+      "lookupTables": [
+        "luoshu",
+        "mountains24"
+      ],
+      "rules": [
+        "Звезда 5 не имеет собственного дворца в квадрате Ло Шу.",
+        "Её полярность берётся по НОМЕРУ ПЕРИОДА.",
+        "Если номер периода не передан или равен 5, функция обязана выбросить ошибку, а НЕ возвращать значение по умолчанию (регрессия к дефекту прежней реализации)."
+      ],
+      "formula": "effective = (starNumber == 5) ? periodNumber : starNumber; palace = luoshu.palaceByNumber(effective); mountain = mountains24[palace.direction][triad]; forward = (mountain.polarity == 'yang')",
+      "output": {
+        "type": "boolean",
+        "description": "true = полёт вперёд"
+      },
+      "dependencies": [
+        "H16"
+      ],
+      "validationMethod": "Численно подтверждено картами Wikibooks периода 9 (сидение S2), где водная звезда центра = 5 и летит назад.",
+      "source": [
+        "en.wikipedia.org/wiki/Flying_Star_Feng_Shui",
+        "alchetron.com/Flying-Star-Feng-Shui"
+      ],
+      "goldenTests": [
+        "GT-H3-01",
+        "GT-H3-02"
+      ]
+    },
+    {
+      "id": "H4",
+      "name": "annualStar",
+      "ru": "Годовая летящая звезда",
+      "system": "xuankong",
+      "status": "VERIFIED",
+      "auditRef": "A-11",
+      "auditResolution": "PHASE 3: конфликт РАЗРЕШЁН численно. Непрерывная убывающая последовательность тождественна правилу трёх юаней на всём 180-летнем цикле (1864-2043, 0 расхождений), т.к. 60 лет ≡ 6 (mod 9), и смещение юаня (+3) компенсирует остаток. Статус возвращён с PARTIALLY VERIFIED на VERIFIED.",
+      "input": {
+        "type": "object",
+        "required": [
+          "solarYear"
+        ],
+        "properties": {
+          "solarYear": {
+            "type": "integer"
+          }
+        }
+      },
+      "normalization": "Год солнечный (CAL-2).",
+      "lookupTables": [
+        "luoshu"
+      ],
+      "rules": [
+        "Каноническое правило трёх юаней 年紫白: 上元甲子 (1864) → 1白, 中元甲子 (1924) → 4綠, 下元甲子 (1984) → 7赤; счёт убывает по годам.",
+        "Эквивалентная замкнутая форма с якорем 2024 → 3."
+      ],
+      "formula": "annualStar = wrap9(3 - (solarYear - 2024))  ≡  wrap9(yuanStart - (solarYear - yuanAnchor))",
+      "output": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 9
+      },
+      "dependencies": [
+        "B1"
+      ],
+      "validationMethod": "Сверка с якорями трёх юаней 1864→1, 1924→4, 1984→7, 2044→1 (полный 180-летний цикл, 0 расхождений); независимая проверка 2026→1.",
+      "source": [
+        "csdn.net 日紫白飞星算法 (年紫白口诀 上元一、四、七)",
+        "fengshuibalanz.com (2026 → 1 в центре)"
+      ],
+      "goldenTests": [
+        "GT-H4-01",
+        "GT-H4-02",
+        "GT-H4-03",
+        "GT-H4-04"
+      ]
+    },
+    {
+      "id": "H5",
+      "name": "monthlyStar",
+      "ru": "Месячная летящая звезда",
+      "system": "xuankong",
+      "status": "VERIFIED",
+      "auditRef": "A-12",
+      "input": {
+        "type": "object",
+        "required": [
+          "yearBranch",
+          "monthOrdinal"
+        ],
+        "properties": {
+          "yearBranch": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 11
+          },
+          "monthOrdinal": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 11
+          }
+        }
+      },
+      "normalization": "monthOrdinal = 0 для месяца 寅 (CAL-4).",
+      "lookupTables": [
+        "luoshu",
+        "branches"
+      ],
+      "rules": [
+        "Стартовая звезда месяца 寅 по группе ветви года: 子午卯酉 → 8; 辰戌丑未 → 5; 寅申巳亥 → 2.",
+        "Месяцы отсчитываются НАЗАД (逆寻月份): звезда убывает на 1 за каждый следующий солнечный месяц.",
+        "Раскладка по дворцам — ВПЕРЁД (顺宫流). Оба признака подтверждены (AUDIT A-12)."
+      ],
+      "formula": "monthlyStar = wrap9(startByYearBranchGroup - monthOrdinal)",
+      "output": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 9
+      },
+      "dependencies": [
+        "B1",
+        "B2"
+      ],
+      "validationMethod": "Все три группы ветви года при monthOrdinal=0 дают 8/5/2; сверка помесячных визитов 2026 года с независимой публикацией.",
+      "source": [
+        "csdn.net 日紫白飞星算法 (月入中飞星: 子午卯酉八白求…逆寻月份顺宫流)",
+        "fengshuibalanz.com"
+      ],
+      "goldenTests": [
+        "GT-H5-01",
+        "GT-H5-02",
+        "GT-H5-03"
+      ]
+    },
+    {
+      "id": "H6",
+      "name": "dailyStar",
+      "ru": "Дневная летящая звезда",
+      "system": "xuankong",
+      "status": "PARTIALLY VERIFIED",
+      "auditRef": "A-03",
+      "conflictRef": "K2",
+      "statusReason": "Существуют ТРИ конкурирующих метода; референс имеет пользовательскую настройку выбора метода, что подтверждает отсутствие единственно верного.",
+      "competingMethods": [
+        {
+          "id": "jiazi",
+          "ru": "Непрерывный счёт от ближайшего дня 甲子 после солнцестояния",
+          "implemented": true,
+          "isDefault": true,
+          "source": "fengshuidiy.com; blog.sina 奇门紫白择日法 (традиционный вариант)"
+        },
+        {
+          "id": "solstice",
+          "ru": "Счёт от самого дня солнцестояния с удвоением звезды",
+          "implemented": false,
+          "source": "9starki.com; heluo.nl"
+        },
+        {
+          "id": "threeYuanTerm",
+          "ru": "Жёсткая привязка к трём юаням внутри термина (вариант 陈良荃): смена на 冬至/雨水/谷雨 (Ян 一七四) и 夏至/处暑/霜降 (Инь 九三六); юань по ветви дня 符头",
+          "implemented": false,
+          "source": "blog.sina 奇门紫白择日法"
+        }
+      ],
+      "input": {
+        "type": "object",
+        "required": [
+          "localYear",
+          "localMonth",
+          "localDay"
+        ],
+        "properties": {
+          "localYear": {
+            "type": "integer"
+          },
+          "localMonth": {
+            "type": "integer"
+          },
+          "localDay": {
+            "type": "integer"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "jiazi",
+              "solstice",
+              "threeYuanTerm"
+            ],
+            "default": "jiazi"
+          }
+        }
+      },
+      "normalization": "JDN на полдень локальной даты.",
+      "lookupTables": [
+        "luoshu"
+      ],
+      "rules": [
+        "Ян Дунь (陽遁, счёт вверх) — от зимнего солнцестояния до летнего.",
+        "Инь Дунь (陰遁, счёт вниз) — от летнего солнцестояния до зимнего.",
+        "Метод jiazi: опорная точка — первый день 甲子, начиная с солнцестояния; в Ян Дунь его звезда = 1, в Инь Дунь = 9."
+      ],
+      "formula": "yangDun ? wrap9(1 + daysFromAnchor) : wrap9(9 - daysFromAnchor)",
+      "output": {
+        "type": "object",
+        "properties": {
+          "star": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9
+          },
+          "yangDun": {
+            "type": "boolean"
+          },
+          "method": {
+            "type": "string"
+          }
+        }
+      },
+      "dependencies": [
+        "A3",
+        "B3"
+      ],
+      "validationMethod": "Инварианты: звезда в 1..9; последовательность непрерывна внутри полупериода (шаг ±1); направление счёта меняется на солнцестояниях.",
+      "source": [
+        "fengshuidiy.com",
+        "blog.sina.com.cn 奇门紫白择日法",
+        "csdn.net 日紫白飞星算法"
+      ],
+      "rejectedSources": [
+        {
+          "url": "baike.baidu.com 九宫八卦",
+          "reason": "AUDIT A-03: относится к 奇门遁甲 — другая школа; ссылаться на неё как на доказательство правила 玄空 некорректно"
+        }
+      ],
+      "goldenTests": [
+        "GT-H6-01",
+        "GT-H6-02"
+      ]
+    },
+    {
+      "id": "H7",
+      "name": "periodForYear",
+      "ru": "Период Сань Юань",
+      "system": "xuankong",
+      "status": "VERIFIED",
+      "input": {
+        "type": "object",
+        "required": [
+          "solarYear"
+        ],
+        "properties": {
+          "solarYear": {
+            "type": "integer"
+          }
+        }
+      },
+      "normalization": "Год солнечный (CAL-2).",
+      "lookupTables": [
+        "luoshu"
+      ],
+      "rules": [
+        "9 периодов по 20 лет, полный цикл 180 лет, отсчёт от 1864."
+      ],
+      "formula": "period = floor(((solarYear - 1864) mod 180) / 20) + 1",
+      "output": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 9
+      },
+      "dependencies": [
+        "B1"
+      ],
+      "validationMethod": "Границы периодов: 1864→1, 1984→7, 2004→8, 2023→8, 2024→9, 2043→9.",
+      "source": [
+        "en.wikipedia.org/wiki/Flying_Star_Feng_Shui"
+      ],
+      "goldenTests": [
+        "GT-H7-01",
+        "GT-H7-02"
+      ]
+    },
+    {
+      "id": "H16",
+      "name": "mountainForDegrees",
+      "ru": "Определение горы по азимуту",
+      "system": "xuankong",
+      "status": "VERIFIED",
+      "input": {
+        "type": "object",
+        "required": [
+          "degrees"
+        ],
+        "properties": {
+          "degrees": {
+            "type": "number"
+          }
+        }
+      },
+      "normalization": "d = degrees mod 360",
+      "lookupTables": [
+        "mountains24"
+      ],
+      "rules": [
+        "24 сектора по 15°, границы на 7.5 + k*15.",
+        "Интервалы полуоткрыты [start, end) (BND-2).",
+        "Гора N2 (子) пересекает 0° и обрабатывается специально."
+      ],
+      "formula": "найти m: (m.start < m.end) ? (d >= m.start && d < m.end) : (d >= m.start || d < m.end)",
+      "output": {
+        "type": "object",
+        "description": "запись горы из mountains24"
+      },
+      "dependencies": [],
+      "validationMethod": "Контрольные азимуты: 0°→N2, 180°→S2, 90°→E2, 270°→W2, 337.5°→N1, 352.5°→N2; инвариант: гора и противоположная расходятся ровно на 12 индексов.",
+      "source": [
+        "en.wikipedia.org/wiki/Flying_Star_Feng_Shui",
+        "metaphysicsdiscovery.com",
+        "novamastersconsulting.com"
+      ],
+      "goldenTests": [
+        "GT-H16-01",
+        "GT-H16-02",
+        "GT-H16-03"
+      ]
+    },
+    {
+      "id": "F2",
+      "name": "aggregationModes",
+      "ru": "Режимы агрегации «Острые» и «Хронические»",
+      "system": "meridians",
+      "status": "VERIFIED",
+      "statusReason": "Единственная часть графической методики референса, где раскрыт математический смысл; определения даны дословными цитатами.",
+      "input": {
+        "type": "object",
+        "required": [
+          "samples",
+          "mode"
+        ],
+        "properties": {
+          "samples": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "chronic",
+              "acute"
+            ]
+          }
+        }
+      },
+      "normalization": "samples — значения показателя внутри одного шага графика.",
+      "lookupTables": [],
+      "rules": [
+        "chronic (Хронические) = «изменение СРЕДНЕЙ силы элементов на данный период с заданным шагом».",
+        "acute (Острые) = «МАКСИМАЛЬНОЕ ОТКЛОНЕНИЕ ОТ СРЕДНЕГО в меньшую или большую сторону на данный период»."
+      ],
+      "formula": "chronic: mean(samples); acute: samples[argmax(|x - mean|)]",
+      "output": {
+        "type": "number"
+      },
+      "dependencies": [],
+      "validationMethod": "Инварианты: chronic([a]) == a; acute константного ряда == та же константа; acute возвращает элемент исходного ряда.",
+      "source": [
+        "feng-shui.net.ru/progV4_2.htm",
+        "feng-shui.net.ru/progV4_3.htm"
+      ],
+      "goldenTests": [
+        "GT-F2-01",
+        "GT-F2-02",
+        "GT-F2-03"
+      ]
+    },
+    {
+      "id": "F1",
+      "name": "meridianComposition",
+      "ru": "Состав 10 меридианов",
+      "system": "meridians",
+      "compositionStatus": "VERIFIED",
+      "formulaStatus": "NOT_VERIFIED",
+      "status": "PARTIALLY VERIFIED",
+      "auditRef": "A-01, A-02, A-13",
+      "criticalNote": "Состав и соответствие орган↔стихия↔полярность VERIFIED. Формула перевода силы стихии в число меридиана NOT_VERIFIED — см. заглушку PH-F1.",
+      "input": {
+        "type": "object",
+        "required": [
+          "elements"
+        ],
+        "properties": {
+          "elements": {
+            "$ref": "#/commonTypes/ElementVector"
+          }
+        }
+      },
+      "normalization": "—",
+      "lookupTables": [
+        "meridians"
+      ],
+      "rules": [
+        "Ровно 10 меридианов: 5 цзан (Инь) + 5 фу (Ян). Перикард и тройной обогреватель ИСКЛЮЧЕНЫ (AUDIT A-02).",
+        "Обоснование: 10 меридианов ↔ 10 небесных стволов ↔ 5 стихий × Инь/Ян.",
+        "Соответствие: Дерево = печень (Инь) / желчный пузырь (Ян); Огонь = сердце / тонкий кишечник; Земля = селезёнка-поджелудочная / желудок; Металл = лёгкие / толстый кишечник; Вода = почки / мочевой пузырь.",
+        "«Три обогревателя» — НЕ меридианы, а агрегирующая группировка (F6)."
+      ],
+      "formula": "PLACEHOLDER PH-F1 — формула распределения силы стихии между парными органами не опубликована",
+      "output": {
+        "type": "array",
+        "minItems": 10,
+        "maxItems": 10
+      },
+      "dependencies": [
+        "E1"
+      ],
+      "validationMethod": "Структурно: ровно 10 записей; по 2 меридиана на каждую стихию; по 5 Инь и 5 Ян.",
+      "source": [
+        "feng-shui.net.ru/progV4_2.htm",
+        "feng-shui.net.ru/progV4_3.htm",
+        "studfile.net/preview/9020568 (5 цзан и 5 фу)",
+        "taiji-bg.com (Хуан-ди нэй цзин)"
+      ],
+      "rejectedSources": [
+        {
+          "name": "Су Джок (Пак Чжэ Ву)",
+          "reason": "AUDIT A-01: современная корейская система 1986 г., микроакупунктура кисти/стопы; не китайский канон и не метод расчёта по календарю"
+        }
+      ],
+      "goldenTests": [
+        "GT-F1-01"
+      ]
+    },
+    {
+      "id": "F6",
+      "name": "tripleBurnerGrouping",
+      "ru": "Три обогревателя (группировка)",
+      "system": "meridians",
+      "compositionStatus": "VERIFIED",
+      "aggregationStatus": "NOT_VERIFIED",
+      "status": "PARTIALLY VERIFIED",
+      "auditRef": "A-13",
+      "input": {
+        "type": "object",
+        "required": [
+          "meridianValues"
+        ],
+        "properties": {
+          "meridianValues": {
+            "type": "array",
+            "minItems": 10,
+            "maxItems": 10
+          }
+        }
+      },
+      "normalization": "—",
+      "lookupTables": [
+        "meridians"
+      ],
+      "rules": [
+        "Верхний = сердце + лёгкие.",
+        "Средний = желчный пузырь + печень + желудок + селезёнка-поджелудочная.",
+        "Нижний = тонкий кишечник + толстый кишечник + мочевой пузырь + почки.",
+        "Это ГРУППИРОВКА существующих меридианов, а не самостоятельные меридианы."
+      ],
+      "formula": "PLACEHOLDER PH-F6 — неизвестно, сумма или среднее (пробел U-24)",
+      "output": {
+        "type": "object",
+        "properties": {
+          "upper": {
+            "type": "number"
+          },
+          "middle": {
+            "type": "number"
+          },
+          "lower": {
+            "type": "number"
+          }
+        }
+      },
+      "dependencies": [
+        "F1"
+      ],
+      "validationMethod": "Структурно: объединение трёх групп покрывает ровно 10 меридианов без пересечений.",
+      "source": [
+        "feng-shui.net.ru/progV4_2.htm",
+        "tibet4u.ru (三焦 как условный орган)"
+      ],
+      "goldenTests": [
+        "GT-F6-01"
+      ]
+    },
+    {
+      "id": "E2",
+      "name": "seasonalStrength",
+      "ru": "Сезонная сила стихии",
+      "system": "elements",
+      "classificationStatus": "VERIFIED",
+      "multipliersStatus": "INFERRED",
+      "status": "PARTIALLY VERIFIED",
+      "auditRef": "A-05",
+      "criticalNote": "Составной статус в одном поле запрещён (AUDIT A-05). Классификация 旺相休囚死 классическая и качественная; она в принципе НЕ задаёт числовых множителей. Любые числа здесь — объявленная модельная гипотеза без источника.",
+      "input": {
+        "type": "object",
+        "required": [
+          "elementId",
+          "monthBranch"
+        ],
+        "properties": {
+          "elementId": {
+            "type": "string"
+          },
+          "monthBranch": {
+            "type": "string"
+          }
+        }
+      },
+      "normalization": "Стихия сезона определяется по ветви солнечного месяца.",
+      "lookupTables": [
+        "elements"
+      ],
+      "rules": [
+        "wang 旺 — стихия, совпадающая со стихией сезона.",
+        "xiang 相 — стихия, порождаемая стихией сезона.",
+        "xiu 休 — стихия, порождающая стихию сезона.",
+        "qiu 囚 — стихия, контролирующая стихию сезона.",
+        "si 死 — стихия, контролируемая стихией сезона."
+      ],
+      "formula": "classification: VERIFIED; multiplier(class): INFERRED, значения объявляются в data/weights.json",
+      "output": {
+        "type": "object",
+        "properties": {
+          "class": {
+            "type": "string",
+            "enum": [
+              "wang",
+              "xiang",
+              "xiu",
+              "qiu",
+              "si"
+            ]
+          },
+          "multiplier": {
+            "type": "number"
+          }
+        }
+      },
+      "dependencies": [
+        "B2"
+      ],
+      "validationMethod": "Классификация: для каждой из 5 стихий сезона все 5 классов назначаются ровно по разу. Множители валидации не подлежат (гипотеза).",
+      "source": [
+        "классическая схема 旺相休囚死"
+      ],
+      "goldenTests": [
+        "GT-E2-01",
+        "GT-E2-02"
+      ]
+    },
+    {
+      "id": "D1",
+      "name": "qiPhases",
+      "ru": "Фазы Ци (проводимость) трёх степеней",
+      "system": "qi_phases",
+      "definitionStatus": "VERIFIED",
+      "polarityStatus": "UNRESOLVED",
+      "status": "PARTIALLY VERIFIED",
+      "conflictRef": "K1",
+      "input": {
+        "type": "object",
+        "required": [
+          "stem",
+          "branch",
+          "degree"
+        ],
+        "properties": {
+          "stem": {
+            "type": "integer"
+          },
+          "branch": {
+            "type": "integer"
+          },
+          "degree": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3
+            ]
+          },
+          "school": {
+            "type": "string",
+            "enum": [
+              "kubni",
+              "igelnik"
+            ],
+            "default": "kubni"
+          }
+        }
+      },
+      "normalization": "—",
+      "lookupTables": [
+        "qi-phases"
+      ],
+      "rules": [
+        "1-я степень: проводимость небесного ствола ДНЯ РОЖДЕНИЯ (личности) по отношению к ветвям года, месяца, дня и часа.",
+        "2-я степень: проводимость ствола по отношению к ветви В ТОМ ЖЕ столпе.",
+        "3-я степень: проводимость доминирующего скрытого ствола внутри своей ветви.",
+        "12-фазный цикл: эмбрион → питание → рост → купание → шапка и пояс → служба → расцвет → ослабление → болезнь → смерть → могила → исчезновение.",
+        "КОНФЛИКТ K1: знаки (+/0/−) 5 из 12 фаз различаются между школами Кубни и Игельника. Конфликт опубликован САМИМ автором референса."
+      ],
+      "formula": "фаза = позиция ветви в 12-фазном цикле, стартующей от ветви «рождения» данного ствола; знак = таблица выбранной школы",
+      "output": {
+        "type": "object",
+        "properties": {
+          "phase": {
+            "type": "string"
+          },
+          "sign": {
+            "type": "string",
+            "enum": [
+              "+",
+              "0",
+              "-"
+            ]
+          }
+        }
+      },
+      "dependencies": [
+        "B1",
+        "B2",
+        "B3",
+        "B4"
+      ],
+      "validationMethod": "Определения степеней проверяемы по тексту референса. Таблица знаков — обе школы хранятся раздельно, выбор пользователя. Числовой коэффициент фазы NOT_VERIFIED (PH-D3).",
+      "source": [
+        "feng-shui.net.ru/progV4_3.htm (полное описание + таблица Кубни vs Игельник)"
+      ],
+      "goldenTests": [
+        "GT-D1-01"
+      ]
+    }
+  ],
+  "placeholders": [
+    {
+      "id": "PH-E1",
+      "name": "elementStrengthPipeline",
+      "ru": "Числовые коэффициенты конвейера подсчёта стихий (17 столбцов)",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U1",
+      "architecturalNote": "Структура конвейера VERIFIED (RESEARCH.md §4). Реализуется как декларативная цепочка: raw[] → sum(отмеченные столбцы) → × СезС × ФЦ × КЖЦ × КЧ → итог. Все коэффициенты выносятся в отдельный конфигурационный слой и НЕ хардкодятся. Значения референса не опубликованы и настраиваются пользователем даже в самой программе.",
+      "requiredInputs": [
+        "pillars",
+        "hiddenStems",
+        "dominantHiddenStems",
+        "lifeCycle",
+        "userExtras"
+      ],
+      "outputContract": {
+        "$ref": "#/commonTypes/ElementVector"
+      }
+    },
+    {
+      "id": "PH-F1",
+      "name": "elementToMeridian",
+      "ru": "Формула перевода силы стихии в силу меридиана",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U4",
+      "architecturalNote": "Известен только СОСТАВ (10 меридианов) и соответствие орган↔стихия↔полярность. Правило деления силы стихии между парными Инь/Ян органами не опубликовано. Реализуется как подключаемая стратегия с явной пометкой INFERRED при выборе любой конкретной."
+    },
+    {
+      "id": "PH-F3",
+      "name": "harmonyIndex",
+      "ru": "Индекс гармоничности меридианов",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U2, U25",
+      "architecturalNote": "Референс называет это «специальной методикой» и не раскрывает. Известны лишь наблюдаемые значения (85, 8, 3-4) → шкала порядка 0-100 и качественная интерпретация (больше = лучше; важна скорость изменения). AUDIT A-09: совпадение шкалы НЕ является подтверждением формулы; любая наша метрика будет INFERRED и заведомо не реконструкцией."
+    },
+    {
+      "id": "PH-F4",
+      "name": "harmonyIndexYinYang",
+      "ru": "Индексы гармоничности янских и иньских меридианов",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U2",
+      "architecturalNote": "Та же методика, применённая к 5 меридианам каждой полярности. Состав групп VERIFIED, формула — нет."
+    },
+    {
+      "id": "PH-F5",
+      "name": "totalHealthIndex",
+      "ru": "Итоговый индекс здоровья",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U3",
+      "architecturalNote": "Перечень входов VERIFIED: индексы гармоничности + благоприятность элементов в НС и ЗВ + двойные и тройные слияния. Формула агрегации не опубликована."
+    },
+    {
+      "id": "PH-F6",
+      "name": "tripleBurnerAggregation",
+      "ru": "Способ агрегации Трёх обогревателей",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U24",
+      "architecturalNote": "Состав групп VERIFIED; неизвестно, сумма или среднее."
+    },
+    {
+      "id": "PH-D3",
+      "name": "qiPhaseCoefficient",
+      "ru": "Числовой коэффициент фазы Ци",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U1",
+      "architecturalNote": "Знаки (+/0/−) известны для обеих школ, но их числовое выражение в столбце 14 конвейера — нет."
+    },
+    {
+      "id": "PH-C8",
+      "name": "combinationPriority",
+      "ru": "Приоритет видов слияний при конкуренции",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U7",
+      "architecturalNote": "Референс: «элементы могут участвовать в нескольких слияниях, необходимо установить приоритет вида слияний» — конкретный порядок не опубликован, настраивается пользователем. Реализуется как явно задаваемый список приоритетов."
+    },
+    {
+      "id": "PH-B9",
+      "name": "dominantHiddenStem",
+      "ru": "Правило выбора доминирующего скрытого ствола",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U8",
+      "architecturalNote": "Понятие классическое (главный скрытый ствол по фазе месяца), правило автора не опубликовано."
+    },
+    {
+      "id": "PH-B5",
+      "name": "conceptionPillar",
+      "ru": "Столп Зачатия",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U6",
+      "architecturalNote": "Известно только наличие и настройка срока беременности (по умолчанию 9 месяцев). Формула не опубликована."
+    },
+    {
+      "id": "PH-B6",
+      "name": "lifePalace",
+      "ru": "Дом/Дворец Жизни",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U6",
+      "architecturalNote": "Референс явно указывает наличие ДВУХ вариантов расположения — традиционного и нового. Ни один не описан."
+    },
+    {
+      "id": "PH-E3",
+      "name": "lifeCycleCoefficient",
+      "ru": "Жизненный цикл и его коэффициент",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U1",
+      "architecturalNote": "Структура VERIFIED (5 периодов по 15 лет при старости 75: Дерево, Огонь, Земля, Металл, Вода; возраст старости настраивается). Коэффициент КЖЦ не опубликован."
+    },
+    {
+      "id": "PH-E4",
+      "name": "lifeCycleKubni",
+      "ru": "Годовой жизненный цикл по системе М. Кубни (ЖЦ-2)",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U9",
+      "architecturalNote": "Внешняя система, описание отсутствует."
+    },
+    {
+      "id": "PH-E5",
+      "name": "birthHourCoefficient",
+      "ru": "Коэффициент часа рождения",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U1",
+      "architecturalNote": "Коэффициент КЧ (столбец 16 конвейера). Референс применяет поправку на час рождения; значение не опубликовано."
+    },
+    {
+      "id": "PH-G1",
+      "name": "activityMapping",
+      "ru": "Таблица «стихия → тип деятельности»",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U10",
+      "architecturalNote": "VERIFIED: «Деятельность рассчитывается по 5-элементной системе на основе 10 меридианов». Сама таблица соответствий не опубликована."
+    },
+    {
+      "id": "PH-G2",
+      "name": "luckIndicator",
+      "ru": "Индикатор Удачи",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U11",
+      "architecturalNote": "Компоновка и цветовая семантика VERIFIED (слева конфликты, справа гармонии; нижний ряд — Земные столпы, важнейший; яркий цвет — столпы даты, приглушённый — транзитные). Это ПАНЕЛЬ, а не линейный график. Числовая формула не опубликована."
+    },
+    {
+      "id": "PH-G3",
+      "name": "childBirthMarriageGraphs",
+      "ru": "Графики рождения детей и вступления в брак",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U12",
+      "architecturalNote": "«Интегрируются различные аспекты» — какие именно, не перечислено."
+    },
+    {
+      "id": "PH-H11",
+      "name": "palaceFavourabilityIndex",
+      "ru": "Индексы благоприятности Дворцов",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U13",
+      "architecturalNote": "Прямая цитата автора: «рассчитывается экспериментальным путем» — то есть эмпирическая, не каноническая величина."
+    },
+    {
+      "id": "PH-H8",
+      "name": "substituteStars",
+      "ru": "Замещающие звёзды 替卦",
+      "status": "PARTIALLY VERIFIED",
+      "unknownRef": "U14",
+      "architecturalNote": "Таблица замещения опубликована (en.wikibooks.org/wiki/Feng_Shui/Substitute_Star), но референс имеет ДВА пользовательских варианта применения (только между 1-й и 2-й горами / между любыми). В MVP не реализовано."
+    },
+    {
+      "id": "PH-TZDB",
+      "name": "historicalTimezoneDatabase",
+      "ru": "Историческая база часовых поясов и летнего времени",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U19",
+      "architecturalNote": "Референс заявляет учёт исторических изменений поясов и декретного/летнего времени. В MVP смещение задаёт пользователь вручную (TZ-5)."
+    },
+    {
+      "id": "PH-EOT",
+      "name": "equationOfTime",
+      "ru": "Уравнение времени",
+      "status": "NOT_VERIFIED",
+      "architecturalNote": "Для строгого истинного солнечного времени требуется уравнение времени; в MVP применяется только поправка на долготу (TZ-6)."
+    },
+    {
+      "id": "PH-G10",
+      "name": "personalityAspects",
+      "ru": "График изменения аспектов личности (十神)",
+      "status": "NOT_VERIFIED",
+      "architecturalNote": "Конкретный набор аспектов автора и формула не опубликованы."
+    },
+    {
+      "id": "PH-DESIRES",
+      "name": "desiresWillSpiritSocial",
+      "ru": "Желания, Воля, Дух, Социальные показатели",
+      "status": "NOT_VERIFIED",
+      "architecturalNote": "Запрошены в ТЗ, но как ОТДЕЛЬНЫЕ ГРАФИКИ в открытых материалах референса НЕ ПОДТВЕРЖДЕНЫ (GRAPH_CATALOG.md). Реализация «по смыслу названия» означала бы выдумывание алгоритма и запрещена доктриной проекта."
+    },
+    {
+      "id": "PH-A5",
+      "name": "sunriseSunset",
+      "ru": "Расчёт восхода и захода Солнца",
+      "status": "NOT_VERIFIED",
+      "unknownRef": "U19",
+      "architecturalNote": "Требуется для переменных двухчасовок (A5). Референс заявляет учёт углового радиуса диска (верхний край) и атмосферной рефракции. В MVP не реализовано; двухчасовки считаются равными."
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "K1",
+      "ru": "Фазы Ци: школы Кубни и Игельника дают разные знаки (+/0/−) для 5 из 12 фаз",
+      "status": "UNRESOLVED",
+      "handling": "обе таблицы хранятся раздельно, выбор пользователя, по умолчанию Кубни",
+      "affects": [
+        "D1",
+        "PH-D3"
+      ]
+    },
+    {
+      "id": "K2",
+      "ru": "Дневная звезда: три конкурирующих метода",
+      "status": "UNRESOLVED",
+      "handling": "реализуется jiazi по умолчанию; два других объявлены как поддерживаемые режимы",
+      "affects": [
+        "H6"
+      ]
+    },
+    {
+      "id": "K3",
+      "ru": "Шестое слияние 午+未: Огонь или Земля",
+      "status": "UNRESOLVED",
+      "handling": "используется Огонь, конфликт помечен в данных полем conflictNote",
+      "affects": [
+        "C1_C6"
+      ]
+    },
+    {
+      "id": "K4",
+      "ru": "Ранний/поздний час Цзы (早子/晚子)",
+      "status": "UNRESOLVED",
+      "handling": "переключатель lateZiNewDay, по умолчанию true",
+      "affects": [
+        "B3",
+        "B4"
+      ]
+    },
+    {
+      "id": "K5",
+      "ru": "Доли скрытых стволов: 60/30/10 против схем по числу дней владения",
+      "status": "UNRESOLVED",
+      "handling": "используется распространённая схема, доли вынесены в JSON",
+      "affects": [
+        "B8",
+        "PH-E1"
+      ]
+    },
+    {
+      "id": "K6",
+      "ru": "Число меридианов: 10 (референс) против 12 (акупунктура)",
+      "status": "RESOLVED",
+      "resolution": "Для данной системы строго 10 (5 цзан + 5 фу), т.к. 10 меридианов ↔ 10 небесных стволов. 12-меридианная схема относится к другой (акупунктурной) системе и не смешивается.",
+      "affects": [
+        "F1",
+        "F6"
+      ]
+    },
+    {
+      "id": "K7",
+      "ru": "Диапазон дат референса: 1706-2198 или 1705-2200",
+      "status": "UNRESOLVED",
+      "handling": "принят диапазон руководства пользователя как более авторитетный; на проект не влияет",
+      "affects": []
+    },
+    {
+      "id": "K8",
+      "ru": "Граница года для Гуа: Ли Чунь или лунный Новый год",
+      "status": "UNRESOLVED",
+      "handling": "используется Ли Чунь (согласуется с годовой летящей звездой); конфликт задокументирован",
+      "affects": [
+        "H12"
+      ]
+    },
+    {
+      "id": "K9",
+      "ru": "Годовая звезда: непрерывный счёт против правила трёх юаней",
+      "status": "RESOLVED",
+      "resolution": "PHASE 3: доказана тождественность на полном 180-летнем цикле (1864-2043, 0 расхождений), т.к. 60 лет ≡ 6 (mod 9) и смещение юаня (+3) компенсирует остаток.",
+      "affects": [
+        "H4"
+      ]
+    }
+  ],
+  "dependencyGraph": {
+    "A1": [],
+    "A2": [
+      "A1"
+    ],
+    "A6": [],
+    "A3": [
+      "A1",
+      "A2",
+      "A6"
+    ],
+    "A5": [
+      "A1",
+      "A2"
+    ],
+    "B1": [
+      "A3"
+    ],
+    "B2": [
+      "A3",
+      "B1"
+    ],
+    "B3": [
+      "A1",
+      "TZ"
+    ],
+    "B4": [
+      "B3"
+    ],
+    "B7": [
+      "A3",
+      "B1",
+      "B2"
+    ],
+    "B8": [],
+    "C1_C6": [
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "C11": [
+      "B1"
+    ],
+    "H12": [
+      "B1"
+    ],
+    "H1": [],
+    "H16": [],
+    "H3": [
+      "H16"
+    ],
+    "H2": [
+      "H1",
+      "H3",
+      "H16"
+    ],
+    "H4": [
+      "B1"
+    ],
+    "H5": [
+      "B1",
+      "B2"
+    ],
+    "H6": [
+      "A3",
+      "B3"
+    ],
+    "H7": [
+      "B1"
+    ],
+    "F2": [],
+    "F1": [
+      "E1"
+    ],
+    "F6": [
+      "F1"
+    ],
+    "E2": [
+      "B2"
+    ],
+    "D1": [
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ]
+  }
+}
