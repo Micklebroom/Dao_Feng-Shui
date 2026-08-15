@@ -1,0 +1,1378 @@
+{
+  "$schema": "research_summary.v1",
+  "phase": "PHASE 1 — RESEARCH + REVERSE ENGINEERING",
+  "note": "Приложение в этой фазе не разрабатывалось. Документ фиксирует результат независимого исследования программы-аналога.",
+  "target": {
+    "name": "Фэн-Шуй Удачи",
+    "latin": "FenShui Udachi",
+    "author": "Виктор Иванович Дегтярёв",
+    "coauthor": "О. Я. Куцый (v3+)",
+    "site": "feng-shui.net.ru",
+    "platform": "Windows desktop (.exe)",
+    "versions": [
+      "1.0 / 1.0L (2007-05)",
+      "2.0",
+      "3.0",
+      "4.0 (2010-05)"
+    ],
+    "companionApp": "Хроно-Био Часы 1.0 (2013-10)",
+    "dateRange": {
+      "v1": "1900-2100",
+      "v4_manual": "1706-2198",
+      "v4_marketing": "1705-2200",
+      "conflict": true
+    },
+    "origin": "Выросла из личной таблицы автора в MS Excel",
+    "licensing": "Закрытый коммерческий продукт; исходный код не использовался и недоступен"
+  },
+  "systems": [
+    {
+      "id": "chinese_calendar",
+      "ru": "Китайский солнечный календарь",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "solar_terms",
+      "ru": "24 солнечных термина",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "ganzhi",
+      "ru": "Небесные стволы и земные ветви",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "yin_yang",
+      "ru": "Инь/Ян",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "wuxing",
+      "ru": "Пять стихий (У-Син)",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "bazi",
+      "ru": "Ба-цзы / Четыре столпа",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "hidden_stems",
+      "ru": "Скрытые небесные стволы",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "dominant_hidden_stems",
+      "ru": "Доминирующие скрытые небесные стволы",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "luck_pillars",
+      "ru": "Столпы Удачи",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "conception_life_pillars",
+      "ru": "Столпы Зачатия и Жизни",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "life_palaces",
+      "ru": "Дворцы Жизни",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "qi_phases",
+      "ru": "Фазы Ци (проводимость) 3 степеней",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "interactions",
+      "ru": "Слияния, конфликты, наказания, вред",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "three_sha",
+      "ru": "Три Ша, Тай Суй, Суй По",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "symbolic_stars",
+      "ru": "Символические звёзды",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "life_cycle",
+      "ru": "Жизненный цикл (ЖЦ и ЖЦ-2 по М. Кубни)",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "meridians10",
+      "ru": "10 меридианов (5 цзан + 5 фу)",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "harmony_indices",
+      "ru": "Индексы гармоничности",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "health_index",
+      "ru": "Итоговый индекс здоровья",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "xuankong",
+      "ru": "Летящие звёзды Сюань Кун",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "substitute_stars",
+      "ru": "Замещающие звёзды (替卦)",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "gua_bazhai",
+      "ru": "Число Гуа и 8 домов",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "eight_omens",
+      "ru": "8 предзнаменований по триграмме здания",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "compatibility",
+      "ru": "Совместимость партнёров",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "personality_types",
+      "ru": "Типы личности",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "magic_square",
+      "ru": "Магический квадрат личности/даты",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "variable_hours",
+      "ru": "Переменные двухчасовки по восходу/заходу",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "timezone_history",
+      "ru": "История часовых поясов и летнего времени",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "magnetic_declination",
+      "ru": "Магнитное склонение",
+      "status": "VERIFIED"
+    }
+  ],
+  "pipeline": {
+    "source": "progV4_3.htm — окно «Подсчёт стихий»",
+    "structureStatus": "VERIFIED",
+    "coefficientsStatus": "NOT VERIFIED",
+    "userConfigurable": true,
+    "criticalNote": "Коэффициенты редактируются пользователем, поэтому канонического набора не существует даже в самой референсной программе.",
+    "columns": [
+      {
+        "n": 1,
+        "id": "NS",
+        "ru": "Элементы небесных стволов"
+      },
+      {
+        "n": 2,
+        "id": "SNS_merged",
+        "ru": "Элементы НС, ушедшие в слияния"
+      },
+      {
+        "n": 3,
+        "id": "SlNS",
+        "ru": "Элементы, появившиеся из слияний НС"
+      },
+      {
+        "n": 4,
+        "id": "ZV",
+        "ru": "Главные элементы земных ветвей"
+      },
+      {
+        "n": 5,
+        "id": "SZV_merged",
+        "ru": "Элементы ЗВ, ушедшие в слияния"
+      },
+      {
+        "n": 6,
+        "id": "SlZV",
+        "ru": "Элементы, появившиеся из слияний ЗВ"
+      },
+      {
+        "n": 7,
+        "id": "SNS",
+        "ru": "Скрытые небесные стволы"
+      },
+      {
+        "n": 8,
+        "id": "DSNS",
+        "ru": "Доминирующие скрытые небесные стволы"
+      },
+      {
+        "n": 9,
+        "id": "ZhC",
+        "ru": "Жизненный цикл (5 периодов)"
+      },
+      {
+        "n": 10,
+        "id": "ZhC2",
+        "ru": "Годовой жизненный цикл по М. Кубни"
+      },
+      {
+        "n": 11,
+        "id": "DOP",
+        "ru": "Дополнительные элементы (эмоции/стресс)"
+      },
+      {
+        "n": 12,
+        "id": "kol",
+        "ru": "Сумма отмеченных столбцов"
+      },
+      {
+        "n": 13,
+        "id": "SezS",
+        "ru": "Коэффициент сезонной силы"
+      },
+      {
+        "n": 14,
+        "id": "FC",
+        "ru": "Коэффициент фазы Ци"
+      },
+      {
+        "n": 15,
+        "id": "KZhC",
+        "ru": "Коэффициент жизненного цикла"
+      },
+      {
+        "n": 16,
+        "id": "KCh",
+        "ru": "Коэффициент часа рождения"
+      },
+      {
+        "n": 17,
+        "id": "result",
+        "ru": "Итоговая сила элементов"
+      }
+    ]
+  },
+  "meridians": {
+    "count": 10,
+    "status": "VERIFIED",
+    "correction": "Расхождение с более ранней реализацией: там было 12 меридианов (с перикардом и тройным обогревателем). Референс использует строго 10.",
+    "rationale": "10 меридианов = 10 небесных стволов = 5 стихий × Инь/Ян",
+    "source": "progV4_2.htm, progV4_3.htm — прямое перечисление автором",
+    "items": [
+      {
+        "id": "liver",
+        "ru": "Печень",
+        "element": "wood",
+        "polarity": "yin",
+        "type": "zang"
+      },
+      {
+        "id": "gallbladder",
+        "ru": "Желчный пузырь",
+        "element": "wood",
+        "polarity": "yang",
+        "type": "fu"
+      },
+      {
+        "id": "heart",
+        "ru": "Сердце",
+        "element": "fire",
+        "polarity": "yin",
+        "type": "zang"
+      },
+      {
+        "id": "smallIntestine",
+        "ru": "Тонкий кишечник",
+        "element": "fire",
+        "polarity": "yang",
+        "type": "fu"
+      },
+      {
+        "id": "spleenPancreas",
+        "ru": "Селезёнка с поджелудочной",
+        "element": "earth",
+        "polarity": "yin",
+        "type": "zang"
+      },
+      {
+        "id": "stomach",
+        "ru": "Желудок",
+        "element": "earth",
+        "polarity": "yang",
+        "type": "fu"
+      },
+      {
+        "id": "lung",
+        "ru": "Лёгкие",
+        "element": "metal",
+        "polarity": "yin",
+        "type": "zang"
+      },
+      {
+        "id": "largeIntestine",
+        "ru": "Толстый кишечник",
+        "element": "metal",
+        "polarity": "yang",
+        "type": "fu"
+      },
+      {
+        "id": "kidney",
+        "ru": "Почки",
+        "element": "water",
+        "polarity": "yin",
+        "type": "zang"
+      },
+      {
+        "id": "bladder",
+        "ru": "Мочевой пузырь",
+        "element": "water",
+        "polarity": "yang",
+        "type": "fu"
+      }
+    ],
+    "excluded": [
+      "pericardium",
+      "tripleBurner"
+    ],
+    "tripleBurnerAsGrouping": {
+      "status": "VERIFIED",
+      "upper": [
+        "heart",
+        "lung"
+      ],
+      "middle": [
+        "gallbladder",
+        "liver",
+        "stomach",
+        "spleenPancreas"
+      ],
+      "lower": [
+        "smallIntestine",
+        "largeIntestine",
+        "bladder",
+        "kidney"
+      ]
+    }
+  },
+  "aggregation": {
+    "status": "VERIFIED",
+    "note": "Единственная часть графической методики, где автор раскрыл математический смысл.",
+    "modes": [
+      {
+        "id": "chronic",
+        "ru": "Хронические",
+        "definition": "изменение средней силы элементов на данный период с заданным шагом",
+        "operation": "mean",
+        "typicalFor": "середина и конец периода"
+      },
+      {
+        "id": "acute",
+        "ru": "Острые",
+        "definition": "максимальное отклонение от среднего в меньшую или большую сторону на данный период",
+        "operation": "max_abs_deviation_from_mean",
+        "typicalFor": "начало периода"
+      }
+    ]
+  },
+  "algorithms": [
+    {
+      "id": "A1",
+      "name": "Юлианская дата",
+      "system": "astronomy",
+      "status": "VERIFIED",
+      "referenceImplStatus": "NOT VERIFIED",
+      "source": "Meeus ch.7"
+    },
+    {
+      "id": "A2",
+      "name": "Видимая долгота Солнца",
+      "system": "astronomy",
+      "status": "VERIFIED",
+      "source": "Meeus ch.25",
+      "check": "199.90894 vs 199.90895"
+    },
+    {
+      "id": "A3",
+      "name": "Моменты 24 солнечных терминов",
+      "system": "calendar",
+      "status": "PARTIALLY VERIFIED",
+      "limitation": "точность ~0.01° ≈ ±15 мин"
+    },
+    {
+      "id": "A4",
+      "name": "Часовые пояса, летнее время, истинное солнечное время",
+      "system": "normalization",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "A5",
+      "name": "Переменные двухчасовки по восходу/заходу",
+      "system": "calendar",
+      "status": "VERIFIED",
+      "source": "prog_new.htm"
+    },
+    {
+      "id": "B1",
+      "name": "Столп года",
+      "system": "bazi",
+      "status": "VERIFIED",
+      "anchor": "1984 = 甲子"
+    },
+    {
+      "id": "B2",
+      "name": "Столп месяца",
+      "system": "bazi",
+      "status": "VERIFIED",
+      "rule": "五虎遁"
+    },
+    {
+      "id": "B3",
+      "name": "Столп дня",
+      "system": "bazi",
+      "status": "VERIFIED",
+      "formula": "S = (JDN_noon - 11) mod 60"
+    },
+    {
+      "id": "B4",
+      "name": "Столп часа",
+      "system": "bazi",
+      "status": "VERIFIED",
+      "rule": "五鼠遁"
+    },
+    {
+      "id": "B5",
+      "name": "Столп Зачатия",
+      "system": "author",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "B6",
+      "name": "Дом/Дворец Жизни",
+      "system": "author+traditional",
+      "status": "NOT VERIFIED",
+      "note": "два варианта: традиционный и новый"
+    },
+    {
+      "id": "B7",
+      "name": "Столпы Удачи",
+      "system": "bazi",
+      "status": "PARTIALLY VERIFIED",
+      "referenceImplStatus": "NOT VERIFIED",
+      "note": "v2.0: «новый современный авторский способ с точностью до дня»"
+    },
+    {
+      "id": "B8",
+      "name": "Скрытые небесные стволы",
+      "system": "bazi",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "B9",
+      "name": "Доминирующие скрытые стволы",
+      "system": "bazi",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "C1",
+      "name": "Слияния небесных стволов",
+      "system": "interactions",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "C2",
+      "name": "Шесть слияний ветвей",
+      "system": "interactions",
+      "status": "VERIFIED",
+      "conflict": "午+未 → Огонь или Земля"
+    },
+    {
+      "id": "C3",
+      "name": "Треугольники и сезонные группы",
+      "system": "interactions",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "C4",
+      "name": "Столкновения",
+      "system": "interactions",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "C5",
+      "name": "Вред",
+      "system": "interactions",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "C6",
+      "name": "Наказания",
+      "system": "interactions",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "C7",
+      "name": "Транзитные взаимодействия",
+      "system": "interactions",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "C8",
+      "name": "Приоритет видов слияний",
+      "system": "interactions",
+      "status": "NOT VERIFIED",
+      "critical": true
+    },
+    {
+      "id": "C9",
+      "name": "Изменение стихии личности при слияниях",
+      "system": "interactions",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "C10",
+      "name": "Пустые ветви (空亡)",
+      "system": "bazi",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "D1",
+      "name": "Фазы Ци 1/2/3 степени",
+      "system": "qi_phases",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "D2",
+      "name": "Таблица фаз Кубни vs Игельник",
+      "system": "qi_phases",
+      "status": "VERIFIED",
+      "note": "конфликт школ опубликован самим автором"
+    },
+    {
+      "id": "D3",
+      "name": "Числовой коэффициент фазы Ци",
+      "system": "qi_phases",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "E1",
+      "name": "Конвейер подсчёта стихий",
+      "system": "elements",
+      "status": "NOT VERIFIED",
+      "structureStatus": "VERIFIED"
+    },
+    {
+      "id": "E2",
+      "name": "Коэффициент сезонной силы",
+      "system": "elements",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "E3",
+      "name": "Жизненный цикл и его коэффициент",
+      "system": "elements",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "E4",
+      "name": "ЖЦ-2 по системе М. Кубни",
+      "system": "elements",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "E5",
+      "name": "Коэффициент часа рождения",
+      "system": "elements",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "E6",
+      "name": "Дополнительные элементы (эмоции)",
+      "system": "elements",
+      "status": "PARTIALLY VERIFIED",
+      "verifiedPart": "соответствие эмоций стихиям (五志)"
+    },
+    {
+      "id": "F1",
+      "name": "Сила 10 меридианов",
+      "system": "meridians",
+      "status": "NOT VERIFIED",
+      "verifiedPart": "состав и соответствие орган↔стихия↔полярность"
+    },
+    {
+      "id": "F2",
+      "name": "Режимы Острые/Хронические",
+      "system": "meridians",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "F3",
+      "name": "Индекс гармоничности (общий)",
+      "system": "meridians",
+      "status": "NOT VERIFIED",
+      "knownScale": "0-100 (примеры: 85, 8, 3, 4)"
+    },
+    {
+      "id": "F4",
+      "name": "Индексы гармоничности Ян и Инь",
+      "system": "meridians",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "F5",
+      "name": "Итоговый индекс здоровья",
+      "system": "meridians",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "F6",
+      "name": "Три обогревателя",
+      "system": "meridians",
+      "status": "PARTIALLY VERIFIED",
+      "verifiedPart": "состав групп"
+    },
+    {
+      "id": "F7",
+      "name": "Сумма Инь/Ян",
+      "system": "meridians",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "F8",
+      "name": "Разность Инь/Ян",
+      "system": "meridians",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "F10",
+      "name": "Коррекция меридианов с учётом стресса",
+      "system": "meridians",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "G1",
+      "name": "Деятельность",
+      "system": "derived",
+      "status": "PARTIALLY VERIFIED",
+      "verifiedPart": "по 5-элементной системе на основе 10 меридианов"
+    },
+    {
+      "id": "G2",
+      "name": "Индикатор Удачи",
+      "system": "derived",
+      "status": "PARTIALLY VERIFIED",
+      "verifiedPart": "компоновка и цветовая семантика"
+    },
+    {
+      "id": "G3",
+      "name": "Графики рождения детей и брака",
+      "system": "derived",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "G5",
+      "name": "Совместимость",
+      "system": "derived",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "G6",
+      "name": "Типы личности",
+      "system": "derived",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "G7",
+      "name": "Символические звёзды",
+      "system": "derived",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "G8",
+      "name": "Магический квадрат",
+      "system": "derived",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "id": "H1",
+      "name": "Полёт звёзд по Ло Шу",
+      "system": "xuankong",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "H2",
+      "name": "Геомантическая карта (3 карты)",
+      "system": "xuankong",
+      "status": "VERIFIED",
+      "externalValidation": "594/594 значений на 22 опубликованных картах"
+    },
+    {
+      "id": "H3",
+      "name": "Полярность звезды 5 в центре",
+      "system": "xuankong",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "H4",
+      "name": "Годовая звезда",
+      "system": "xuankong",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "H5",
+      "name": "Месячная звезда",
+      "system": "xuankong",
+      "status": "VERIFIED",
+      "note": "референс имеет настройку способа заполнения"
+    },
+    {
+      "id": "H6",
+      "name": "Дневная звезда",
+      "system": "xuankong",
+      "status": "PARTIALLY VERIFIED",
+      "conflict": "правило 甲子 vs правило солнцестояния"
+    },
+    {
+      "id": "H7",
+      "name": "Звезда цикла (периода)",
+      "system": "xuankong",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "H8",
+      "name": "Замещающие звёзды",
+      "system": "xuankong",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "H9",
+      "name": "Нетрадиционное расположение Горного дворца (90/180/270)",
+      "system": "xuankong",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "H10",
+      "name": "Особые комбинации (3-х, 10-ти, бусы, тюрьма)",
+      "system": "xuankong",
+      "status": "PARTIALLY VERIFIED"
+    },
+    {
+      "id": "H11",
+      "name": "Индексы благоприятности Дворцов",
+      "system": "xuankong",
+      "status": "NOT VERIFIED",
+      "authorQuote": "рассчитывается экспериментальным путем"
+    },
+    {
+      "id": "H12",
+      "name": "Число Гуа и 8 домов",
+      "system": "bazhai",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "H14",
+      "name": "3 Ша года/месяца/дня, Тай Суй",
+      "system": "xuankong",
+      "status": "PARTIALLY VERIFIED",
+      "verifiedPart": "для года"
+    },
+    {
+      "id": "H15",
+      "name": "Магнитное склонение",
+      "system": "geo",
+      "status": "VERIFIED"
+    }
+  ],
+  "graphs": [
+    {
+      "id": "G-01",
+      "ru": "10 меридианов",
+      "series": 10,
+      "seriesGroups": [
+        "все",
+        "янские (5)",
+        "иньские (5)"
+      ],
+      "timeScales": [
+        "десятилетия",
+        "годы",
+        "месяцы",
+        "дни",
+        "часы"
+      ],
+      "colorSemantics": "по стихиям, настраивается пользователем",
+      "dataSource": "столбец 17 конвейера",
+      "algorithmStatus": "NOT VERIFIED",
+      "visualStatus": "NOT VISUALLY VERIFIED",
+      "images": [
+        "progV4_2.files/image009-013.gif"
+      ]
+    },
+    {
+      "id": "G-02",
+      "ru": "Соотношение сумм иньских и янских",
+      "series": 2,
+      "algorithmStatus": "PARTIALLY VERIFIED",
+      "visualStatus": "NOT VISUALLY VERIFIED",
+      "images": [
+        "progV4_2.files/image014.gif"
+      ]
+    },
+    {
+      "id": "G-03",
+      "ru": "Сумма Инь/Ян",
+      "series": 2,
+      "algorithmStatus": "PARTIALLY VERIFIED",
+      "visualStatus": "NOT VISUALLY VERIFIED"
+    },
+    {
+      "id": "G-04",
+      "ru": "Разность Инь/Ян",
+      "series": 1,
+      "algorithmStatus": "PARTIALLY VERIFIED",
+      "visualStatus": "NOT VISUALLY VERIFIED"
+    },
+    {
+      "id": "G-05",
+      "ru": "Три обогревателя",
+      "series": 3,
+      "algorithmStatus": "PARTIALLY VERIFIED",
+      "compositionStatus": "VERIFIED",
+      "visualStatus": "NOT VISUALLY VERIFIED",
+      "images": [
+        "progV4_2.files/image015.gif"
+      ]
+    },
+    {
+      "id": "G-06",
+      "ru": "Индексы гармоничности (общий, янский, иньский)",
+      "series": 3,
+      "knownValues": [
+        85,
+        8,
+        3,
+        4
+      ],
+      "algorithmStatus": "NOT VERIFIED",
+      "visualStatus": "NOT VISUALLY VERIFIED",
+      "images": [
+        "progV4_2.files/image016-017.gif",
+        "analis7.files/image004-005.png"
+      ]
+    },
+    {
+      "id": "G-07",
+      "ru": "Итоговый индекс здоровья",
+      "series": 1,
+      "algorithmStatus": "NOT VERIFIED",
+      "inputsStatus": "VERIFIED",
+      "visualStatus": "NOT VISUALLY VERIFIED",
+      "images": [
+        "progV4_2.files/image018.gif"
+      ]
+    },
+    {
+      "id": "G-08",
+      "ru": "Конфликты, гармонии, наказания, символические звёзды",
+      "series": 4,
+      "dataType": "счётные величины",
+      "algorithmStatus": "PARTIALLY VERIFIED",
+      "visualStatus": "NOT VISUALLY VERIFIED",
+      "images": [
+        "progV4_2.files/image001-004.gif"
+      ]
+    },
+    {
+      "id": "G-09",
+      "ru": "Проводимость",
+      "series": 1,
+      "algorithmStatus": "PARTIALLY VERIFIED",
+      "visualStatus": "NOT VISUALLY VERIFIED",
+      "images": [
+        "progV4_2.files/image005.gif"
+      ]
+    },
+    {
+      "id": "G-10",
+      "ru": "Изменение аспектов личности",
+      "series": 10,
+      "algorithmStatus": "NOT VERIFIED",
+      "visualStatus": "NOT VISUALLY VERIFIED",
+      "images": [
+        "progV4_2.files/image006.gif"
+      ]
+    },
+    {
+      "id": "G-11",
+      "ru": "Благоприятные типы деятельности",
+      "series": 5,
+      "algorithmStatus": "PARTIALLY VERIFIED",
+      "visualStatus": "NOT VISUALLY VERIFIED",
+      "images": [
+        "progV4_2.files/image007.gif"
+      ]
+    },
+    {
+      "id": "G-12",
+      "ru": "Рождение детей и вступление в брак",
+      "series": 3,
+      "algorithmStatus": "NOT VERIFIED",
+      "visualStatus": "NOT VISUALLY VERIFIED",
+      "images": [
+        "progV4_2.files/image008.gif",
+        "progr3b.files/image011-022.gif"
+      ]
+    },
+    {
+      "id": "G-13",
+      "ru": "Индикатор Удачи",
+      "type": "панель, не линейный график",
+      "algorithmStatus": "PARTIALLY VERIFIED",
+      "layoutStatus": "VERIFIED",
+      "visualStatus": "NOT VISUALLY VERIFIED",
+      "images": [
+        "progV4_3.files/image006.jpg"
+      ]
+    },
+    {
+      "id": "G-14",
+      "ru": "Пентаграмма У-Син",
+      "type": "диаграмма",
+      "algorithmStatus": "VERIFIED",
+      "visualStatus": "NOT VISUALLY VERIFIED"
+    },
+    {
+      "id": "G-15",
+      "ru": "Магический квадрат личности/даты",
+      "type": "сетка 3x3",
+      "algorithmStatus": "NOT VERIFIED",
+      "visualStatus": "NOT VISUALLY VERIFIED"
+    }
+  ],
+  "requestedButNotFound": [
+    {
+      "ru": "Желания",
+      "finding": "отдельный график не подтверждён",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "ru": "Воля",
+      "finding": "отдельный график не подтверждён",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "ru": "Дух",
+      "finding": "косвенно: 五神 и Духи удачи/Демоны неудачи; отдельный график не подтверждён",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "ru": "Социальные показатели",
+      "finding": "косвенно: аспекты личности и типы деятельности",
+      "status": "NOT VERIFIED"
+    },
+    {
+      "ru": "Отношения",
+      "finding": "покрывается окном Совместимости и графиками брака, отдельного графика нет",
+      "status": "NOT VERIFIED"
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://feng-shui.net.ru/progr.htm",
+      "fetched": true,
+      "value": "список 34 возможностей Excel-таблицы автора; описание графиков меридианов"
+    },
+    {
+      "url": "https://feng-shui.net.ru/progr2.htm",
+      "fetched": true,
+      "value": "оглавление версий"
+    },
+    {
+      "url": "https://feng-shui.net.ru/progr3.htm",
+      "fetched": true,
+      "value": "оглавление примеров анализа"
+    },
+    {
+      "url": "https://feng-shui.net.ru/progr3a.htm",
+      "fetched": true,
+      "value": "принцип Су Джок / 5 элементов; графики с учётом и без учёта слияний"
+    },
+    {
+      "url": "https://feng-shui.net.ru/progr3b.htm",
+      "fetched": true,
+      "value": "12 кейсов графиков рождения детей"
+    },
+    {
+      "url": "https://feng-shui.net.ru/progr4.htm",
+      "fetched": true,
+      "value": "оглавление 5 разделов примеров"
+    },
+    {
+      "url": "https://feng-shui.net.ru/analis7.htm",
+      "fetched": true,
+      "value": "кейс В. Пельша; числа индекса гармоничности 85/8/3-4"
+    },
+    {
+      "url": "https://feng-shui.net.ru/progV1.htm",
+      "fetched": true,
+      "value": "структура главного окна v1.0, 5 зон"
+    },
+    {
+      "url": "https://feng-shui.net.ru/prog_new.htm",
+      "fetched": true,
+      "value": "v2.0: переменные двухчасовки, авторский расчёт столпов Удачи, цвета элементов"
+    },
+    {
+      "url": "https://feng-shui.net.ru/progV3_1.htm",
+      "fetched": true,
+      "value": "окно Летящих звёзд: 15 пунктов; окно Плана помещения"
+    },
+    {
+      "url": "https://feng-shui.net.ru/progV3_2.htm",
+      "fetched": true,
+      "value": "подробности окна Летящих звёзд, индексы Дворцов «экспериментальным путем»"
+    },
+    {
+      "url": "https://feng-shui.net.ru/prog_4_new.htm",
+      "fetched": true,
+      "value": "11 новшеств v4.0"
+    },
+    {
+      "url": "https://feng-shui.net.ru/progV4_1.htm",
+      "fetched": true,
+      "value": "главное окно v4.0, 5 зон, элементы управления"
+    },
+    {
+      "url": "https://feng-shui.net.ru/progV4_2.htm",
+      "fetched": true,
+      "value": "КАТАЛОГ ГРАФИКОВ; определения Острые/Хронические; 10 меридианов; индексы"
+    },
+    {
+      "url": "https://feng-shui.net.ru/progV4_3.htm",
+      "fetched": true,
+      "value": "окно Подсчёта стихий (17 столбцов); фазы Ци; Дворцы Жизни; Индикатор Удачи"
+    },
+    {
+      "url": "https://feng-shui.net.ru/progV4_4.htm",
+      "fetched": true,
+      "value": "настройки: координаты, приоритет слияний, методы звёзд, цвета, магнитное склонение"
+    },
+    {
+      "url": "https://feng-shui.net.ru/ChronoBioClock.1.0.htm",
+      "fetched": true,
+      "value": "смежная программа: 12 двухчасовок, меридианы, Ба-цзы, Аюрведа"
+    },
+    {
+      "url": "https://dzen.ru/a/Y_uMr1ADETu2rTUm",
+      "fetched": false,
+      "reason": "клиентский JS-рендеринг, пустое тело"
+    },
+    {
+      "url": "https://dzen.ru/a/Y_uZHVADETu21bIR",
+      "fetched": false,
+      "reason": "то же"
+    },
+    {
+      "url": "https://dzen.ru/a/Y_uZuXKXv3wyjwzy",
+      "fetched": false,
+      "reason": "то же"
+    },
+    {
+      "url": "https://dzen.ru/a/ZyT8TZtBBVy8auGp",
+      "fetched": false,
+      "reason": "то же"
+    },
+    {
+      "url": "https://dzen.ru/a/ZyT6ncDpFi-B7LnK",
+      "fetched": false,
+      "reason": "то же"
+    },
+    {
+      "url": "https://dzen.ru/a/ZyT4yWYKbipbusme",
+      "fetched": false,
+      "reason": "то же"
+    },
+    {
+      "url": "https://dzen.ru/video/watch/63d4364acbe4534dd4de37ae",
+      "fetched": false,
+      "reason": "видео, текст не извлекается"
+    },
+    {
+      "url": "https://en.wikibooks.org/wiki/Feng_Shui",
+      "fetched": true,
+      "value": "путь полёта, построение карт, замещающие звёзды"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Flying_Star_Feng_Shui",
+      "fetched": true,
+      "value": "24 горы, периоды, полярность звезды 5"
+    },
+    {
+      "url": "https://ytliu0.github.io/ChineseCalendar/sexagenary.html",
+      "fetched": true,
+      "value": "формула столпа дня, якорь 2019-01-27"
+    },
+    {
+      "url": "https://baike.baidu.com/en/item/Day%20Pillar%20Formula/1462903",
+      "fetched": true,
+      "value": "якорь 2000-03-01 = 戊午"
+    },
+    {
+      "url": "https://www.9starki.com/faq.htm",
+      "fetched": true,
+      "value": "конфликт правил дневной звезды"
+    },
+    {
+      "url": "https://heluo.nl/9-star-ki-calendar-day-stars-and-start-of-months/",
+      "fetched": true,
+      "value": "альтернативное правило дневной звезды"
+    },
+    {
+      "url": "https://tibet4u.ru/akupunktura-tkm/",
+      "fetched": true,
+      "value": "соответствие цзан-фу стихиям, подтверждение 5+5"
+    },
+    {
+      "url": "https://studfile.net/preview/9020568/page:18/",
+      "fetched": true,
+      "value": "5 органов цзан и 5 органов фу по теории 5 стихий"
+    }
+  ],
+  "visualVerification": {
+    "verified": [],
+    "notVerified": [
+      "Главное окно v1.0 (progV1.files/image011.png, image012.png)",
+      "Главное окно v4.0 (progV4_1.files/image001.jpg)",
+      "Элементы управления v4.0 (progV4_1.files/image002-033)",
+      "Окно Летящих звёзд (progV3_1.files/image001-003.gif, progV3_2.files/image001-011)",
+      "Окно Плана помещения (progV3_1.files/image004-006)",
+      "Окно Подсчёта стихий (progV4_3.files/image001.jpg)",
+      "Символические звёзды (progV4_3.files/image002.jpg)",
+      "Дворцы Жизни (progV4_3.files/image003-005)",
+      "Индикатор Удачи (progV4_3.files/image006.jpg)",
+      "Настройки (progV4_4.files/image001-012)",
+      "Все 18 графиков v4.0 (progV4_2.files/image001-018.gif)",
+      "5 графиков кейса Пельша (analis7.files/image001-005.png)",
+      "2 графика кейса 2004 (progr3a.files/image014-015.gif)",
+      "12 графиков рождения детей (progr3b.files/image011-022.gif)"
+    ],
+    "reason": "Изображения на feng-shui.net.ru не отдаются доступным инструментам (HTTP 500 при загрузке через fetch, прямой сетевой доступ из песочницы закрыт). Поиск изображений релевантных результатов не дал.",
+    "policy": "Содержимое неполученных изображений не реконструируется и не додумывается."
+  },
+  "verification_status": {
+    "summary": {
+      "systems_discovered": 29,
+      "algorithms_catalogued": 63,
+      "verified": 25,
+      "partially_verified": 21,
+      "inferred": 0,
+      "not_verified": 17,
+      "graphs_identified": 15,
+      "visual_elements_verified": 0,
+      "visual_elements_not_verified": 14,
+      "sources_total": 32,
+      "sources_fetched": 25,
+      "unknowns": 20,
+      "conflicts": 7
+    },
+    "note": "INFERRED = 0, поскольку в фазе исследования собственные гипотезы намеренно не выдвигались. Гипотезы будут помечаться INFERRED только на этапе проектирования."
+  },
+  "unknowns": [
+    {
+      "id": "U1",
+      "ru": "Числовые значения ВСЕХ коэффициентов конвейера подсчёта стихий (СезС, ФЦ, КЖЦ, КЧ, коэффициенты столбцов и столпов)",
+      "impact": "критический: определяет форму всех графиков",
+      "resolvable": "только через справку FenShui_4.chm или саму программу"
+    },
+    {
+      "id": "U2",
+      "ru": "Формула Индекса гармоничности меридианов («специальная методика»)",
+      "impact": "критический",
+      "known": "шкала около 0-100, интерпретация"
+    },
+    {
+      "id": "U3",
+      "ru": "Формула Итогового индекса здоровья",
+      "impact": "критический",
+      "known": "перечень входов"
+    },
+    {
+      "id": "U4",
+      "ru": "Формула перевода силы стихии в силу меридиана",
+      "impact": "критический",
+      "known": "состав 10 меридианов"
+    },
+    {
+      "id": "U5",
+      "ru": "Авторский способ расчёта столпов Удачи «с точностью до дня»",
+      "impact": "высокий"
+    },
+    {
+      "id": "U6",
+      "ru": "Расчёт столпа Зачатия и Дома Жизни (2 варианта)",
+      "impact": "средний"
+    },
+    {
+      "id": "U7",
+      "ru": "Приоритет видов слияний при конкуренции",
+      "impact": "высокий"
+    },
+    {
+      "id": "U8",
+      "ru": "Правило выбора доминирующего скрытого ствола (ДСНС)",
+      "impact": "высокий"
+    },
+    {
+      "id": "U9",
+      "ru": "Система жизненного цикла М. Кубни (ЖЦ-2)",
+      "impact": "средний"
+    },
+    {
+      "id": "U10",
+      "ru": "Таблица соответствия «стихия → тип деятельности»",
+      "impact": "средний"
+    },
+    {
+      "id": "U11",
+      "ru": "Формула Индикатора Удачи",
+      "impact": "средний",
+      "known": "компоновка и цветовая семантика"
+    },
+    {
+      "id": "U12",
+      "ru": "Алгоритм графиков рождения детей и брака («интегрируются различные аспекты»)",
+      "impact": "средний"
+    },
+    {
+      "id": "U13",
+      "ru": "Индексы благоприятности Дворцов («экспериментальным путем»)",
+      "impact": "низкий"
+    },
+    {
+      "id": "U14",
+      "ru": "Способ заполнения квадрата Ло Шу месяца (варианты в настройках)",
+      "impact": "средний"
+    },
+    {
+      "id": "U15",
+      "ru": "Способ определения звезды дня (варианты в настройках)",
+      "impact": "средний"
+    },
+    {
+      "id": "U16",
+      "ru": "Критерии особых комбинаций звёзд (3-х, 10-ти, бусы, тюрьма)",
+      "impact": "низкий"
+    },
+    {
+      "id": "U17",
+      "ru": "Функция коррекции меридианов с учётом стресса",
+      "impact": "низкий"
+    },
+    {
+      "id": "U18",
+      "ru": "Магический квадрат личности и расчётной даты",
+      "impact": "низкий"
+    },
+    {
+      "id": "U19",
+      "ru": "Точный внешний вид всех окон и графиков",
+      "impact": "высокий для визуального соответствия",
+      "reason": "изображения недоступны"
+    },
+    {
+      "id": "U20",
+      "ru": "Диапазон дат v4.0: 1706-2198 или 1705-2200",
+      "impact": "низкий"
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "K1",
+      "ru": "Фазы Ци: школа Кубни vs школа Игельника — разные знаки (+/0/-) для 5 из 12 фаз",
+      "publishedBy": "сам автор референса",
+      "impact": "влияет на коэффициент ФЦ и, следовательно, на все графики",
+      "resolved": false
+    },
+    {
+      "id": "K2",
+      "ru": "Дневная звезда: правило первого дня 甲子 после солнцестояния vs правило самого дня солнцестояния",
+      "impact": "расхождение до нескольких дней",
+      "resolved": false
+    },
+    {
+      "id": "K3",
+      "ru": "Шестое слияние 午+未: Огонь или Земля",
+      "impact": "локальный",
+      "resolved": false
+    },
+    {
+      "id": "K4",
+      "ru": "Ранний/поздний час Цзы (早子/晚子)",
+      "impact": "рождения 23:00-24:00",
+      "resolved": false
+    },
+    {
+      "id": "K5",
+      "ru": "Доли скрытых стволов: 60/30/10 vs схемы по числу дней владения",
+      "impact": "высокий",
+      "resolved": false
+    },
+    {
+      "id": "K6",
+      "ru": "Число меридианов: 10 (референс, по числу небесных стволов) vs 12 (классическая акупунктура)",
+      "impact": "структурный",
+      "resolved": true,
+      "resolution": "Для данной программы строго 10; подтверждено дважды прямым перечислением автора"
+    },
+    {
+      "id": "K7",
+      "ru": "Диапазон дат v4.0 в разных разделах сайта",
+      "impact": "низкий",
+      "resolved": false
+    }
+  ],
+  "correctionsToPriorWork": [
+    {
+      "ru": "Меридианов должно быть 10, а не 12: исключить перикард и тройной обогреватель",
+      "severity": "критическая",
+      "affects": "data/meridians.json, src/engine/meridians.js, все графики и тесты"
+    },
+    {
+      "ru": "«Три обогревателя» — это группирующий график (верхний/средний/нижний), а не меридианы",
+      "severity": "высокая"
+    },
+    {
+      "ru": "Добавить режимы агрегации «Острые» и «Хронические» (среднее и максимальное отклонение от среднего) — это VERIFIED часть методики",
+      "severity": "высокая"
+    },
+    {
+      "ru": "Добавить фазы Ци (проводимость) 3 степеней как отдельную подсистему с выбором школы Кубни/Игельник",
+      "severity": "средняя"
+    },
+    {
+      "ru": "Ориентация Ло Шу: подтверждено «Юг сверху» по умолчанию + прокрутка ориентации + расположение Горного дворца 90/180/270",
+      "severity": "средняя"
+    },
+    {
+      "ru": "Индикатор Удачи — панель со счётчиком, а не линейный график",
+      "severity": "средняя"
+    },
+    {
+      "ru": "Добавить графики: Три обогревателя, Разность Инь/Ян, счётчики конфликтов/гармоний/наказаний",
+      "severity": "средняя"
+    }
+  ]
+}
