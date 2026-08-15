@@ -63,23 +63,23 @@ test('Периоды Сань Юань', () => {
 
 test('Годовые звёзды: 2024=3, 2025=2, 2026=1 (независимый источник по 2026)', () => {
   // fengshuibalanz.com: «Annual Flying Star 1 in the CENTRAL Palace» для 2026
-  assert.equal(annualStar(2024), 3);
-  assert.equal(annualStar(2025), 2);
-  assert.equal(annualStar(2026), 1);
-  assert.equal(annualStar(2027), 9);
-  assert.equal(annualStar(2023), 4);
+  assert.equal(annualStar(2024, T.anchors), 3);
+  assert.equal(annualStar(2025, T.anchors), 2);
+  assert.equal(annualStar(2026, T.anchors), 1);
+  assert.equal(annualStar(2027, T.anchors), 9);
+  assert.equal(annualStar(2023, T.anchors), 4);
 });
 
 test('Годовые звёзды убывают с периодом 9', () => {
   for (let y = 1900; y < 2100; y++) {
-    assert.equal(annualStar(y + 9), annualStar(y), `год ${y}`);
-    assert.equal(annualStar(y + 1), wrap9(annualStar(y) - 1));
+    assert.equal(annualStar(y + 9, T.anchors), annualStar(y, T.anchors), `год ${y}`);
+    assert.equal(annualStar(y + 1, T.anchors), wrap9(annualStar(y, T.anchors) - 1));
   }
 });
 
 test('Годовая звезда 2026 в центре согласуется с размещением звёзд по дворцам', () => {
   // fengshuibalanz.com для 2026: звезда 8 — Восток, 2 — СЗ, 5 — Юг, 7 — ЮЗ, 3 — Запад
-  const g = flyStars(annualStar(2026), true, T.luoshu);
+  const g = flyStars(annualStar(2026, T.anchors), true, T.luoshu);
   assert.equal(g.C, 1);
   assert.equal(g.E, 8, 'звезда 8 на востоке');
   assert.equal(g.NW, 2, 'звезда 2 на северо-западе');

@@ -11,6 +11,7 @@ const steps = [
   ['UNIT       (модульные тесты)', ['node', ['--test', 'tests/unit/astro.test.js', 'tests/unit/ganzhi.test.js', 'tests/unit/flyingstars.test.js']]],
   ['INTEGRATION(интеграционные)', ['node', ['--test', 'tests/integration/reference-charts.test.js', 'tests/integration/engine.test.js', 'tests/integration/model.test.js', 'tests/integration/bugfix.test.js']]],
   ['ARCHITECTURE(правила слоёв)', ['node', ['--test', 'tests/architecture/data-sensitivity.test.js']]],
+  ['GOLDEN     (эталонные случаи)', ['node', ['--test', 'tests/golden/runner.test.js']]],
   ['CONSOLE    (чистота консоли)', ['node', ['tools/console-check.js']]],
   ['JSON       (пакет данных)', ['node', ['tools/validate-json.js']]],
   ['SPEC       (спецификация)', ['node', ['tools/validate-spec.js']]],

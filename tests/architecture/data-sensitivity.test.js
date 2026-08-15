@@ -20,22 +20,23 @@ const T = loadTables();
 const BIRTH = { year: 2022, month: 5, day: 1, hour: 19, minute: 14, gender: 'male', tzOffsetHours: 3 };
 
 test('Чувствительность: конверсия столпов удачи (3 дня = 1 год)', () => {
-  const base = computeLuckPillars(BIRTH, { rules: T.luckRules });
+  const base = computeLuckPillars(BIRTH, { rules: T.luckRules, anchors: T.anchors, zi: T.ziRule });
   const changed = computeLuckPillars(BIRTH, {
-    rules: { ...T.luckRules, daysPerYear: T.luckRules.daysPerYear * 2 }
+    rules: { ...T.luckRules, daysPerYear: T.luckRules.daysPerYear * 2 },
+    anchors: T.anchors, zi: T.ziRule
   });
   assert.notEqual(changed.startAge, base.startAge,
     'Изменение daysPerYear не повлияло — константа зашита в коде');
   assert.ok(Math.abs(changed.startAge - base.startAge / 2) < 1e-9,
     'Удвоение daysPerYear обязано вдвое уменьшить начальный возраст');
 
-  const restored = computeLuckPillars(BIRTH, { rules: T.luckRules });
+  const restored = computeLuckPillars(BIRTH, { rules: T.luckRules, anchors: T.anchors, zi: T.ziRule });
   assert.equal(restored.startAge, base.startAge, 'Возврат значения обязан вернуть исходный результат');
 });
 
 test('Чувствительность: длина столпа удачи (10 лет)', () => {
-  const base = computeLuckPillars(BIRTH, { rules: T.luckRules });
-  const changed = computeLuckPillars(BIRTH, { rules: { ...T.luckRules, pillarYears: 20 } });
+  const base = computeLuckPillars(BIRTH, { rules: T.luckRules, anchors: T.anchors, zi: T.ziRule });
+  const changed = computeLuckPillars(BIRTH, { rules: { ...T.luckRules, pillarYears: 20 }, anchors: T.anchors, zi: T.ziRule });
   const stepBase = base.pillars[1].startAge - base.pillars[0].startAge;
   const stepChanged = changed.pillars[1].startAge - changed.pillars[0].startAge;
   assert.equal(stepBase, T.luckRules.pillarYears);
@@ -65,6 +66,14 @@ test('Чувствительность: якорь периодов Сань Ю�
   };
   const changed = periodForYear(far, shifted);
   assert.notEqual(changed, base, 'Якорь периодов не пришёл из данных');
+});
+
+test('CONST-1: вызов без данных ПАДАЕТ, а не откатывается на литерал (RT-03)', () => {
+  // Раньше все три функции имели молчаливый откат вида `anchors ? ... : 1984`,
+  // из-за чего правило «JSON управляет расчётом» было фиктивным.
+  assert.throws(() => yearIndexFromSolarYear(2026), /CONST-1/);
+  assert.throws(() => annualStar(2026), /CONST-1/);
+  assert.throws(() => computeLuckPillars(BIRTH, { anchors: T.anchors }), /CONST-1/);
 });
 
 test('Значения в данных совпадают с прежними литералами (регрессия не изменила результаты)', () => {

@@ -89,6 +89,17 @@ export function assembleTables(map) {
     termType: t.luckPillars.countingTarget.termType,
     defaultRounding: t.luckPillars.rounding.default
   });
+  // RT-02: режим часа Цзы (конфликт K4) задаётся ДАННЫМИ, а не кодом.
+  // bazi.json объявляет режим по умолчанию; движок обязан читать его отсюда.
+  const ziModes = t.bazi.ziHourConflict.modes;
+  const ziDefault = ziModes.find((m) => m.default) || ziModes[0];
+  t.ziRule = Object.freeze({
+    mode: ziDefault.id,
+    earlyZiNewDay: ziDefault.id === 'earlyZi',
+    conflictRef: t.bazi.ziHourConflict.conflictRef,
+    status: t.bazi.ziHourConflict.status
+  });
+
   t.dateRange = Object.freeze({
     from: cal.range.engineSupported.from,
     to: cal.range.engineSupported.to

@@ -56,7 +56,9 @@ function recalc() {
       applyCombos: state.applyCombos
     });
     state.model = buildProfile(state.birth, T, { applyCombos: state.applyCombos });
-    state.luck = computeLuckPillars(state.birth, { count: 12, rules: T.luckRules });
+    state.luck = computeLuckPillars(state.birth, {
+      count: 12, rules: T.luckRules, anchors: T.anchors, zi: T.ziRule
+    });
     state.stars = computeFlyingStarsView(state.building, state.moment, T);
     setStatus('Расчёт выполнен за ' + (performance.now() - t0).toFixed(1) + ' мс', '');
   } catch (e) {

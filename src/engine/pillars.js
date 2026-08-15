@@ -5,7 +5,7 @@
  * Слой расчёта. Не содержит ничего, связанного с UI.
  */
 
-import { julianDayFromUTC } from './astro.js';
+import { julianDayFromUTC, utcFromJulianDay } from './astro.js';
 import {
   mod, dayIndexForDate, yearIndexFromSolarYear, monthStemIndex, monthBranchIndex,
   hourBranchIndex, hourStemIndex, splitSexagenary, solarMonthAt, jieTermsForYear
@@ -42,10 +42,9 @@ export function normalizeInput(input) {
  * Полный расчёт четырёх столпов.
  * @returns {{year,month,day,hour}} каждый — {stem,branch,index}
  */
-export function computeFourPillars(input, anchors = null) {
+export function computeFourPillars(input, anchors = null, zi = null) {
   const norm = normalizeInput(input);
   const { year, month, day, hour = 12, minute = 0 } = input;
-  const { lateZiNewDay = true } = input;
 
   // Локальный момент, выраженный как JD, для сравнения с границами сезонов.
   const sm = solarMonthAt(norm.jdUTC, year);
@@ -57,10 +56,28 @@ export function computeFourPillars(input, anchors = null) {
   const mStem = monthStemIndex(ySplit.stem, sm.ordinal);
   const mBranch = monthBranchIndex(sm.ordinal);
 
-  const dIdx = dayIndexForDate(year, month, day, hour, { lateZiNewDay });
+  /*
+   * RT-10 / правила TZ-3 и TZ-4. Раньше столпы дня и часа брались из СЫРЫХ
+   * локальных чисел input.{year,month,day,hour}, тогда как год и месяц шли от
+   * instantJD. Это и есть дефект A-08: при поправке истинного солнечного
+   * времени или сдвиге пояса шкалы расходились, а golden-случай GT-B3-04
+   * (столпы дня при UTC+12 и UTC-12 обязаны различаться) проваливался.
+   *
+   * Теперь локальная гражданская дата ВОССТАНАВЛИВАЕТСЯ из единого момента:
+   *   localJD = instantJD + tzOffsetHours/24
+   * и столп дня берётся уже по ней. Все четыре столпа выведены из одной шкалы.
+   *
+   * Режим часа Цзы (конфликт K4) приходит из данных: см. RT-02.
+   */
+  const tz = input.tzOffsetHours || 0;
+  const localJD = norm.jdUTC + tz / 24;
+  const loc = utcFromJulianDay(localJD);
+
+  const earlyZiNewDay = zi ? zi.earlyZiNewDay : true;
+  const dIdx = dayIndexForDate(loc.year, loc.month, loc.day, loc.hour, { earlyZiNewDay });
   const dSplit = splitSexagenary(dIdx);
 
-  const hBranch = hourBranchIndex(hour);
+  const hBranch = hourBranchIndex(loc.hour);
   const hStem = hourStemIndex(dSplit.stem, hBranch);
 
   return {
@@ -97,7 +114,7 @@ export function computeLuckPillars(input, options = {}) {
   // ARCH-1: rules приходит из data/luck_pillars.json через движок.
   const { count = 10, rounding = 'exact', rules = null } = options;
 
-  const fp = computeFourPillars(input, options.anchors || null);
+  const fp = computeFourPillars(input, options.anchors || null, options.zi || null);
   const yearStem = fp.pillars.year.stem;
   const yearStemIsYang = mod(yearStem, 2) === 0;
   const forward = (gender === 'male') === yearStemIsYang;
@@ -120,10 +137,13 @@ export function computeLuckPillars(input, options = {}) {
     deltaDays = birthJD - prev.jd;
   }
 
-  // ARCH-1: 3 дня = 1 год и длина столпа 10 лет приходят из
-  // data/luck_pillars.json, а не зашиты числами.
-  const daysPerYear = rules ? rules.daysPerYear : 3;
-  const pillarYears = rules ? rules.pillarYears : 10;
+  // RT-03 / CONST-1: конверсия «3 дня = 1 год» и длина столпа обязаны
+  // прийти из data/luck_pillars.json. Молчаливый откат удалён.
+  if (!rules || typeof rules.daysPerYear !== 'number' || typeof rules.pillarYears !== 'number') {
+    throw new Error('CONST-1: не переданы правила столпов удачи (luck_pillars.json -> conversion/pillarLength)');
+  }
+  const daysPerYear = rules.daysPerYear;
+  const pillarYears = rules.pillarYears;
   let startAge = deltaDays / daysPerYear;
   if (rounding === 'floor') startAge = Math.floor(startAge);
   else if (rounding === 'round') startAge = Math.round(startAge);
@@ -149,6 +169,6 @@ export function computeLuckPillars(input, options = {}) {
 /**
  * Столпы текущей даты (год/месяц/день/час) для произвольного момента.
  */
-export function computeDatePillars(input) {
-  return computeFourPillars({ ...input, gender: undefined });
+export function computeDatePillars(input, anchors = null, zi = null) {
+  return computeFourPillars({ ...input, gender: undefined }, anchors, zi);
 }

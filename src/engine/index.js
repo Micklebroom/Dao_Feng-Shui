@@ -32,7 +32,7 @@ export const ENGINE_VERSION = '0.4.0-mvp';
 export function computeProfile(birth, tables, options = {}) {
   const { applyCombos = true } = options;
 
-  const fp = computeFourPillars(birth, tables.anchors);
+  const fp = computeFourPillars(birth, tables.anchors, tables.ziRule);
   const roles = ['year', 'month', 'day', 'hour'];
   const pillarArr = roles.map((r) => ({ ...fp.pillars[r], role: r }));
 
@@ -107,7 +107,9 @@ export function computeTimeSeries(birth, tables, options = {}) {
 
   let luck = null;
   if (includeLuck && (birth.gender === 'male' || birth.gender === 'female')) {
-    luck = computeLuckPillars(birth, { count: 12, rules: tables.luckRules });
+    luck = computeLuckPillars(birth, {
+      count: 12, rules: tables.luckRules, anchors: tables.anchors, zi: tables.ziRule
+    });
   }
 
   const points = [];
@@ -280,7 +282,7 @@ export function computeFlyingStarsView(building, moment, tables) {
   const period = building.period ?? periodForYear(buildYear, tables.luoshu);
   const chart = computeGeomanticChart({ period, facingDegrees }, tables);
 
-  const mp = computeFourPillars({ ...moment, gender: undefined });
+  const mp = computeFourPillars({ ...moment, gender: undefined }, tables.anchors, tables.ziRule);
   const yBranch = tables.branches.items[mp.pillars.year.branch];
 
   const yStar = annualStar(mp.solarYear, tables.anchors);

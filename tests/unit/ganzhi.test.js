@@ -35,20 +35,22 @@ test('Столп дня: непрерывность цикла 60', () => {
   assert.equal(dayIndexForDate(2020, 1, 1, 12), dayIndexForDate(2020, 3, 1, 12));
 });
 
-test('Поздний час Цзы переносит столп дня на следующий день', () => {
-  const a = dayIndexForDate(2024, 5, 10, 22, { lateZiNewDay: true });
-  const b = dayIndexForDate(2024, 5, 10, 23, { lateZiNewDay: true });
+// RT-02: название приведено в соответствие с поведением. Перенос дня на 23:00 —
+// это школа РАННЕГО Цзы (早子); прежнее имя вводило в заблуждение.
+test('Ранний час Цзы (23:00) переносит столп дня на следующий день', () => {
+  const a = dayIndexForDate(2024, 5, 10, 22, { earlyZiNewDay: true });
+  const b = dayIndexForDate(2024, 5, 10, 23, { earlyZiNewDay: true });
   assert.equal(b, mod(a + 1, 60));
-  const c = dayIndexForDate(2024, 5, 10, 23, { lateZiNewDay: false });
+  const c = dayIndexForDate(2024, 5, 10, 23, { earlyZiNewDay: false });
   assert.equal(c, a);
 });
 
 test('Столп года: 1984 = 甲子, 2026 = 丙午', () => {
-  assert.equal(yearIndexFromSolarYear(1984), 0);
-  assert.equal(name(yearIndexFromSolarYear(1984)), '甲子');
-  assert.equal(name(yearIndexFromSolarYear(2026)), '丙午');
-  assert.equal(name(yearIndexFromSolarYear(2024)), '甲辰');
-  assert.equal(name(yearIndexFromSolarYear(2025)), '乙巳');
+  assert.equal(yearIndexFromSolarYear(1984, T.anchors), 0);
+  assert.equal(name(yearIndexFromSolarYear(1984, T.anchors)), '甲子');
+  assert.equal(name(yearIndexFromSolarYear(2026, T.anchors)), '丙午');
+  assert.equal(name(yearIndexFromSolarYear(2024, T.anchors)), '甲辰');
+  assert.equal(name(yearIndexFromSolarYear(2025, T.anchors)), '乙巳');
 });
 
 test('Столп месяца: правило «пяти тигров» (五虎遁)', () => {

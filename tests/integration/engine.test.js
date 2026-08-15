@@ -61,8 +61,8 @@ test('Меридианы: значения неотрицательны и по�
 });
 
 test('Столпы удачи: направление и последовательность', () => {
-  const male = computeLuckPillars({ ...SUBJECT, gender: 'male' }, { count: 8 });
-  const female = computeLuckPillars({ ...SUBJECT, gender: 'female' }, { count: 8 });
+  const male = computeLuckPillars({ ...SUBJECT, gender: 'male' }, { count: 8, rules: T.luckRules, anchors: T.anchors, zi: T.ziRule });
+  const female = computeLuckPillars({ ...SUBJECT, gender: 'female' }, { count: 8, rules: T.luckRules, anchors: T.anchors, zi: T.ziRule });
   // 1967 Дин(3) — иньский ствол; мужчина -> назад, женщина -> вперёд
   assert.equal(male.forward, false);
   assert.equal(female.forward, true);
@@ -81,9 +81,9 @@ test('Столпы удачи: направление и последовате�
 });
 
 test('Столпы удачи: мужчина в ян-год идёт вперёд', () => {
-  const m = computeLuckPillars({ year: 1984, month: 6, day: 15, hour: 10, gender: 'male' }, { count: 3 });
+  const m = computeLuckPillars({ year: 1984, month: 6, day: 15, hour: 10, gender: 'male' }, { count: 3, rules: T.luckRules, anchors: T.anchors, zi: T.ziRule });
   assert.equal(m.forward, true, '1984 Цзя — ян; мужчина -> вперёд');
-  const f = computeLuckPillars({ year: 1984, month: 6, day: 15, hour: 10, gender: 'female' }, { count: 3 });
+  const f = computeLuckPillars({ year: 1984, month: 6, day: 15, hour: 10, gender: 'female' }, { count: 3, rules: T.luckRules, anchors: T.anchors, zi: T.ziRule });
   assert.equal(f.forward, false);
 });
 
@@ -221,11 +221,32 @@ test('Граница Ли Чунь меняет столп года', () => {
   assert.notEqual(before.pillarLabels.year.han, after.pillarLabels.year.han);
 });
 
-test('Часовой пояс влияет на результат у границы суток', () => {
-  const a = computeProfile({ year: 2024, month: 5, day: 10, hour: 1, tzOffsetHours: 12, gender: 'male' }, T);
-  const b = computeProfile({ year: 2024, month: 5, day: 10, hour: 1, tzOffsetHours: -12, gender: 'male' }, T);
-  assert.ok(a.pillarLabels.hour.han === b.pillarLabels.hour.han);
-  // Столп месяца может различаться только у самых границ сезонов; проверяем,
-  // что расчёт не падает и нормализация фиксируется в результате.
-  assert.notEqual(a.normalization.jdUTC, b.normalization.jdUTC);
+test('Часовой пояс меняет столпы у границы сезона (регрессия A-08)', () => {
+  // RT-04: прежняя версия утверждала только notEqual(jdUTC) — величину,
+  // которая различается ПО ОПРЕДЕЛЕНИЮ при разных поясах, даже если все
+  // столпы посчитаны неверно. Тест носил имя, обещавшее проверку влияния
+  // пояса на результат, но не проверял ни одного столпа.
+  //
+  // Ли Чунь 2025 наступает 03.02 в 14:07 UTC. Локальные 04.02 01:00
+  // при UTC+0 — это уже новый солнечный год, а при UTC+14 — ещё старый.
+  const early = computeProfile(
+    { year: 2025, month: 2, day: 4, hour: 1, minute: 0, tzOffsetHours: 0, gender: 'male' }, T);
+  const late = computeProfile(
+    { year: 2025, month: 2, day: 4, hour: 1, minute: 0, tzOffsetHours: 14, gender: 'male' }, T);
+
+  assert.equal(early.solarYear, 2025, 'UTC+0: момент уже после Ли Чунь');
+  assert.equal(late.solarYear, 2024, 'UTC+14: момент ещё до Ли Чунь');
+  assert.notDeepEqual(early.pillars.year, late.pillars.year, 'столп года обязан различаться');
+  assert.notDeepEqual(early.pillars.month, late.pillars.month, 'столп месяца обязан различаться');
+});
+
+test('Единая шкала времени: поправка солнечного времени влияет на столп дня (A-08)', () => {
+  // Второй половина регрессии A-08: раньше день и час брались из сырых
+  // локальных чисел, поэтому поправка истинного солнечного времени меняла
+  // только год и месяц. Теперь все четыре столпа идут из одного момента.
+  const base = { year: 2024, month: 5, day: 10, hour: 23, minute: 50, tzOffsetHours: 3, gender: 'male' };
+  const plain = computeProfile({ ...base }, T);
+  const solar = computeProfile({ ...base, useTrueSolarTime: true, longitude: 60 }, T);
+  assert.notDeepEqual(plain.pillars.day, solar.pillars.day,
+    'поправка истинного солнечного времени обязана смещать столп дня');
 });

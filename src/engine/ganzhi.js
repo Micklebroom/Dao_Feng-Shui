@@ -36,14 +36,20 @@ export function jdnAtNoon(year, month, day) {
 
 /**
  * Day pillar index for a civil date/time.
- * @param {object} opts.lateZiNewDay If true (default), the zi hour beginning at
- *   23:00 belongs to the NEXT day pillar (早子/晚子 convention, "早晚子时").
- *   This is a documented school difference — see docs/CONFLICTS.md#late-zi.
+ *
+ * RT-02: флаг переименован. Прежнее имя `lateZiNewDay` означало ПРОТИВОПОЛОЖНОЕ
+ * тому, что делало: при значении true день менялся в 23:00, то есть работала
+ * школа РАННЕГО Цзы (早子). Теперь имя отражает поведение.
+ *
+ * @param {object} opts.earlyZiNewDay Если true, час Цзы, начинающийся в 23:00,
+ *   относится к СЛЕДУЮЩЕМУ столпу дня (школа 早子). Если false — день меняется
+ *   в 00:00 (школа 晚子). Это неразрешённый конфликт K4: обе школы существуют,
+ *   выбор задаётся данными (data/bazi.json -> ziHourConflict), а не кодом.
  */
 export function dayIndexForDate(year, month, day, hour = 12, opts = {}) {
-  const { lateZiNewDay = true } = opts;
+  const { earlyZiNewDay = true } = opts;
   let jdn = jdnAtNoon(year, month, day);
-  if (lateZiNewDay && hour >= 23) jdn += 1;
+  if (earlyZiNewDay && hour >= 23) jdn += 1;
   return sexagenaryDayIndexFromJDN(jdn);
 }
 
@@ -55,12 +61,14 @@ export function dayIndexForDate(year, month, day, hour = 12, opts = {}) {
  * Source: masterseanchan.com/bazi-60-jiazi ("Cycle anchor: 1984 = 甲子"), and
  * aa.quae.nl (n = mod(a+56,60)+1 gives 1984 -> 1).
  */
-export function yearIndexFromSolarYear(solarYear, anchors = null) {
-  // ARCH-1 / CONST-1: якорь берётся из data/calendar.json (epochs.yearPillarAnchor).
-  // Значение по умолчанию сохранено ТОЛЬКО для обратной совместимости старых
-  // вызовов; рабочий путь всегда передаёт anchors из данных.
-  const anchor = anchors ? anchors.yearPillar : 1984;
-  return mod(solarYear - anchor, 60);
+export function yearIndexFromSolarYear(solarYear, anchors) {
+  // RT-03 / CONST-1: якорь ОБЯЗАН прийти из data/calendar.json
+  // (epochs.yearPillarAnchor). Молчаливый откат на литерал 1984 удалён:
+  // он позволял обойти данные незаметно и делал правило CONST-1 фиктивным.
+  if (!anchors || typeof anchors.yearPillar !== 'number') {
+    throw new Error('CONST-1: не передан якорь столпа года (calendar.json -> epochs.yearPillarAnchor)');
+  }
+  return mod(solarYear - anchors.yearPillar, 60);
 }
 
 /**

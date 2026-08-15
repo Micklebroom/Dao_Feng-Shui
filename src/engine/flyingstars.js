@@ -45,11 +45,14 @@ export function periodForYear(solarYear, luoshu) {
  * Проверка по независимому источнику: 2026 -> 1 (fengshuibalanz.com указывает
  * «Annual Flying Star 1 in the CENTRAL Palace» для 2026). Тест закрепляет оба.
  */
-export function annualStar(solarYear, anchors = null) {
-  // ARCH-1: опорный год и звезда — из data/calendar.json (epochs.annualStarAnchor).
-  const y0 = anchors ? anchors.annualStarYear : 2024;
-  const s0 = anchors ? anchors.annualStarValue : 3;
-  return wrap9(s0 - (solarYear - y0));
+export function annualStar(solarYear, anchors) {
+  // RT-03 / CONST-1: якорь ОБЯЗАН прийти из data/calendar.json
+  // (epochs.annualStarAnchor). Откат на литералы 2024/3 удалён.
+  if (!anchors || typeof anchors.annualStarYear !== 'number'
+      || typeof anchors.annualStarValue !== 'number') {
+    throw new Error('CONST-1: не передан якорь годовой звезды (calendar.json -> epochs.annualStarAnchor)');
+  }
+  return wrap9(anchors.annualStarValue - (solarYear - anchors.annualStarYear));
 }
 
 /**
