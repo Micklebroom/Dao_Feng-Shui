@@ -30,7 +30,10 @@ export function renderLineChart(svg, cfg) {
   const {
     points, series, visible, title = '',
     yMin: forceMin = null, yMax: forceMax = null,
-    markers = []
+    markers = [],
+    // VIS-02: подпись оси Y. Без неё непонятно, что означает число на шкале,
+    // а смысл величины меняется при переключении режима графика.
+    yLabel = ''
   } = cfg;
 
   while (svg.firstChild) svg.removeChild(svg.firstChild);
@@ -38,7 +41,7 @@ export function renderLineChart(svg, cfg) {
   const H = svg.clientHeight || 260;
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
-  const M = { top: 14, right: 10, bottom: 26, left: 38 };
+  const M = { top: 14, right: 10, bottom: 26, left: yLabel ? 50 : 38 };
   const iw = W - M.left - M.right;
   const ih = H - M.top - M.bottom;
 
@@ -102,6 +105,19 @@ export function renderLineChart(svg, cfg) {
       g.appendChild(t);
     }
   }
+  // VIS-02: название оси Y — вертикально вдоль шкалы, как в технических
+  // построителях графиков. Рисуется только если подпись задана.
+  if (yLabel) {
+    const yt = el('text', {
+      x: 9, y: M.top + ih / 2,
+      'text-anchor': 'middle', 'font-size': 9, fill: '#333',
+      'font-family': 'Tahoma, Arial, sans-serif',
+      transform: `rotate(-90 9 ${(M.top + ih / 2).toFixed(1)})`
+    });
+    yt.textContent = yLabel;
+    g.appendChild(yt);
+  }
+
   svg.appendChild(g);
 
   // Вертикальные маркеры (например, границы столпов удачи)

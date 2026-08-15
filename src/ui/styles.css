@@ -116,11 +116,17 @@ table.grid td.han { font-size: 13px; font-family: "Noto Sans CJK SC", "Microsoft
 }
 .pillar .ru { font-size: 9px; color: #333; }
 
-/* Цвета стихий (единый источник — data/elements.json) */
+/* Цвета стихий.
+   VIS-01: раньше HEX-значения дублировались здесь и в data/colors.json и
+   разошлись (металл #5b6b75 против #78909c), из-за чего линия графика и
+   подпись в таблице для одной стихии окрашивались по-разному.
+   Теперь правила .el-* / .bg-* генерируются из colors.json на старте
+   (src/ui/app.js -> injectElementColors). Здесь остаётся только запасной
+   вариант на случай, если скрипт не отработал. */
 .el-wood  { color: #2e7d32; }
 .el-fire  { color: #c62828; }
 .el-earth { color: #8d6e26; }
-.el-metal { color: #5b6b75; }
+.el-metal { color: #78909c; }
 .el-water { color: #1565c0; }
 .bg-wood  { background: #e5f2e6; }
 .bg-fire  { background: #fbe6e6; }

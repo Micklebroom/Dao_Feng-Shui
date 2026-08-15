@@ -149,6 +149,18 @@ function renderLuck() {
     }).join('') + `</table>`;
 }
 
+/**
+ * VIS-02: подпись оси Y для текущего режима.
+ * Указывает И величину, И её статус достоверности, чтобы шкала
+ * INFERRED-значений не выглядела как измеренная.
+ */
+function yLabelForMode() {
+  if (state.chartMode === 'meridians') return 'Сила меридиана, усл. ед. (INFERRED)';
+  if (state.chartMode === 'elements') return 'Доля стихии, % (INFERRED)';
+  if (state.chartMode === 'yinyang') return 'Инь / Ян, усл. ед. и % (INFERRED)';
+  return 'Индекс, 0–100 (INFERRED)';
+}
+
 function seriesForMode() {
   if (state.chartMode === 'meridians') {
     return T.meridians.items.map((m) => ({
@@ -235,6 +247,25 @@ function renderIndicatorList() {
   }));
 }
 
+/**
+ * VIS-01: цвета стихий генерируются из colors.json — единственного источника.
+ * Раньше палитра дублировалась в styles.css и разошлась с данными.
+ */
+function injectElementColors() {
+  const pal = T.colors.palettes.elements.byId;
+  const rules = Object.entries(pal)
+    .map(([id, hex]) => `.el-${id}{color:${hex}}`)
+    .join('\n');
+  // Точка вставки: head в браузере, иначе — корень документа.
+  // Тестовая DOM-заглушка не имеет head, а падать из-за оформления нельзя.
+  const host = document.head || document.body || document.documentElement;
+  if (!host || typeof host.appendChild !== 'function') return;
+  const style = document.createElement('style');
+  style.id = 'element-colors';
+  style.textContent = '/* сгенерировано из data/colors.json */\n' + rules;
+  host.appendChild(style);
+}
+
 /** Заполнение списка мест рождения из data/places.json. */
 function fillPlaces() {
   const sel = $('#b-place');
@@ -290,6 +321,7 @@ function renderChart() {
 
   renderLineChart($('#main-chart'), {
     points: pts, series, visible, markers,
+    yLabel: yLabelForMode(),
     onHover: (i, pt, ev) => {
       const tt = $('#tooltip');
       if (i === null) { tt.style.display = 'none'; return; }
@@ -550,6 +582,7 @@ function exportJSON() {
 /* ============================ СТАРТ ============================ */
 
 export function boot() {
+  injectElementColors();
   fillPlaces();
   fillUnverifiedSelect();
   bind();

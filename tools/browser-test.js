@@ -428,6 +428,28 @@ check('возврат к графику меридианов работает',
   document.querySelectorAll('#main-chart path').length === 10,
   'путей: ' + document.querySelectorAll('#main-chart path').length);
 
+/* ---------------- Визуальный аудит (фаза 9) ---------------- */
+console.log('\n[BROWSER] Визуальные требования фазы 9');
+const TABLES_FOR_VIS = JSON.parse(fs.readFileSync(path.join(root, 'data/colors.json'), 'utf8'))
+  ? { colors: JSON.parse(fs.readFileSync(path.join(root, 'data/colors.json'), 'utf8')) } : null;
+
+// VIS-01: палитра стихий не должна дублироваться в CSS и расходиться с данными.
+const genStyle = document.querySelector('#element-colors');
+check('цвета стихий сгенерированы из colors.json', !!genStyle);
+if (genStyle) {
+  const pal = TABLES_FOR_VIS.colors.palettes.elements.byId;
+  const mismatched = Object.entries(pal)
+    .filter(([id, hex]) => !genStyle.textContent.includes(`.el-${id}{color:${hex}}`));
+  check('CSS-палитра совпадает с данными (VIS-01)', mismatched.length === 0,
+    'расхождений: ' + mismatched.length);
+}
+
+// VIS-02: ось Y обязана иметь подпись величины.
+const yTexts = [...document.querySelectorAll('#main-chart text')].map((n) => n.textContent);
+check('подпись оси Y присутствует (VIS-02)',
+  yTexts.some((t) => /усл\. ед\.|%|Индекс/.test(t)),
+  'подписей: ' + yTexts.length);
+
 /* ---------------- Визуальные требования ---------------- */
 console.log('\n[BROWSER] Визуальная спецификация');
 const css = fs.readFileSync(path.join(root, 'src/ui/styles.css'), 'utf8');
