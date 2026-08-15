@@ -11,6 +11,7 @@ import { renderLineChart, renderBarChart } from '../chart/chart.js';
 import { buildProfile, buildTimeSeries } from '../model/profile.js';
 import { INDICATOR_CATALOG } from '../model/indicators.js';
 import { STATUS_RU } from '../core/provenance.js';
+import { bindDownloads } from './download.js';
 
 const T = TABLES;
 const $ = (s, r = document) => r.querySelector(s);
@@ -551,6 +552,13 @@ function bind() {
   }));
 
   $('#btn-export').addEventListener('click', exportJSON);
+  // Выгрузка файлов дистрибутива. Отдельный модуль: это не расчёт и не отчёт,
+  // а поставка. Ошибка выгрузки не должна ронять приложение.
+  bindDownloads({
+    tables: T,
+    meta: { version: ENGINE_VERSION, engineVersion: ENGINE_VERSION },
+    setStatus
+  });
   $('#btn-about').addEventListener('click', () => $('#about').showModal());
   $$('#about .close').forEach((b) => b.addEventListener('click', () => $('#about').close()));
 

@@ -1,0 +1,119 @@
+{
+  "$manifest": "dao-feng-shui-distribution",
+  "version": "0.4.0-mvp",
+  "engineVersion": "0.4.0-mvp",
+  "status": "MVP / experimental — НЕ production-ready",
+  "productionReady": false,
+  "build": {
+    "deterministic": true,
+    "note": "Одинаковое дерево исходников даёт одинаковые контрольные суммы. Время файлов в архиве фиксировано.",
+    "generator": "tools/build-distribution.js",
+    "nodeRequired": ">=20",
+    "externalDependencies": 0
+  },
+  "runtime": {
+    "backendRequired": false,
+    "networkRequired": false,
+    "note": "Все подтверждённые расчёты выполняются на клиенте. Автономный HTML работает по file://."
+  },
+  "files": [
+    {
+      "file": "feng_shui_mvp.html",
+      "role": "автономное приложение (один файл)",
+      "bytes": 249537,
+      "sha256": "dfb27c7a20bec7cc918a466ee294dcdd6b13a20ec929f399bf5c1d4cda7f1342"
+    },
+    {
+      "file": "feng_shui_data.json",
+      "role": "машиночитаемый пакет расчётных данных",
+      "bytes": 105525,
+      "sha256": "20691410e02281ca191faf4636f994610ff420e3c9317fd7be5cdd1c2ff96665"
+    },
+    {
+      "file": "FENG_SHUI_MVP.zip",
+      "role": "полный пакет исходников, тестов и документации",
+      "bytes": 514587,
+      "sha256": "f5bbf7c90805fcd47a5dd8cda98c80c794e572233a27d0f8e3fe0fb3043f1079"
+    },
+    {
+      "file": "README.md",
+      "role": "инструкция к поставке",
+      "bytes": 4089,
+      "sha256": "76ca4b4666e85a8521b4ef303c50ba2c90d3c0c6a406961e39722416eb3ab88b"
+    }
+  ],
+  "dataPackage": {
+    "tableCount": 12,
+    "tables": [
+      "stems_branches",
+      "calendar",
+      "elements",
+      "bazi",
+      "luck_pillars",
+      "gua",
+      "meridians",
+      "indicators",
+      "colors",
+      "luoshu",
+      "mountains24",
+      "places"
+    ]
+  },
+  "archive": {
+    "file": "FENG_SHUI_MVP.zip",
+    "rootDirectory": "FENG_SHUI_MVP",
+    "entryCount": 106,
+    "includes": [
+      "app/",
+      "src/",
+      "data/",
+      "algorithms/",
+      "tests/",
+      "docs/",
+      "tools/",
+      "README.md",
+      "LICENSE",
+      "package.json",
+      "index.html",
+      "START.txt"
+    ]
+  },
+  "downloads": {
+    "btn-dl-app": {
+      "label": "Скачать программу",
+      "file": "feng_shui_mvp.html"
+    },
+    "btn-dl-json": {
+      "label": "Скачать JSON",
+      "file": "feng_shui_data.json"
+    },
+    "btn-dl-zip": {
+      "label": "Скачать полный пакет",
+      "file": "FENG_SHUI_MVP.zip"
+    }
+  },
+  "limitations": [
+    "Весовая модель силы стихий и меридианов имеет статус INFERRED.",
+    "Показатели с невосстановленным алгоритмом возвращают null.",
+    "Расчёты меридианов не являются медицинской диагностикой.",
+    "Референсные изображения недоступны: пиксельное соответствие не проверялось."
+  ],
+  "documentation": [
+    "ALGORITHMS.md",
+    "ALGORITHM_STATUS.md",
+    "ARCHITECTURE.md",
+    "BUG_FIX_REPORT.md",
+    "CONFLICTS.md",
+    "DISTRIBUTION_QA.md",
+    "FINAL_QA.md",
+    "GRAPH_CATALOG.md",
+    "JSON_VALIDATION.md",
+    "QA-REPORT.txt",
+    "RED_TEAM_REPORT.md",
+    "RESEARCH.md",
+    "RESEARCH_AUDIT.md",
+    "SPECIFICATION.md",
+    "TESTING.md",
+    "VISUAL_QA.md"
+  ]
+}

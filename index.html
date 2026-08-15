@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1200">
+<meta name="fs-build" content="hosted">
 <title>Фэн-шуй: расчётный движок циклов (MVP)</title>
 <link rel="stylesheet" href="src/ui/styles.css">
 </head>
@@ -180,6 +181,23 @@
         </div>
       </div>
 
+      <div class="panel">
+        <h2>Загрузка <span class="badge">дистрибутив</span></h2>
+        <div class="body">
+          <div class="dl-row">
+            <button class="btn" id="btn-dl-app" title="Автономный HTML: открывается в браузере без сервера">Скачать программу</button>
+            <button class="btn" id="btn-dl-json" title="Пакет расчётных данных и таблиц">Скачать JSON</button>
+            <button class="btn" id="btn-dl-zip" title="Исходный код, данные, тесты, документация">Скачать полный пакет</button>
+          </div>
+          <div class="note">
+            Программа — один файл <code>feng_shui_mvp.html</code>, работает без сервера.
+            JSON — <code>feng_shui_data.json</code>, собирается на клиенте.
+            Пакет — <code>FENG_SHUI_MVP.zip</code> (app, src, data, algorithms, tests, docs).
+            <br><span id="dl-mode">—</span>
+          </div>
+        </div>
+      </div>
+
       <div class="panel flex1">
         <h2>Статусы алгоритмов</h2>
         <div class="body" style="font-size:10px">
@@ -225,7 +243,7 @@
   <p><b>Статусы алгоритмов.</b> Каждый расчёт помечен: ПОДТВЕРЖДЁН, ЧАСТИЧНО ПОДТВЕРЖДЁН,
   ВЫВЕДЕН или НЕ ПОДТВЕРЖДЁН. Весовые коэффициенты модели силы стихий и меридианов
   <b>не восстановлены</b> из референсной программы и являются явной гипотезой данной
-  реализации (файл <code>data/weights.json</code>, статус ВЫВЕДЕНО).</p>
+  реализации (файл <code>data/indicators.json</code>, статус ВЫВЕДЕНО).</p>
   <p><b>Запрещённые приёмы не использованы:</b> в расчётах нет random(), подгонки формы
   графиков, произвольной интерполяции и вымышленных значений. Тригонометрия применяется
   только там, где она физически обоснована — в ряде видимой долготы Солнца.</p>

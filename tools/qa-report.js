@@ -17,7 +17,9 @@ const steps = [
   ['SPEC       (спецификация)', ['node', ['tools/validate-spec.js']]],
   ['BROWSER    (интерфейс)', ['node', ['tools/browser-test.js']]],
   ['STANDALONE (автономный HTML)', ['node', ['tools/standalone-test.js']]],
-  ['RED TEAM   (аудит доктрины)', ['node', ['tools/red-team.js']]]
+  ['RED TEAM   (аудит доктрины)', ['node', ['tools/red-team.js']]],
+  ['DISTRIBUTION(пакет поставки)', ['node', ['tools/distribution-test.js']]],
+  ['HTTP       (выгрузки с сервера)', ['node', ['tools/download-http-test.js']]]
 ];
 
 const results = [];

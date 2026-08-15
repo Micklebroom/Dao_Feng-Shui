@@ -43,7 +43,7 @@ export function computeMeridians(totals, tables) {
 
 /**
  * Индекс гармоничности меридианов 0..100.
- * STATUS: INFERRED (см. data/weights.json -> harmony).
+ * STATUS: INFERRED (см. data/indicators.json -> harmony).
  */
 export function computeHarmony(meridianValues) {
   const vals = meridianValues.map((m) => m.value);

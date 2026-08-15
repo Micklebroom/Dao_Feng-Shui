@@ -24,7 +24,22 @@ const shimCode = shim.slice(
   shim.indexOf('/* ---------------- Построение DOM из index.html ---------------- */')
 );
 
-const file = path.join(root, 'dist/feng_shui_mvp.html');
+/* Автономный файл лежит по-разному в дереве разработки и в поставке:
+   в репозитории — dist/, в распакованном пакете — app/index.html.
+   Дефект найден при проверке архива: тест падал с ENOENT у пользователя,
+   который выполнял инструкцию из README поставки. */
+const CANDIDATES = [
+  'dist/feng_shui_mvp.html',
+  'distribution/feng_shui_mvp.html',
+  'app/index.html'
+];
+const file = CANDIDATES.map((p) => path.join(root, p)).find((p) => fs.existsSync(p));
+if (!file) {
+  console.error('ОШИБКА: не найден автономный HTML. Ожидался один из: ' + CANDIDATES.join(', '));
+  console.error('Соберите его: npm run build');
+  process.exit(1);
+}
+console.log('Проверяется: ' + path.relative(root, file));
 const html = fs.readFileSync(file, 'utf8');
 
 console.log('\n[STANDALONE] Структура файла');

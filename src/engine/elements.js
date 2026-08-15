@@ -7,7 +7,7 @@
  * Ниже — ПРОЗРАЧНАЯ, детерминированная, полностью декларативная модель:
  * каждый вклад — это (вес позиции) x (доля скрытого ствола) x (сезонный множитель).
  * Никаких случайных чисел, никакой подгонки под форму чужого графика.
- * Все коэффициенты вынесены в JSON (data/weights.json) и могут быть изменены
+ * Все коэффициенты вынесены в JSON (data/indicators.json) и могут быть изменены
  * без правки кода.
  */
 
@@ -97,7 +97,7 @@ export function toPercent(totals) {
  * (см. progr3a.htm, Рис.1 и Рис.2). Мы воспроизводим ЭТО РАЗЛИЧИЕ как
  * переключатель, а не как подгонку значений: при включении часть силы
  * участников слияния переносится в порождаемую стихию.
- * Коэффициент переноса объявлен в data/weights.json (transformRatio).
+ * Коэффициент переноса объявлен в data/indicators.json (transformRatio).
  */
 export function applyCombinations(totals, foundCombinations, tables, ratioOverride = null) {
   const { weights, stems, branches } = tables;

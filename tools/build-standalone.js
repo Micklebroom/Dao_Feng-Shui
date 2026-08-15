@@ -142,7 +142,14 @@ let out = html
   );
 
 // Пометка автономной сборки
-out = out.replace('MVP / экспериментальный</span>', 'MVP / экспериментальный · автономная сборка</span>');
+out = out.replace('MVP / экспериментальный</span>', () => 'MVP / экспериментальный · автономная сборка</span>');
+
+// Машиночитаемый признак автономной сборки: по нему UI понимает, что
+// готовых файлов поставки рядом нет и выгрузка HTML идёт из самой страницы.
+out = out.replace('<meta name="fs-build" content="hosted">', () => '<meta name="fs-build" content="standalone">');
+if (!/content="standalone"/.test(out)) {
+  throw new Error('Не найден маркер сборки <meta name="fs-build">: автономный режим не будет распознан');
+}
 
 const target = path.join(root, 'dist', 'feng_shui_mvp.html');
 fs.mkdirSync(path.dirname(target), { recursive: true });
