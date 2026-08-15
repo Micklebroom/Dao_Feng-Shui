@@ -1,0 +1,19 @@
+{
+  "$id": "stems",
+  "title": "Ten Heavenly Stems / 十天干 / Десять небесных стволов",
+  "status": "VERIFIED",
+  "sources": ["ytliu0.github.io/ChineseCalendar/sexagenary.html", "Baidu Baike: Ganzhi Conversion Method", "en.wikipedia.org/wiki/Sexagenary_cycle"],
+  "note": "Index is 0-based. Order and element/polarity assignment are invariant across all consulted sources.",
+  "items": [
+    { "index": 0, "id": "jia",  "han": "甲", "pinyin": "Jiǎ",  "ru": "Цзя",  "element": "wood",  "polarity": "yang" },
+    { "index": 1, "id": "yi",   "han": "乙", "pinyin": "Yǐ",   "ru": "И",    "element": "wood",  "polarity": "yin"  },
+    { "index": 2, "id": "bing", "han": "丙", "pinyin": "Bǐng", "ru": "Бин",  "element": "fire",  "polarity": "yang" },
+    { "index": 3, "id": "ding", "han": "丁", "pinyin": "Dīng", "ru": "Дин",  "element": "fire",  "polarity": "yin"  },
+    { "index": 4, "id": "wu",   "han": "戊", "pinyin": "Wù",   "ru": "У",    "element": "earth", "polarity": "yang" },
+    { "index": 5, "id": "ji",   "han": "己", "pinyin": "Jǐ",   "ru": "Цзи",  "element": "earth", "polarity": "yin"  },
+    { "index": 6, "id": "geng", "han": "庚", "pinyin": "Gēng", "ru": "Гэн",  "element": "metal", "polarity": "yang" },
+    { "index": 7, "id": "xin",  "han": "辛", "pinyin": "Xīn",  "ru": "Синь", "element": "metal", "polarity": "yin"  },
+    { "index": 8, "id": "ren",  "han": "壬", "pinyin": "Rén",  "ru": "Жэнь", "element": "water", "polarity": "yang" },
+    { "index": 9, "id": "gui",  "han": "癸", "pinyin": "Guǐ",  "ru": "Гуй",  "element": "water", "polarity": "yin"  }
+  ]
+}

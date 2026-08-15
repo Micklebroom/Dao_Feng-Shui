@@ -1,0 +1,36 @@
+{
+  "$id": "meridians",
+  "title": "Twelve Organ Meridians mapped to Five Elements / 十二经络 / Двенадцать меридианов",
+  "status": "VERIFIED (organ-element-polarity mapping) / INFERRED (numeric strength model)",
+  "sources": [
+    "Classical Zang-Fu (臟腑) five-element correspondence: Liver/Gallbladder=Wood, Heart+Pericardium/Small Intestine+Triple Burner=Fire, Spleen-Pancreas/Stomach=Earth, Lung/Large Intestine=Metal, Kidney/Bladder=Water",
+    "feng-shui.net.ru/progr3a.htm - reference program explicitly states its meridian graphs rest on Su Jok / Five Element theory",
+    "feng-shui.net.ru/analis7.htm - worked example naming liver, gallbladder, pancreas, heart meridians moving to deficiency/excess"
+  ],
+  "note": "The ORGAN-TO-ELEMENT and YIN/YANG (zang/fu) correspondences below are classical and VERIFIED. How the reference program converts Four Pillars element strength into a per-meridian NUMBER is NOT published; our model is declared INFERRED and is documented in docs/ALGORITHMS.md#meridian-strength. Yin organs (zang) take the yin share of their element, yang organs (fu) the yang share.",
+  "items": [
+    { "index": 0,  "id": "liver",       "han": "肝",   "ru": "Печень",              "en": "Liver",            "element": "wood",  "polarity": "yin",  "color": "#1b7a2f" },
+    { "index": 1,  "id": "gallbladder", "han": "胆",   "ru": "Желчный пузырь",      "en": "Gallbladder",      "element": "wood",  "polarity": "yang", "color": "#7cb342" },
+    { "index": 2,  "id": "heart",       "han": "心",   "ru": "Сердце",              "en": "Heart",            "element": "fire",  "polarity": "yin",  "color": "#c62828" },
+    { "index": 3,  "id": "smallIntestine", "han": "小肠", "ru": "Тонкий кишечник",  "en": "Small Intestine",  "element": "fire",  "polarity": "yang", "color": "#ef6c00" },
+    { "index": 4,  "id": "pericardium", "han": "心包", "ru": "Перикард",            "en": "Pericardium",      "element": "fire",  "polarity": "yin",  "color": "#ad1457", "ministerial": true },
+    { "index": 5,  "id": "tripleBurner","han": "三焦", "ru": "Тройной обогреватель","en": "Triple Burner",    "element": "fire",  "polarity": "yang", "color": "#d81b60", "ministerial": true },
+    { "index": 6,  "id": "spleen",      "han": "脾",   "ru": "Селезёнка/Поджелудочная", "en": "Spleen-Pancreas", "element": "earth", "polarity": "yin", "color": "#8d6e26" },
+    { "index": 7,  "id": "stomach",     "han": "胃",   "ru": "Желудок",             "en": "Stomach",          "element": "earth", "polarity": "yang", "color": "#bda23a" },
+    { "index": 8,  "id": "lung",        "han": "肺",   "ru": "Лёгкие",              "en": "Lung",             "element": "metal", "polarity": "yin",  "color": "#546e7a" },
+    { "index": 9,  "id": "largeIntestine", "han": "大肠", "ru": "Толстый кишечник","en": "Large Intestine",  "element": "metal", "polarity": "yang", "color": "#90a4ae" },
+    { "index": 10, "id": "kidney",      "han": "肾",   "ru": "Почки",               "en": "Kidney",           "element": "water", "polarity": "yin",  "color": "#1565c0" },
+    { "index": 11, "id": "bladder",     "han": "膀胱", "ru": "Мочевой пузырь",      "en": "Bladder",          "element": "water", "polarity": "yang", "color": "#42a5f5" }
+  ],
+  "interpretation": {
+    "status": "INFERRED",
+    "note": "Bands used to label a meridian as deficient/balanced/excess. Reference program describes 'недостаток' (deficiency) and 'избыток' (excess) but publishes no numeric thresholds. Percent of the 12-meridian mean.",
+    "bands": [
+      { "id": "deficient", "ru": "Недостаток", "en": "Deficiency", "maxRatio": 0.72 },
+      { "id": "low",       "ru": "Пониженный", "en": "Low",        "maxRatio": 0.90 },
+      { "id": "balanced",  "ru": "Норма",      "en": "Balanced",   "maxRatio": 1.10 },
+      { "id": "high",      "ru": "Повышенный", "en": "High",       "maxRatio": 1.28 },
+      { "id": "excess",    "ru": "Избыток",    "en": "Excess",     "maxRatio": null }
+    ]
+  }
+}

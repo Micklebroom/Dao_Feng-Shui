@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200">
+<title>Фэн-шуй: расчётный движок циклов (MVP)</title>
+<link rel="stylesheet" href="src/ui/styles.css">
+</head>
+<body>
+<div id="app">
+
+  <div class="menubar">
+    <div class="title">ФЭН-ШУЙ · РАСЧЁТ ЦИКЛОВ <span style="font-weight:normal;color:#777">MVP / экспериментальный</span></div>
+    <button id="btn-calc" title="Пересчитать">Расчёт</button>
+    <button id="btn-today" title="Установить текущую дату">Сегодня</button>
+    <button id="btn-export" title="Выгрузить результат в JSON">Экспорт JSON</button>
+    <button id="btn-about">О программе</button>
+    <div class="spacer"></div>
+    <div class="status">движок <b id="engine-ver">—</b> · <span id="data-ver">—</span></div>
+  </div>
+
+  <div class="workspace">
+
+    <!-- ЛЕВАЯ КОЛОНКА -->
+    <div class="column">
+      <div class="panel">
+        <h2>Данные личности</h2>
+        <div class="body">
+          <div class="field wide"><label>Дата рожд.</label>
+            <div class="row3" style="flex:1">
+              <input type="number" id="b-day" value="5" min="1" max="31" title="день">
+              <input type="number" id="b-month" value="6" min="1" max="12" title="месяц">
+              <input type="number" id="b-year" value="1967" min="1900" max="2100" title="год">
+            </div>
+          </div>
+          <div class="field wide"><label>Время</label>
+            <div class="row3" style="flex:1">
+              <input type="number" id="b-hour" value="12" min="0" max="23" title="час">
+              <input type="number" id="b-min" value="0" min="0" max="59" title="минута">
+              <input type="number" id="b-tz" value="3" min="-12" max="14" step="1" title="часовой пояс">
+            </div>
+          </div>
+          <div class="field wide"><label>Пол</label>
+            <select id="b-gender">
+              <option value="male">мужской</option>
+              <option value="female">женский</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Четыре столпа <span class="badge">四柱</span></h2>
+        <div class="body">
+          <div class="pillars" id="pillars"></div>
+          <div class="note" id="daymaster" style="margin-top:3px"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Пять стихий <span class="badge">五行</span></h2>
+        <div class="body">
+          <svg id="el-chart" class="chart" height="104"></svg>
+          <div id="el-table" style="margin-top:3px"></div>
+          <div class="note" id="yinyang"></div>
+        </div>
+      </div>
+
+      <div class="panel flex1">
+        <h2>Столпы удачи <span class="badge">大運</span></h2>
+        <div class="body">
+          <div class="note" id="luck-info"></div>
+          <div id="luck-table"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ЦЕНТР -->
+    <div class="column">
+      <div class="chart-wrap flex1">
+        <div class="chart-head">
+          График циклов
+          <span class="ctl">
+            <label><input type="radio" name="cmode" value="meridians" checked> меридианы</label>
+            <label><input type="radio" name="cmode" value="elements"> стихии</label>
+            <label><input type="radio" name="cmode" value="index"> индексы</label>
+          </span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;padding:2px 6px;background:#e4e1db;border-bottom:1px solid #c4c0b9">
+          <span>Масштаб:</span>
+          <label><input type="radio" name="scale" value="decade"> десятилетия</label>
+          <label><input type="radio" name="scale" value="year" checked> годы</label>
+          <label><input type="radio" name="scale" value="month"> месяцы</label>
+          <label><input type="radio" name="scale" value="day"> дни</label>
+          <span class="sep"></span>
+          <span>с</span><input type="number" id="s-from" value="2000" style="width:56px">
+          <span>кол-во</span><input type="number" id="s-count" value="30" style="width:46px">
+          <label title="Учитывать слияния стихий"><input type="checkbox" id="chk-combos" checked> слияния</label>
+        </div>
+        <svg id="main-chart" class="chart" height="300"></svg>
+        <div class="legend" id="legend"></div>
+        <div style="padding:2px 6px;background:#e4e1db;border-top:1px solid #c4c0b9">
+          <button class="btn" id="btn-all-on">Все серии</button>
+          <button class="btn" id="btn-all-off">Снять все</button>
+          <span class="note" style="background:none;border:none;display:inline">
+            Клик по легенде включает/выключает серию. Пунктир — границы столпов удачи.
+          </span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="tabs" data-group="mid">
+          <button class="active" data-tab="meridians">Меридианы</button>
+          <button data-tab="inter">Взаимодействия</button>
+          <button data-tab="terms">Сезоны</button>
+          <button data-tab="gua">Гуа</button>
+        </div>
+        <div class="body" style="max-height:250px;overflow:auto">
+          <div class="tabpage active" data-group="mid" data-tab="meridians" id="meridian-table"></div>
+          <div class="tabpage" data-group="mid" data-tab="inter" id="interactions"></div>
+          <div class="tabpage" data-group="mid" data-tab="terms" id="terms-table"></div>
+          <div class="tabpage" data-group="mid" data-tab="gua">
+            <div class="note" id="gua-info"></div>
+            <div id="gua-table"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ПРАВАЯ КОЛОНКА -->
+    <div class="column">
+      <div class="panel">
+        <h2>Помещение <span class="badge">玄空</span></h2>
+        <div class="body">
+          <div class="field"><label>Год постройки</label><input type="number" id="f-year" value="2010" min="1864" max="2100"></div>
+          <div class="field"><label>Азимут фасада</label><input type="number" id="f-deg" value="180" min="0" max="359" step="0.5"></div>
+          <div class="note">Гора: <b id="f-mountain">—</b><br>Период: <b id="f-period">—</b></div>
+          <div class="field" style="margin-top:3px"><label>Дата анализа</label>
+            <div class="row3" style="flex:1">
+              <input type="number" id="m-day" value="15" min="1" max="31">
+              <input type="number" id="m-month" value="3" min="1" max="12">
+              <input type="number" id="m-year" value="2026" min="1900" max="2100">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Девять дворцов <span class="badge">九宮</span></h2>
+        <div class="body">
+          <div class="checks" style="margin-bottom:3px">
+            <label><input type="checkbox" id="chk-year" checked> год</label>
+            <label><input type="checkbox" id="chk-month" checked> месяц</label>
+            <label><input type="checkbox" id="chk-day"> день</label>
+          </div>
+          <div class="luoshu" id="luoshu"></div>
+          <div class="note" id="stars-info"></div>
+          <div class="note">Юг сверху. Слева — горная звезда (山), справа — водная (向), в центре — земная основа (地).</div>
+        </div>
+      </div>
+
+      <div class="panel flex1">
+        <h2>Статусы алгоритмов</h2>
+        <div class="body" style="font-size:10px">
+          <table class="grid">
+            <tr><th class="l">Модуль</th><th>Статус</th></tr>
+            <tr><td class="l">Юлианская дата, долгота Солнца</td><td><span class="status-tag status-VERIFIED">ПОДТВ.</span></td></tr>
+            <tr><td class="l">24 сезона (границы месяцев)</td><td><span class="status-tag status-VERIFIED">ПОДТВ.</span></td></tr>
+            <tr><td class="l">Столпы года/месяца/дня/часа</td><td><span class="status-tag status-VERIFIED">ПОДТВ.</span></td></tr>
+            <tr><td class="l">Летящие звёзды (3 карты)</td><td><span class="status-tag status-VERIFIED">ПОДТВ.</span></td></tr>
+            <tr><td class="l">Годовая / месячная звезда</td><td><span class="status-tag status-VERIFIED">ПОДТВ.</span></td></tr>
+            <tr><td class="l">Число Гуа, 8 домов</td><td><span class="status-tag status-VERIFIED">ПОДТВ.</span></td></tr>
+            <tr><td class="l">Взаимодействия (слияния и др.)</td><td><span class="status-tag status-VERIFIED">ПОДТВ.</span></td></tr>
+            <tr><td class="l">Старт столпов удачи</td><td><span class="status-tag status-PARTIAL">ЧАСТИЧНО</span></td></tr>
+            <tr><td class="l">Дневная звезда</td><td><span class="status-tag status-PARTIAL">ЧАСТИЧНО</span></td></tr>
+            <tr><td class="l">Веса силы стихий</td><td><span class="status-tag status-INFERRED">ВЫВЕДЕНО</span></td></tr>
+            <tr><td class="l">Сила меридианов</td><td><span class="status-tag status-INFERRED">ВЫВЕДЕНО</span></td></tr>
+            <tr><td class="l">Индекс гармоничности</td><td><span class="status-tag status-INFERRED">ВЫВЕДЕНО</span></td></tr>
+          </table>
+          <div class="note">Полное обоснование — docs/ALGORITHMS.md и docs/CONFLICTS.md.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="statusline">
+    <span id="status-msg">Готово</span>
+    <span class="sep"></span>
+    <span class="warn">Традиционные метафизические расчёты. Не медицинская диагностика.</span>
+    <span class="sep"></span>
+    <span>MVP / экспериментальное приложение — не production-ready</span>
+  </div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<dialog id="about" style="border:1px solid #666;background:#ece9e4;font:11px Tahoma,Arial;max-width:640px">
+  <h3 style="margin:0 0 6px">Фэн-шуй: расчётный движок циклов</h3>
+  <p>Экспериментальное MVP-приложение. Независимая реализация традиционных китайских
+  циклических расчётов: китайский календарь, 24 сезона, стволы и ветви, четыре столпа,
+  скрытые стволы, столпы удачи, взаимодействия, летящие звёзды Сюань Кун, число Гуа,
+  проекция силы стихий на 12 меридианов.</p>
+  <p><b>Статусы алгоритмов.</b> Каждый расчёт помечен: ПОДТВЕРЖДЁН, ЧАСТИЧНО ПОДТВЕРЖДЁН,
+  ВЫВЕДЕН или НЕ ПОДТВЕРЖДЁН. Весовые коэффициенты модели силы стихий и меридианов
+  <b>не восстановлены</b> из референсной программы и являются явной гипотезой данной
+  реализации (файл <code>data/weights.json</code>, статус ВЫВЕДЕНО).</p>
+  <p><b>Запрещённые приёмы не использованы:</b> в расчётах нет random(), подгонки формы
+  графиков, произвольной интерполяции и вымышленных значений. Тригонометрия применяется
+  только там, где она физически обоснована — в ряде видимой долготы Солнца.</p>
+  <p><b>Ограничение.</b> Показатели меридианов и органов — традиционные энергетические
+  расчётные величины, а не медицинская диагностика и не медицинский прогноз.</p>
+  <p style="color:#a00"><b>Статус проекта: MVP / экспериментальный. Не production-ready.</b></p>
+  <button class="btn close">Закрыть</button>
+</dialog>
+
+<script type="module" src="src/ui/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "$id": "mountains24",
+  "title": "24 Mountains / 二十四山 / 24 горы",
+  "status": "VERIFIED",
+  "sources": [
+    "en.wikipedia.org/wiki/Flying_Star_Feng_Shui (degrees + yin/yang nature)",
+    "metaphysicsdiscovery.com/fengshui-luopan-the-24-mountains (degrees, yin/yang, H/E/T coding)",
+    "novamastersconsulting.com/flying-star/24-mountains-reference (degrees, opposites)"
+  ],
+  "note": "Three independent sources agree exactly on all 24 degree ranges and all 24 yin/yang assignments. Boundaries at 7.5 + k*15 degrees. 'triad' is the Earth(地)/Heaven(天)/Man(人) position within each 45-degree sector, required for the replacement-star (替卦) table.",
+  "items": [
+    { "index": 0,  "code": "N1",  "id": "ren",   "han": "壬", "ru": "Жэнь", "start": 337.5, "end": 352.5, "sector": "N",  "trigram": "kan",  "lostShu": 1, "polarity": "yang", "triad": "earth" },
+    { "index": 1,  "code": "N2",  "id": "zi",    "han": "子", "ru": "Цзы",  "start": 352.5, "end": 7.5,   "sector": "N",  "trigram": "kan",  "lostShu": 1, "polarity": "yin",  "triad": "heaven" },
+    { "index": 2,  "code": "N3",  "id": "gui",   "han": "癸", "ru": "Гуй",  "start": 7.5,   "end": 22.5,  "sector": "N",  "trigram": "kan",  "lostShu": 1, "polarity": "yin",  "triad": "man" },
+    { "index": 3,  "code": "NE1", "id": "chou",  "han": "丑", "ru": "Чоу",  "start": 22.5,  "end": 37.5,  "sector": "NE", "trigram": "gen",  "lostShu": 8, "polarity": "yin",  "triad": "earth" },
+    { "index": 4,  "code": "NE2", "id": "gen",   "han": "艮", "ru": "Гэнь", "start": 37.5,  "end": 52.5,  "sector": "NE", "trigram": "gen",  "lostShu": 8, "polarity": "yang", "triad": "heaven" },
+    { "index": 5,  "code": "NE3", "id": "yin",   "han": "寅", "ru": "Инь",  "start": 52.5,  "end": 67.5,  "sector": "NE", "trigram": "gen",  "lostShu": 8, "polarity": "yang", "triad": "man" },
+    { "index": 6,  "code": "E1",  "id": "jia",   "han": "甲", "ru": "Цзя",  "start": 67.5,  "end": 82.5,  "sector": "E",  "trigram": "zhen", "lostShu": 3, "polarity": "yang", "triad": "earth" },
+    { "index": 7,  "code": "E2",  "id": "mao",   "han": "卯", "ru": "Мао",  "start": 82.5,  "end": 97.5,  "sector": "E",  "trigram": "zhen", "lostShu": 3, "polarity": "yin",  "triad": "heaven" },
+    { "index": 8,  "code": "E3",  "id": "yi",    "han": "乙", "ru": "И",    "start": 97.5,  "end": 112.5, "sector": "E",  "trigram": "zhen", "lostShu": 3, "polarity": "yin",  "triad": "man" },
+    { "index": 9,  "code": "SE1", "id": "chen",  "han": "辰", "ru": "Чэнь", "start": 112.5, "end": 127.5, "sector": "SE", "trigram": "xun",  "lostShu": 4, "polarity": "yin",  "triad": "earth" },
+    { "index": 10, "code": "SE2", "id": "xun",   "han": "巽", "ru": "Сюнь", "start": 127.5, "end": 142.5, "sector": "SE", "trigram": "xun",  "lostShu": 4, "polarity": "yang", "triad": "heaven" },
+    { "index": 11, "code": "SE3", "id": "si",    "han": "巳", "ru": "Сы",   "start": 142.5, "end": 157.5, "sector": "SE", "trigram": "xun",  "lostShu": 4, "polarity": "yang", "triad": "man" },
+    { "index": 12, "code": "S1",  "id": "bing",  "han": "丙", "ru": "Бин",  "start": 157.5, "end": 172.5, "sector": "S",  "trigram": "li",   "lostShu": 9, "polarity": "yang", "triad": "earth" },
+    { "index": 13, "code": "S2",  "id": "wu",    "han": "午", "ru": "У",    "start": 172.5, "end": 187.5, "sector": "S",  "trigram": "li",   "lostShu": 9, "polarity": "yin",  "triad": "heaven" },
+    { "index": 14, "code": "S3",  "id": "ding",  "han": "丁", "ru": "Дин",  "start": 187.5, "end": 202.5, "sector": "S",  "trigram": "li",   "lostShu": 9, "polarity": "yin",  "triad": "man" },
+    { "index": 15, "code": "SW1", "id": "wei",   "han": "未", "ru": "Вэй",  "start": 202.5, "end": 217.5, "sector": "SW", "trigram": "kun",  "lostShu": 2, "polarity": "yin",  "triad": "earth" },
+    { "index": 16, "code": "SW2", "id": "kun",   "han": "坤", "ru": "Кунь", "start": 217.5, "end": 232.5, "sector": "SW", "trigram": "kun",  "lostShu": 2, "polarity": "yang", "triad": "heaven" },
+    { "index": 17, "code": "SW3", "id": "shen",  "han": "申", "ru": "Шэнь", "start": 232.5, "end": 247.5, "sector": "SW", "trigram": "kun",  "lostShu": 2, "polarity": "yang", "triad": "man" },
+    { "index": 18, "code": "W1",  "id": "geng",  "han": "庚", "ru": "Гэн",  "start": 247.5, "end": 262.5, "sector": "W",  "trigram": "dui",  "lostShu": 7, "polarity": "yang", "triad": "earth" },
+    { "index": 19, "code": "W2",  "id": "you",   "han": "酉", "ru": "Ю",    "start": 262.5, "end": 277.5, "sector": "W",  "trigram": "dui",  "lostShu": 7, "polarity": "yin",  "triad": "heaven" },
+    { "index": 20, "code": "W3",  "id": "xin",   "han": "辛", "ru": "Синь", "start": 277.5, "end": 292.5, "sector": "W",  "trigram": "dui",  "lostShu": 7, "polarity": "yin",  "triad": "man" },
+    { "index": 21, "code": "NW1", "id": "xu",    "han": "戌", "ru": "Сюй",  "start": 292.5, "end": 307.5, "sector": "NW", "trigram": "qian", "lostShu": 6, "polarity": "yin",  "triad": "earth" },
+    { "index": 22, "code": "NW2", "id": "qian",  "han": "乾", "ru": "Цянь", "start": 307.5, "end": 322.5, "sector": "NW", "trigram": "qian", "lostShu": 6, "polarity": "yang", "triad": "heaven" },
+    { "index": 23, "code": "NW3", "id": "hai",   "han": "亥", "ru": "Хай",  "start": 322.5, "end": 337.5, "sector": "NW", "trigram": "qian", "lostShu": 6, "polarity": "yang", "triad": "man" }
+  ]
+}

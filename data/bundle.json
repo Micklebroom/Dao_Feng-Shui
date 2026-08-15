@@ -1,0 +1,2260 @@
+{
+  "$package": "dao-feng-shui-data",
+  "version": "0.4.0-mvp",
+  "generated": "deterministic build; see tools/build-data-bundle.js",
+  "tables": {
+    "stems": {
+      "$id": "stems",
+      "title": "Ten Heavenly Stems / 十天干 / Десять небесных стволов",
+      "status": "VERIFIED",
+      "sources": [
+        "ytliu0.github.io/ChineseCalendar/sexagenary.html",
+        "Baidu Baike: Ganzhi Conversion Method",
+        "en.wikipedia.org/wiki/Sexagenary_cycle"
+      ],
+      "note": "Index is 0-based. Order and element/polarity assignment are invariant across all consulted sources.",
+      "items": [
+        {
+          "index": 0,
+          "id": "jia",
+          "han": "甲",
+          "pinyin": "Jiǎ",
+          "ru": "Цзя",
+          "element": "wood",
+          "polarity": "yang"
+        },
+        {
+          "index": 1,
+          "id": "yi",
+          "han": "乙",
+          "pinyin": "Yǐ",
+          "ru": "И",
+          "element": "wood",
+          "polarity": "yin"
+        },
+        {
+          "index": 2,
+          "id": "bing",
+          "han": "丙",
+          "pinyin": "Bǐng",
+          "ru": "Бин",
+          "element": "fire",
+          "polarity": "yang"
+        },
+        {
+          "index": 3,
+          "id": "ding",
+          "han": "丁",
+          "pinyin": "Dīng",
+          "ru": "Дин",
+          "element": "fire",
+          "polarity": "yin"
+        },
+        {
+          "index": 4,
+          "id": "wu",
+          "han": "戊",
+          "pinyin": "Wù",
+          "ru": "У",
+          "element": "earth",
+          "polarity": "yang"
+        },
+        {
+          "index": 5,
+          "id": "ji",
+          "han": "己",
+          "pinyin": "Jǐ",
+          "ru": "Цзи",
+          "element": "earth",
+          "polarity": "yin"
+        },
+        {
+          "index": 6,
+          "id": "geng",
+          "han": "庚",
+          "pinyin": "Gēng",
+          "ru": "Гэн",
+          "element": "metal",
+          "polarity": "yang"
+        },
+        {
+          "index": 7,
+          "id": "xin",
+          "han": "辛",
+          "pinyin": "Xīn",
+          "ru": "Синь",
+          "element": "metal",
+          "polarity": "yin"
+        },
+        {
+          "index": 8,
+          "id": "ren",
+          "han": "壬",
+          "pinyin": "Rén",
+          "ru": "Жэнь",
+          "element": "water",
+          "polarity": "yang"
+        },
+        {
+          "index": 9,
+          "id": "gui",
+          "han": "癸",
+          "pinyin": "Guǐ",
+          "ru": "Гуй",
+          "element": "water",
+          "polarity": "yin"
+        }
+      ]
+    },
+    "branches": {
+      "$id": "branches",
+      "title": "Twelve Earthly Branches / 十二地支 / Двенадцать земных ветвей",
+      "status": "VERIFIED",
+      "hiddenStemsStatus": "PARTIALLY VERIFIED",
+      "sources": [
+        "American Feng Shui Institute AS101 tables (amfengshui.com)",
+        "ba-zi.ai/en/blog/tian-gan-di-zhi (hidden stems table)",
+        "travelchinaguide.com/intro/astrology/four-pillar.htm (month/hour mapping)"
+      ],
+      "note": "Branch identity, element, polarity, animal, hour range and solar-month mapping are invariant across sources (VERIFIED). The NUMERIC WEIGHTS of hidden stems (canggan) are school-dependent: the 60/30/10 and 70/30 splits used here are the most widely published convention but are NOT unique. See docs/CONFLICTS.md#hidden-stem-weights.",
+      "items": [
+        {
+          "index": 0,
+          "id": "zi",
+          "han": "子",
+          "pinyin": "Zǐ",
+          "ru": "Цзы",
+          "animal": "rat",
+          "ruAnimal": "Крыса",
+          "element": "water",
+          "polarity": "yang",
+          "hourStart": 23,
+          "hourEnd": 1,
+          "solarMonth": 11,
+          "hidden": [
+            {
+              "stem": "gui",
+              "share": 100
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "id": "chou",
+          "han": "丑",
+          "pinyin": "Chǒu",
+          "ru": "Чоу",
+          "animal": "ox",
+          "ruAnimal": "Бык",
+          "element": "earth",
+          "polarity": "yin",
+          "hourStart": 1,
+          "hourEnd": 3,
+          "solarMonth": 12,
+          "hidden": [
+            {
+              "stem": "ji",
+              "share": 60
+            },
+            {
+              "stem": "gui",
+              "share": 30
+            },
+            {
+              "stem": "xin",
+              "share": 10
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "id": "yin",
+          "han": "寅",
+          "pinyin": "Yín",
+          "ru": "Инь",
+          "animal": "tiger",
+          "ruAnimal": "Тигр",
+          "element": "wood",
+          "polarity": "yang",
+          "hourStart": 3,
+          "hourEnd": 5,
+          "solarMonth": 1,
+          "hidden": [
+            {
+              "stem": "jia",
+              "share": 60
+            },
+            {
+              "stem": "bing",
+              "share": 30
+            },
+            {
+              "stem": "wu",
+              "share": 10
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "id": "mao",
+          "han": "卯",
+          "pinyin": "Mǎo",
+          "ru": "Мао",
+          "animal": "rabbit",
+          "ruAnimal": "Кролик",
+          "element": "wood",
+          "polarity": "yin",
+          "hourStart": 5,
+          "hourEnd": 7,
+          "solarMonth": 2,
+          "hidden": [
+            {
+              "stem": "yi",
+              "share": 100
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "id": "chen",
+          "han": "辰",
+          "pinyin": "Chén",
+          "ru": "Чэнь",
+          "animal": "dragon",
+          "ruAnimal": "Дракон",
+          "element": "earth",
+          "polarity": "yang",
+          "hourStart": 7,
+          "hourEnd": 9,
+          "solarMonth": 3,
+          "hidden": [
+            {
+              "stem": "wu",
+              "share": 60
+            },
+            {
+              "stem": "yi",
+              "share": 30
+            },
+            {
+              "stem": "gui",
+              "share": 10
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "id": "si",
+          "han": "巳",
+          "pinyin": "Sì",
+          "ru": "Сы",
+          "animal": "snake",
+          "ruAnimal": "Змея",
+          "element": "fire",
+          "polarity": "yin",
+          "hourStart": 9,
+          "hourEnd": 11,
+          "solarMonth": 4,
+          "hidden": [
+            {
+              "stem": "bing",
+              "share": 60
+            },
+            {
+              "stem": "wu",
+              "share": 30
+            },
+            {
+              "stem": "geng",
+              "share": 10
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "id": "wu",
+          "han": "午",
+          "pinyin": "Wǔ",
+          "ru": "У",
+          "animal": "horse",
+          "ruAnimal": "Лошадь",
+          "element": "fire",
+          "polarity": "yang",
+          "hourStart": 11,
+          "hourEnd": 13,
+          "solarMonth": 5,
+          "hidden": [
+            {
+              "stem": "ding",
+              "share": 70
+            },
+            {
+              "stem": "ji",
+              "share": 30
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "id": "wei",
+          "han": "未",
+          "pinyin": "Wèi",
+          "ru": "Вэй",
+          "animal": "goat",
+          "ruAnimal": "Коза",
+          "element": "earth",
+          "polarity": "yin",
+          "hourStart": 13,
+          "hourEnd": 15,
+          "solarMonth": 6,
+          "hidden": [
+            {
+              "stem": "ji",
+              "share": 60
+            },
+            {
+              "stem": "ding",
+              "share": 30
+            },
+            {
+              "stem": "yi",
+              "share": 10
+            }
+          ]
+        },
+        {
+          "index": 8,
+          "id": "shen",
+          "han": "申",
+          "pinyin": "Shēn",
+          "ru": "Шэнь",
+          "animal": "monkey",
+          "ruAnimal": "Обезьяна",
+          "element": "metal",
+          "polarity": "yang",
+          "hourStart": 15,
+          "hourEnd": 17,
+          "solarMonth": 7,
+          "hidden": [
+            {
+              "stem": "geng",
+              "share": 60
+            },
+            {
+              "stem": "ren",
+              "share": 30
+            },
+            {
+              "stem": "wu",
+              "share": 10
+            }
+          ]
+        },
+        {
+          "index": 9,
+          "id": "you",
+          "han": "酉",
+          "pinyin": "Yǒu",
+          "ru": "Ю",
+          "animal": "rooster",
+          "ruAnimal": "Петух",
+          "element": "metal",
+          "polarity": "yin",
+          "hourStart": 17,
+          "hourEnd": 19,
+          "solarMonth": 8,
+          "hidden": [
+            {
+              "stem": "xin",
+              "share": 100
+            }
+          ]
+        },
+        {
+          "index": 10,
+          "id": "xu",
+          "han": "戌",
+          "pinyin": "Xū",
+          "ru": "Сюй",
+          "animal": "dog",
+          "ruAnimal": "Собака",
+          "element": "earth",
+          "polarity": "yang",
+          "hourStart": 19,
+          "hourEnd": 21,
+          "solarMonth": 9,
+          "hidden": [
+            {
+              "stem": "wu",
+              "share": 60
+            },
+            {
+              "stem": "xin",
+              "share": 30
+            },
+            {
+              "stem": "ding",
+              "share": 10
+            }
+          ]
+        },
+        {
+          "index": 11,
+          "id": "hai",
+          "han": "亥",
+          "pinyin": "Hài",
+          "ru": "Хай",
+          "animal": "pig",
+          "ruAnimal": "Свинья",
+          "element": "water",
+          "polarity": "yin",
+          "hourStart": 21,
+          "hourEnd": 23,
+          "solarMonth": 10,
+          "hidden": [
+            {
+              "stem": "ren",
+              "share": 70
+            },
+            {
+              "stem": "jia",
+              "share": 30
+            }
+          ]
+        }
+      ]
+    },
+    "elements": {
+      "$id": "elements",
+      "title": "Five Elements / 五行 / Пять стихий",
+      "status": "VERIFIED",
+      "sources": [
+        "Classical Wu Xing generating (相生) and controlling (相剋) cycles; universal across all consulted sources."
+      ],
+      "items": [
+        {
+          "id": "wood",
+          "han": "木",
+          "ru": "Дерево",
+          "en": "Wood",
+          "generates": "fire",
+          "controls": "earth",
+          "color": "#2e7d32"
+        },
+        {
+          "id": "fire",
+          "han": "火",
+          "ru": "Огонь",
+          "en": "Fire",
+          "generates": "earth",
+          "controls": "metal",
+          "color": "#c62828"
+        },
+        {
+          "id": "earth",
+          "han": "土",
+          "ru": "Земля",
+          "en": "Earth",
+          "generates": "metal",
+          "controls": "water",
+          "color": "#8d6e26"
+        },
+        {
+          "id": "metal",
+          "han": "金",
+          "ru": "Металл",
+          "en": "Metal",
+          "generates": "water",
+          "controls": "wood",
+          "color": "#78909c"
+        },
+        {
+          "id": "water",
+          "han": "水",
+          "ru": "Вода",
+          "en": "Water",
+          "generates": "wood",
+          "controls": "fire",
+          "color": "#1565c0"
+        }
+      ],
+      "seasonByMonthBranch": {
+        "status": "VERIFIED",
+        "note": "Element that commands the season (当令) for each solar month branch. Chen/Xu/Chou/Wei are the earth transition months.",
+        "map": {
+          "yin": "wood",
+          "mao": "wood",
+          "chen": "earth",
+          "si": "fire",
+          "wu": "fire",
+          "wei": "earth",
+          "shen": "metal",
+          "you": "metal",
+          "xu": "earth",
+          "hai": "water",
+          "zi": "water",
+          "chou": "earth"
+        }
+      },
+      "seasonalPhase": {
+        "status": "VERIFIED (classification) / INFERRED (numeric multipliers)",
+        "note": "旺相休囚死 classification is classical. The numeric multipliers are an INFERRED modelling choice of this implementation; they are declared here so they can be audited and changed without touching code.",
+        "multipliers": {
+          "wang": 1.3,
+          "xiang": 1.15,
+          "xiu": 1,
+          "qiu": 0.85,
+          "si": 0.7
+        },
+        "rule": "wang = element equal to season element; xiang = element generated BY season element; xiu = element that generates the season element; qiu = element that controls the season element; si = element controlled by the season element."
+      }
+    },
+    "solarTerms": {
+      "$id": "solar-terms",
+      "title": "24 Solar Terms / 二十四节气 / 24 сезона",
+      "status": "VERIFIED",
+      "sources": [
+        "Definition by apparent solar longitude in 15-degree steps (standard modern Chinese calendar definition, GB/T 33661-2017)",
+        "nouahsark.com/en/infocenter/culture/astrology/four_pillar.php (month branch boundaries at the 12 sectional terms)"
+      ],
+      "note": "type=jie (節, sectional) terms START a solar month and therefore START a new month pillar. type=qi (氣, middle) terms fall inside a month. longitude is the apparent geocentric solar longitude in degrees.",
+      "items": [
+        {
+          "index": 0,
+          "id": "lichun",
+          "han": "立春",
+          "ru": "Начало весны",
+          "en": "Start of Spring",
+          "longitude": 315,
+          "type": "jie",
+          "startsMonthBranch": "yin"
+        },
+        {
+          "index": 1,
+          "id": "yushui",
+          "han": "雨水",
+          "ru": "Дождевая вода",
+          "en": "Rain Water",
+          "longitude": 330,
+          "type": "qi",
+          "startsMonthBranch": null
+        },
+        {
+          "index": 2,
+          "id": "jingzhe",
+          "han": "惊蛰",
+          "ru": "Пробуждение",
+          "en": "Awakening Insects",
+          "longitude": 345,
+          "type": "jie",
+          "startsMonthBranch": "mao"
+        },
+        {
+          "index": 3,
+          "id": "chunfen",
+          "han": "春分",
+          "ru": "Весеннее равноденствие",
+          "en": "Spring Equinox",
+          "longitude": 0,
+          "type": "qi",
+          "startsMonthBranch": null
+        },
+        {
+          "index": 4,
+          "id": "qingming",
+          "han": "清明",
+          "ru": "Ясная погода",
+          "en": "Pure Brightness",
+          "longitude": 15,
+          "type": "jie",
+          "startsMonthBranch": "chen"
+        },
+        {
+          "index": 5,
+          "id": "guyu",
+          "han": "谷雨",
+          "ru": "Хлебные дожди",
+          "en": "Grain Rain",
+          "longitude": 30,
+          "type": "qi",
+          "startsMonthBranch": null
+        },
+        {
+          "index": 6,
+          "id": "lixia",
+          "han": "立夏",
+          "ru": "Начало лета",
+          "en": "Start of Summer",
+          "longitude": 45,
+          "type": "jie",
+          "startsMonthBranch": "si"
+        },
+        {
+          "index": 7,
+          "id": "xiaoman",
+          "han": "小满",
+          "ru": "Малое изобилие",
+          "en": "Grain Full",
+          "longitude": 60,
+          "type": "qi",
+          "startsMonthBranch": null
+        },
+        {
+          "index": 8,
+          "id": "mangzhong",
+          "han": "芒种",
+          "ru": "Колошение",
+          "en": "Grain in Ear",
+          "longitude": 75,
+          "type": "jie",
+          "startsMonthBranch": "wu"
+        },
+        {
+          "index": 9,
+          "id": "xiazhi",
+          "han": "夏至",
+          "ru": "Летнее солнцестояние",
+          "en": "Summer Solstice",
+          "longitude": 90,
+          "type": "qi",
+          "startsMonthBranch": null
+        },
+        {
+          "index": 10,
+          "id": "xiaoshu",
+          "han": "小暑",
+          "ru": "Малая жара",
+          "en": "Minor Heat",
+          "longitude": 105,
+          "type": "jie",
+          "startsMonthBranch": "wei"
+        },
+        {
+          "index": 11,
+          "id": "dashu",
+          "han": "大暑",
+          "ru": "Большая жара",
+          "en": "Major Heat",
+          "longitude": 120,
+          "type": "qi",
+          "startsMonthBranch": null
+        },
+        {
+          "index": 12,
+          "id": "liqiu",
+          "han": "立秋",
+          "ru": "Начало осени",
+          "en": "Start of Autumn",
+          "longitude": 135,
+          "type": "jie",
+          "startsMonthBranch": "shen"
+        },
+        {
+          "index": 13,
+          "id": "chushu",
+          "han": "处暑",
+          "ru": "Конец жары",
+          "en": "Limit of Heat",
+          "longitude": 150,
+          "type": "qi",
+          "startsMonthBranch": null
+        },
+        {
+          "index": 14,
+          "id": "bailu",
+          "han": "白露",
+          "ru": "Белые росы",
+          "en": "White Dew",
+          "longitude": 165,
+          "type": "jie",
+          "startsMonthBranch": "you"
+        },
+        {
+          "index": 15,
+          "id": "qiufen",
+          "han": "秋分",
+          "ru": "Осеннее равноденствие",
+          "en": "Autumn Equinox",
+          "longitude": 180,
+          "type": "qi",
+          "startsMonthBranch": null
+        },
+        {
+          "index": 16,
+          "id": "hanlu",
+          "han": "寒露",
+          "ru": "Холодные росы",
+          "en": "Cold Dew",
+          "longitude": 195,
+          "type": "jie",
+          "startsMonthBranch": "xu"
+        },
+        {
+          "index": 17,
+          "id": "shuangjiang",
+          "han": "霜降",
+          "ru": "Выпадение инея",
+          "en": "Frost Descent",
+          "longitude": 210,
+          "type": "qi",
+          "startsMonthBranch": null
+        },
+        {
+          "index": 18,
+          "id": "lidong",
+          "han": "立冬",
+          "ru": "Начало зимы",
+          "en": "Start of Winter",
+          "longitude": 225,
+          "type": "jie",
+          "startsMonthBranch": "hai"
+        },
+        {
+          "index": 19,
+          "id": "xiaoxue",
+          "han": "小雪",
+          "ru": "Малые снега",
+          "en": "Minor Snow",
+          "longitude": 240,
+          "type": "qi",
+          "startsMonthBranch": null
+        },
+        {
+          "index": 20,
+          "id": "daxue",
+          "han": "大雪",
+          "ru": "Большие снега",
+          "en": "Major Snow",
+          "longitude": 255,
+          "type": "jie",
+          "startsMonthBranch": "zi"
+        },
+        {
+          "index": 21,
+          "id": "dongzhi",
+          "han": "冬至",
+          "ru": "Зимнее солнцестояние",
+          "en": "Winter Solstice",
+          "longitude": 270,
+          "type": "qi",
+          "startsMonthBranch": null
+        },
+        {
+          "index": 22,
+          "id": "xiaohan",
+          "han": "小寒",
+          "ru": "Малые холода",
+          "en": "Minor Cold",
+          "longitude": 285,
+          "type": "jie",
+          "startsMonthBranch": "chou"
+        },
+        {
+          "index": 23,
+          "id": "dahan",
+          "han": "大寒",
+          "ru": "Большие холода",
+          "en": "Major Cold",
+          "longitude": 300,
+          "type": "qi",
+          "startsMonthBranch": null
+        }
+      ]
+    },
+    "meridians": {
+      "$id": "meridians",
+      "title": "Twelve Organ Meridians mapped to Five Elements / 十二经络 / Двенадцать меридианов",
+      "status": "VERIFIED (organ-element-polarity mapping) / INFERRED (numeric strength model)",
+      "sources": [
+        "Classical Zang-Fu (臟腑) five-element correspondence: Liver/Gallbladder=Wood, Heart+Pericardium/Small Intestine+Triple Burner=Fire, Spleen-Pancreas/Stomach=Earth, Lung/Large Intestine=Metal, Kidney/Bladder=Water",
+        "feng-shui.net.ru/progr3a.htm - reference program explicitly states its meridian graphs rest on Su Jok / Five Element theory",
+        "feng-shui.net.ru/analis7.htm - worked example naming liver, gallbladder, pancreas, heart meridians moving to deficiency/excess"
+      ],
+      "note": "The ORGAN-TO-ELEMENT and YIN/YANG (zang/fu) correspondences below are classical and VERIFIED. How the reference program converts Four Pillars element strength into a per-meridian NUMBER is NOT published; our model is declared INFERRED and is documented in docs/ALGORITHMS.md#meridian-strength. Yin organs (zang) take the yin share of their element, yang organs (fu) the yang share.",
+      "items": [
+        {
+          "index": 0,
+          "id": "liver",
+          "han": "肝",
+          "ru": "Печень",
+          "en": "Liver",
+          "element": "wood",
+          "polarity": "yin",
+          "color": "#1b7a2f"
+        },
+        {
+          "index": 1,
+          "id": "gallbladder",
+          "han": "胆",
+          "ru": "Желчный пузырь",
+          "en": "Gallbladder",
+          "element": "wood",
+          "polarity": "yang",
+          "color": "#7cb342"
+        },
+        {
+          "index": 2,
+          "id": "heart",
+          "han": "心",
+          "ru": "Сердце",
+          "en": "Heart",
+          "element": "fire",
+          "polarity": "yin",
+          "color": "#c62828"
+        },
+        {
+          "index": 3,
+          "id": "smallIntestine",
+          "han": "小肠",
+          "ru": "Тонкий кишечник",
+          "en": "Small Intestine",
+          "element": "fire",
+          "polarity": "yang",
+          "color": "#ef6c00"
+        },
+        {
+          "index": 4,
+          "id": "pericardium",
+          "han": "心包",
+          "ru": "Перикард",
+          "en": "Pericardium",
+          "element": "fire",
+          "polarity": "yin",
+          "color": "#ad1457",
+          "ministerial": true
+        },
+        {
+          "index": 5,
+          "id": "tripleBurner",
+          "han": "三焦",
+          "ru": "Тройной обогреватель",
+          "en": "Triple Burner",
+          "element": "fire",
+          "polarity": "yang",
+          "color": "#d81b60",
+          "ministerial": true
+        },
+        {
+          "index": 6,
+          "id": "spleen",
+          "han": "脾",
+          "ru": "Селезёнка/Поджелудочная",
+          "en": "Spleen-Pancreas",
+          "element": "earth",
+          "polarity": "yin",
+          "color": "#8d6e26"
+        },
+        {
+          "index": 7,
+          "id": "stomach",
+          "han": "胃",
+          "ru": "Желудок",
+          "en": "Stomach",
+          "element": "earth",
+          "polarity": "yang",
+          "color": "#bda23a"
+        },
+        {
+          "index": 8,
+          "id": "lung",
+          "han": "肺",
+          "ru": "Лёгкие",
+          "en": "Lung",
+          "element": "metal",
+          "polarity": "yin",
+          "color": "#546e7a"
+        },
+        {
+          "index": 9,
+          "id": "largeIntestine",
+          "han": "大肠",
+          "ru": "Толстый кишечник",
+          "en": "Large Intestine",
+          "element": "metal",
+          "polarity": "yang",
+          "color": "#90a4ae"
+        },
+        {
+          "index": 10,
+          "id": "kidney",
+          "han": "肾",
+          "ru": "Почки",
+          "en": "Kidney",
+          "element": "water",
+          "polarity": "yin",
+          "color": "#1565c0"
+        },
+        {
+          "index": 11,
+          "id": "bladder",
+          "han": "膀胱",
+          "ru": "Мочевой пузырь",
+          "en": "Bladder",
+          "element": "water",
+          "polarity": "yang",
+          "color": "#42a5f5"
+        }
+      ],
+      "interpretation": {
+        "status": "INFERRED",
+        "note": "Bands used to label a meridian as deficient/balanced/excess. Reference program describes 'недостаток' (deficiency) and 'избыток' (excess) but publishes no numeric thresholds. Percent of the 12-meridian mean.",
+        "bands": [
+          {
+            "id": "deficient",
+            "ru": "Недостаток",
+            "en": "Deficiency",
+            "maxRatio": 0.72
+          },
+          {
+            "id": "low",
+            "ru": "Пониженный",
+            "en": "Low",
+            "maxRatio": 0.9
+          },
+          {
+            "id": "balanced",
+            "ru": "Норма",
+            "en": "Balanced",
+            "maxRatio": 1.1
+          },
+          {
+            "id": "high",
+            "ru": "Повышенный",
+            "en": "High",
+            "maxRatio": 1.28
+          },
+          {
+            "id": "excess",
+            "ru": "Избыток",
+            "en": "Excess",
+            "maxRatio": null
+          }
+        ]
+      }
+    },
+    "mountains24": {
+      "$id": "mountains24",
+      "title": "24 Mountains / 二十四山 / 24 горы",
+      "status": "VERIFIED",
+      "sources": [
+        "en.wikipedia.org/wiki/Flying_Star_Feng_Shui (degrees + yin/yang nature)",
+        "metaphysicsdiscovery.com/fengshui-luopan-the-24-mountains (degrees, yin/yang, H/E/T coding)",
+        "novamastersconsulting.com/flying-star/24-mountains-reference (degrees, opposites)"
+      ],
+      "note": "Three independent sources agree exactly on all 24 degree ranges and all 24 yin/yang assignments. Boundaries at 7.5 + k*15 degrees. 'triad' is the Earth(地)/Heaven(天)/Man(人) position within each 45-degree sector, required for the replacement-star (替卦) table.",
+      "items": [
+        {
+          "index": 0,
+          "code": "N1",
+          "id": "ren",
+          "han": "壬",
+          "ru": "Жэнь",
+          "start": 337.5,
+          "end": 352.5,
+          "sector": "N",
+          "trigram": "kan",
+          "lostShu": 1,
+          "polarity": "yang",
+          "triad": "earth"
+        },
+        {
+          "index": 1,
+          "code": "N2",
+          "id": "zi",
+          "han": "子",
+          "ru": "Цзы",
+          "start": 352.5,
+          "end": 7.5,
+          "sector": "N",
+          "trigram": "kan",
+          "lostShu": 1,
+          "polarity": "yin",
+          "triad": "heaven"
+        },
+        {
+          "index": 2,
+          "code": "N3",
+          "id": "gui",
+          "han": "癸",
+          "ru": "Гуй",
+          "start": 7.5,
+          "end": 22.5,
+          "sector": "N",
+          "trigram": "kan",
+          "lostShu": 1,
+          "polarity": "yin",
+          "triad": "man"
+        },
+        {
+          "index": 3,
+          "code": "NE1",
+          "id": "chou",
+          "han": "丑",
+          "ru": "Чоу",
+          "start": 22.5,
+          "end": 37.5,
+          "sector": "NE",
+          "trigram": "gen",
+          "lostShu": 8,
+          "polarity": "yin",
+          "triad": "earth"
+        },
+        {
+          "index": 4,
+          "code": "NE2",
+          "id": "gen",
+          "han": "艮",
+          "ru": "Гэнь",
+          "start": 37.5,
+          "end": 52.5,
+          "sector": "NE",
+          "trigram": "gen",
+          "lostShu": 8,
+          "polarity": "yang",
+          "triad": "heaven"
+        },
+        {
+          "index": 5,
+          "code": "NE3",
+          "id": "yin",
+          "han": "寅",
+          "ru": "Инь",
+          "start": 52.5,
+          "end": 67.5,
+          "sector": "NE",
+          "trigram": "gen",
+          "lostShu": 8,
+          "polarity": "yang",
+          "triad": "man"
+        },
+        {
+          "index": 6,
+          "code": "E1",
+          "id": "jia",
+          "han": "甲",
+          "ru": "Цзя",
+          "start": 67.5,
+          "end": 82.5,
+          "sector": "E",
+          "trigram": "zhen",
+          "lostShu": 3,
+          "polarity": "yang",
+          "triad": "earth"
+        },
+        {
+          "index": 7,
+          "code": "E2",
+          "id": "mao",
+          "han": "卯",
+          "ru": "Мао",
+          "start": 82.5,
+          "end": 97.5,
+          "sector": "E",
+          "trigram": "zhen",
+          "lostShu": 3,
+          "polarity": "yin",
+          "triad": "heaven"
+        },
+        {
+          "index": 8,
+          "code": "E3",
+          "id": "yi",
+          "han": "乙",
+          "ru": "И",
+          "start": 97.5,
+          "end": 112.5,
+          "sector": "E",
+          "trigram": "zhen",
+          "lostShu": 3,
+          "polarity": "yin",
+          "triad": "man"
+        },
+        {
+          "index": 9,
+          "code": "SE1",
+          "id": "chen",
+          "han": "辰",
+          "ru": "Чэнь",
+          "start": 112.5,
+          "end": 127.5,
+          "sector": "SE",
+          "trigram": "xun",
+          "lostShu": 4,
+          "polarity": "yin",
+          "triad": "earth"
+        },
+        {
+          "index": 10,
+          "code": "SE2",
+          "id": "xun",
+          "han": "巽",
+          "ru": "Сюнь",
+          "start": 127.5,
+          "end": 142.5,
+          "sector": "SE",
+          "trigram": "xun",
+          "lostShu": 4,
+          "polarity": "yang",
+          "triad": "heaven"
+        },
+        {
+          "index": 11,
+          "code": "SE3",
+          "id": "si",
+          "han": "巳",
+          "ru": "Сы",
+          "start": 142.5,
+          "end": 157.5,
+          "sector": "SE",
+          "trigram": "xun",
+          "lostShu": 4,
+          "polarity": "yang",
+          "triad": "man"
+        },
+        {
+          "index": 12,
+          "code": "S1",
+          "id": "bing",
+          "han": "丙",
+          "ru": "Бин",
+          "start": 157.5,
+          "end": 172.5,
+          "sector": "S",
+          "trigram": "li",
+          "lostShu": 9,
+          "polarity": "yang",
+          "triad": "earth"
+        },
+        {
+          "index": 13,
+          "code": "S2",
+          "id": "wu",
+          "han": "午",
+          "ru": "У",
+          "start": 172.5,
+          "end": 187.5,
+          "sector": "S",
+          "trigram": "li",
+          "lostShu": 9,
+          "polarity": "yin",
+          "triad": "heaven"
+        },
+        {
+          "index": 14,
+          "code": "S3",
+          "id": "ding",
+          "han": "丁",
+          "ru": "Дин",
+          "start": 187.5,
+          "end": 202.5,
+          "sector": "S",
+          "trigram": "li",
+          "lostShu": 9,
+          "polarity": "yin",
+          "triad": "man"
+        },
+        {
+          "index": 15,
+          "code": "SW1",
+          "id": "wei",
+          "han": "未",
+          "ru": "Вэй",
+          "start": 202.5,
+          "end": 217.5,
+          "sector": "SW",
+          "trigram": "kun",
+          "lostShu": 2,
+          "polarity": "yin",
+          "triad": "earth"
+        },
+        {
+          "index": 16,
+          "code": "SW2",
+          "id": "kun",
+          "han": "坤",
+          "ru": "Кунь",
+          "start": 217.5,
+          "end": 232.5,
+          "sector": "SW",
+          "trigram": "kun",
+          "lostShu": 2,
+          "polarity": "yang",
+          "triad": "heaven"
+        },
+        {
+          "index": 17,
+          "code": "SW3",
+          "id": "shen",
+          "han": "申",
+          "ru": "Шэнь",
+          "start": 232.5,
+          "end": 247.5,
+          "sector": "SW",
+          "trigram": "kun",
+          "lostShu": 2,
+          "polarity": "yang",
+          "triad": "man"
+        },
+        {
+          "index": 18,
+          "code": "W1",
+          "id": "geng",
+          "han": "庚",
+          "ru": "Гэн",
+          "start": 247.5,
+          "end": 262.5,
+          "sector": "W",
+          "trigram": "dui",
+          "lostShu": 7,
+          "polarity": "yang",
+          "triad": "earth"
+        },
+        {
+          "index": 19,
+          "code": "W2",
+          "id": "you",
+          "han": "酉",
+          "ru": "Ю",
+          "start": 262.5,
+          "end": 277.5,
+          "sector": "W",
+          "trigram": "dui",
+          "lostShu": 7,
+          "polarity": "yin",
+          "triad": "heaven"
+        },
+        {
+          "index": 20,
+          "code": "W3",
+          "id": "xin",
+          "han": "辛",
+          "ru": "Синь",
+          "start": 277.5,
+          "end": 292.5,
+          "sector": "W",
+          "trigram": "dui",
+          "lostShu": 7,
+          "polarity": "yin",
+          "triad": "man"
+        },
+        {
+          "index": 21,
+          "code": "NW1",
+          "id": "xu",
+          "han": "戌",
+          "ru": "Сюй",
+          "start": 292.5,
+          "end": 307.5,
+          "sector": "NW",
+          "trigram": "qian",
+          "lostShu": 6,
+          "polarity": "yin",
+          "triad": "earth"
+        },
+        {
+          "index": 22,
+          "code": "NW2",
+          "id": "qian",
+          "han": "乾",
+          "ru": "Цянь",
+          "start": 307.5,
+          "end": 322.5,
+          "sector": "NW",
+          "trigram": "qian",
+          "lostShu": 6,
+          "polarity": "yang",
+          "triad": "heaven"
+        },
+        {
+          "index": 23,
+          "code": "NW3",
+          "id": "hai",
+          "han": "亥",
+          "ru": "Хай",
+          "start": 322.5,
+          "end": 337.5,
+          "sector": "NW",
+          "trigram": "qian",
+          "lostShu": 6,
+          "polarity": "yang",
+          "triad": "man"
+        }
+      ]
+    },
+    "luoshu": {
+      "$id": "luoshu",
+      "title": "Lo Shu square, nine palaces, flight path and nine stars / 洛書九宮 / Квадрат Ло Шу",
+      "status": "VERIFIED",
+      "sources": [
+        "en.wikibooks.org/wiki/Feng_Shui (flight path center -> NW -> W -> NE -> S -> N -> SW -> E -> SE)",
+        "en.wikipedia.org/wiki/Flying_Star_Feng_Shui",
+        "Classical Later Heaven (後天) bagua arrangement"
+      ],
+      "note": "The Lo Shu flight path is invariant across every consulted source. Palace 'number' is the fixed Earth Base (地盤) number of that direction. Orientation convention of this application: SOUTH AT TOP, as used by the reference program «Фэн-шуй Удачи» (its Lo Shu window defaults to 'Юг сверху' = South on top).",
+      "palaces": [
+        {
+          "index": 0,
+          "number": 4,
+          "direction": "SE",
+          "trigram": "xun",
+          "han": "巽",
+          "ru": "ЮВ",
+          "element": "wood",
+          "row": 0,
+          "col": 0
+        },
+        {
+          "index": 1,
+          "number": 9,
+          "direction": "S",
+          "trigram": "li",
+          "han": "離",
+          "ru": "Ю",
+          "element": "fire",
+          "row": 0,
+          "col": 1
+        },
+        {
+          "index": 2,
+          "number": 2,
+          "direction": "SW",
+          "trigram": "kun",
+          "han": "坤",
+          "ru": "ЮЗ",
+          "element": "earth",
+          "row": 0,
+          "col": 2
+        },
+        {
+          "index": 3,
+          "number": 3,
+          "direction": "E",
+          "trigram": "zhen",
+          "han": "震",
+          "ru": "В",
+          "element": "wood",
+          "row": 1,
+          "col": 0
+        },
+        {
+          "index": 4,
+          "number": 5,
+          "direction": "C",
+          "trigram": null,
+          "han": "中",
+          "ru": "Ц",
+          "element": "earth",
+          "row": 1,
+          "col": 1
+        },
+        {
+          "index": 5,
+          "number": 7,
+          "direction": "W",
+          "trigram": "dui",
+          "han": "兌",
+          "ru": "З",
+          "element": "metal",
+          "row": 1,
+          "col": 2
+        },
+        {
+          "index": 6,
+          "number": 8,
+          "direction": "NE",
+          "trigram": "gen",
+          "han": "艮",
+          "ru": "СВ",
+          "element": "earth",
+          "row": 2,
+          "col": 0
+        },
+        {
+          "index": 7,
+          "number": 1,
+          "direction": "N",
+          "trigram": "kan",
+          "han": "坎",
+          "ru": "С",
+          "element": "water",
+          "row": 2,
+          "col": 1
+        },
+        {
+          "index": 8,
+          "number": 6,
+          "direction": "NW",
+          "trigram": "qian",
+          "han": "乾",
+          "ru": "СЗ",
+          "element": "metal",
+          "row": 2,
+          "col": 2
+        }
+      ],
+      "flightPath": [
+        "C",
+        "NW",
+        "W",
+        "NE",
+        "S",
+        "N",
+        "SW",
+        "E",
+        "SE"
+      ],
+      "flightPathNote": "Order in which successive star numbers are placed. Index 0 is the center; the star placed at step k is (start + k) for forward flight and (start - k) for reverse flight, wrapped into 1..9.",
+      "stars": [
+        {
+          "number": 1,
+          "id": "tanlang",
+          "han": "貪狼",
+          "ru": "Тань Лан",
+          "en": "Greedy Wolf",
+          "element": "water",
+          "color": "#ffffff",
+          "colorName": "white",
+          "ruColor": "белая",
+          "nature": "auspicious"
+        },
+        {
+          "number": 2,
+          "id": "jumen",
+          "han": "巨門",
+          "ru": "Цзюй Мэнь",
+          "en": "Great Gate",
+          "element": "earth",
+          "color": "#000000",
+          "colorName": "black",
+          "ruColor": "чёрная",
+          "nature": "inauspicious"
+        },
+        {
+          "number": 3,
+          "id": "lucun",
+          "han": "祿存",
+          "ru": "Лу Цунь",
+          "en": "Jade Rank",
+          "element": "wood",
+          "color": "#1f8a3b",
+          "colorName": "jade",
+          "ruColor": "нефритовая",
+          "nature": "inauspicious"
+        },
+        {
+          "number": 4,
+          "id": "wenqu",
+          "han": "文曲",
+          "ru": "Вэнь Цюй",
+          "en": "Literary Arts",
+          "element": "wood",
+          "color": "#2f8f2f",
+          "colorName": "green",
+          "ruColor": "зелёная",
+          "nature": "auspicious"
+        },
+        {
+          "number": 5,
+          "id": "lianzhen",
+          "han": "廉貞",
+          "ru": "Лянь Чжэнь",
+          "en": "Five Yellow",
+          "element": "earth",
+          "color": "#d4a017",
+          "colorName": "yellow",
+          "ruColor": "жёлтая",
+          "nature": "inauspicious"
+        },
+        {
+          "number": 6,
+          "id": "wuqu",
+          "han": "武曲",
+          "ru": "У Цюй",
+          "en": "Military Arts",
+          "element": "metal",
+          "color": "#eeeeee",
+          "colorName": "white",
+          "ruColor": "белая",
+          "nature": "auspicious"
+        },
+        {
+          "number": 7,
+          "id": "pojun",
+          "han": "破軍",
+          "ru": "По Цзюнь",
+          "en": "Broken Soldier",
+          "element": "metal",
+          "color": "#c62828",
+          "colorName": "red",
+          "ruColor": "красная",
+          "nature": "inauspicious"
+        },
+        {
+          "number": 8,
+          "id": "zuofu",
+          "han": "左輔",
+          "ru": "Цзо Фу",
+          "en": "Left Assistant",
+          "element": "earth",
+          "color": "#f5f5f5",
+          "colorName": "white",
+          "ruColor": "белая",
+          "nature": "auspicious"
+        },
+        {
+          "number": 9,
+          "id": "youbi",
+          "han": "右弼",
+          "ru": "Ю Би",
+          "en": "Right Assistant",
+          "element": "fire",
+          "color": "#7b1fa2",
+          "colorName": "purple",
+          "ruColor": "пурпурная",
+          "nature": "auspicious"
+        }
+      ],
+      "periods": {
+        "status": "VERIFIED",
+        "note": "San Yuan Jiu Yun (三元九運). Each period is 20 years, anchored on the Li Chun of the start year.",
+        "cycleYears": 180,
+        "items": [
+          {
+            "period": 1,
+            "start": 1864,
+            "end": 1883
+          },
+          {
+            "period": 2,
+            "start": 1884,
+            "end": 1903
+          },
+          {
+            "period": 3,
+            "start": 1904,
+            "end": 1923
+          },
+          {
+            "period": 4,
+            "start": 1924,
+            "end": 1943
+          },
+          {
+            "period": 5,
+            "start": 1944,
+            "end": 1963
+          },
+          {
+            "period": 6,
+            "start": 1964,
+            "end": 1983
+          },
+          {
+            "period": 7,
+            "start": 1984,
+            "end": 2003
+          },
+          {
+            "period": 8,
+            "start": 2004,
+            "end": 2023
+          },
+          {
+            "period": 9,
+            "start": 2024,
+            "end": 2043
+          }
+        ]
+      }
+    },
+    "interactions": {
+      "$id": "interactions",
+      "title": "Взаимодействия стволов и ветвей (слияния, конфликты, наказания, вред, Ша)",
+      "status": "VERIFIED",
+      "sources": [
+        "American Feng Shui Institute AS101 (шесть слияний, три встречи)",
+        "divinefs.weebly.com/compatibility (слияния небесных стволов)",
+        "Классические таблицы Ба-цзы (六合/三合/三會/六沖/三刑/六害/三煞)"
+      ],
+      "note": "Составы всех групп инвариантны во всех проверенных источниках. Ключи — стабильные ID (латиница), русские названия — только подписи (display labels).",
+      "stemCombinations": {
+        "ru": "Слияния небесных стволов (天干五合)",
+        "status": "VERIFIED",
+        "items": [
+          {
+            "id": "jia_ji",
+            "stems": [
+              "jia",
+              "ji"
+            ],
+            "produces": "earth",
+            "ru": "Цзя + Цзи → Земля"
+          },
+          {
+            "id": "yi_geng",
+            "stems": [
+              "yi",
+              "geng"
+            ],
+            "produces": "metal",
+            "ru": "И + Гэн → Металл"
+          },
+          {
+            "id": "bing_xin",
+            "stems": [
+              "bing",
+              "xin"
+            ],
+            "produces": "water",
+            "ru": "Бин + Синь → Вода"
+          },
+          {
+            "id": "ding_ren",
+            "stems": [
+              "ding",
+              "ren"
+            ],
+            "produces": "wood",
+            "ru": "Дин + Жэнь → Дерево"
+          },
+          {
+            "id": "wu_gui",
+            "stems": [
+              "wu",
+              "gui"
+            ],
+            "produces": "fire",
+            "ru": "У + Гуй → Огонь"
+          }
+        ]
+      },
+      "sixCombinations": {
+        "ru": "Шесть слияний ветвей (六合)",
+        "status": "VERIFIED",
+        "items": [
+          {
+            "id": "zi_chou",
+            "branches": [
+              "zi",
+              "chou"
+            ],
+            "produces": "earth",
+            "ru": "Цзы + Чоу → Земля"
+          },
+          {
+            "id": "yin_hai",
+            "branches": [
+              "yin",
+              "hai"
+            ],
+            "produces": "wood",
+            "ru": "Инь + Хай → Дерево"
+          },
+          {
+            "id": "mao_xu",
+            "branches": [
+              "mao",
+              "xu"
+            ],
+            "produces": "fire",
+            "ru": "Мао + Сюй → Огонь"
+          },
+          {
+            "id": "chen_you",
+            "branches": [
+              "chen",
+              "you"
+            ],
+            "produces": "metal",
+            "ru": "Чэнь + Ю → Металл"
+          },
+          {
+            "id": "si_shen",
+            "branches": [
+              "si",
+              "shen"
+            ],
+            "produces": "water",
+            "ru": "Сы + Шэнь → Вода"
+          },
+          {
+            "id": "wu_wei",
+            "branches": [
+              "wu",
+              "wei"
+            ],
+            "produces": "fire",
+            "ru": "У + Вэй → Огонь",
+            "conflictNote": "Часть школ даёт Землю вместо Огня — см. docs/CONFLICTS.md#wu-wei"
+          }
+        ]
+      },
+      "threeHarmonies": {
+        "ru": "Три гармонии / треугольники (三合)",
+        "status": "VERIFIED",
+        "items": [
+          {
+            "id": "shen_zi_chen",
+            "branches": [
+              "shen",
+              "zi",
+              "chen"
+            ],
+            "produces": "water",
+            "ru": "Шэнь + Цзы + Чэнь → Вода"
+          },
+          {
+            "id": "hai_mao_wei",
+            "branches": [
+              "hai",
+              "mao",
+              "wei"
+            ],
+            "produces": "wood",
+            "ru": "Хай + Мао + Вэй → Дерево"
+          },
+          {
+            "id": "yin_wu_xu",
+            "branches": [
+              "yin",
+              "wu",
+              "xu"
+            ],
+            "produces": "fire",
+            "ru": "Инь + У + Сюй → Огонь"
+          },
+          {
+            "id": "si_you_chou",
+            "branches": [
+              "si",
+              "you",
+              "chou"
+            ],
+            "produces": "metal",
+            "ru": "Сы + Ю + Чоу → Металл"
+          }
+        ]
+      },
+      "directionalCombinations": {
+        "ru": "Три встречи / сезонные объединения (三會)",
+        "status": "VERIFIED",
+        "items": [
+          {
+            "id": "yin_mao_chen",
+            "branches": [
+              "yin",
+              "mao",
+              "chen"
+            ],
+            "produces": "wood",
+            "ru": "Инь + Мао + Чэнь → Дерево (весна)"
+          },
+          {
+            "id": "si_wu_wei",
+            "branches": [
+              "si",
+              "wu",
+              "wei"
+            ],
+            "produces": "fire",
+            "ru": "Сы + У + Вэй → Огонь (лето)"
+          },
+          {
+            "id": "shen_you_xu",
+            "branches": [
+              "shen",
+              "you",
+              "xu"
+            ],
+            "produces": "metal",
+            "ru": "Шэнь + Ю + Сюй → Металл (осень)"
+          },
+          {
+            "id": "hai_zi_chou",
+            "branches": [
+              "hai",
+              "zi",
+              "chou"
+            ],
+            "produces": "water",
+            "ru": "Хай + Цзы + Чоу → Вода (зима)"
+          }
+        ]
+      },
+      "clashes": {
+        "ru": "Шесть столкновений (六沖)",
+        "status": "VERIFIED",
+        "items": [
+          {
+            "id": "zi_wu",
+            "branches": [
+              "zi",
+              "wu"
+            ],
+            "ru": "Цзы ↔ У"
+          },
+          {
+            "id": "chou_wei",
+            "branches": [
+              "chou",
+              "wei"
+            ],
+            "ru": "Чоу ↔ Вэй"
+          },
+          {
+            "id": "yin_shen",
+            "branches": [
+              "yin",
+              "shen"
+            ],
+            "ru": "Инь ↔ Шэнь"
+          },
+          {
+            "id": "mao_you",
+            "branches": [
+              "mao",
+              "you"
+            ],
+            "ru": "Мао ↔ Ю"
+          },
+          {
+            "id": "chen_xu",
+            "branches": [
+              "chen",
+              "xu"
+            ],
+            "ru": "Чэнь ↔ Сюй"
+          },
+          {
+            "id": "si_hai",
+            "branches": [
+              "si",
+              "hai"
+            ],
+            "ru": "Сы ↔ Хай"
+          }
+        ]
+      },
+      "harms": {
+        "ru": "Шесть вредов (六害)",
+        "status": "VERIFIED",
+        "items": [
+          {
+            "id": "zi_wei",
+            "branches": [
+              "zi",
+              "wei"
+            ],
+            "ru": "Цзы ↔ Вэй"
+          },
+          {
+            "id": "chou_wu",
+            "branches": [
+              "chou",
+              "wu"
+            ],
+            "ru": "Чоу ↔ У"
+          },
+          {
+            "id": "yin_si",
+            "branches": [
+              "yin",
+              "si"
+            ],
+            "ru": "Инь ↔ Сы"
+          },
+          {
+            "id": "mao_chen",
+            "branches": [
+              "mao",
+              "chen"
+            ],
+            "ru": "Мао ↔ Чэнь"
+          },
+          {
+            "id": "shen_hai",
+            "branches": [
+              "shen",
+              "hai"
+            ],
+            "ru": "Шэнь ↔ Хай"
+          },
+          {
+            "id": "you_xu",
+            "branches": [
+              "you",
+              "xu"
+            ],
+            "ru": "Ю ↔ Сюй"
+          }
+        ]
+      },
+      "punishments": {
+        "ru": "Наказания (三刑)",
+        "status": "VERIFIED",
+        "items": [
+          {
+            "id": "yin_si_shen",
+            "kind": "triple",
+            "branches": [
+              "yin",
+              "si",
+              "shen"
+            ],
+            "ru": "Инь + Сы + Шэнь — «неблагодарности»"
+          },
+          {
+            "id": "chou_xu_wei",
+            "kind": "triple",
+            "branches": [
+              "chou",
+              "xu",
+              "wei"
+            ],
+            "ru": "Чоу + Сюй + Вэй — «power/притеснения»"
+          },
+          {
+            "id": "zi_mao",
+            "kind": "double",
+            "branches": [
+              "zi",
+              "mao"
+            ],
+            "ru": "Цзы + Мао — «невежливости»"
+          },
+          {
+            "id": "chen_chen",
+            "kind": "self",
+            "branches": [
+              "chen",
+              "chen"
+            ],
+            "ru": "Чэнь + Чэнь — самонаказание"
+          },
+          {
+            "id": "wu_wu",
+            "kind": "self",
+            "branches": [
+              "wu",
+              "wu"
+            ],
+            "ru": "У + У — самонаказание"
+          },
+          {
+            "id": "you_you",
+            "kind": "self",
+            "branches": [
+              "you",
+              "you"
+            ],
+            "ru": "Ю + Ю — самонаказание"
+          },
+          {
+            "id": "hai_hai",
+            "kind": "self",
+            "branches": [
+              "hai",
+              "hai"
+            ],
+            "ru": "Хай + Хай — самонаказание"
+          }
+        ]
+      },
+      "threeSha": {
+        "ru": "Три Ша (三煞)",
+        "status": "VERIFIED",
+        "note": "Определяется треугольником года. Ша занимает три горы сектора, противоположного стихии треугольника.",
+        "items": [
+          {
+            "id": "sha_south",
+            "yearTriad": [
+              "shen",
+              "zi",
+              "chen"
+            ],
+            "shaBranches": [
+              "si",
+              "wu",
+              "wei"
+            ],
+            "direction": "S",
+            "ru": "Год Воды (Шэнь-Цзы-Чэнь) → Три Ша на Юге"
+          },
+          {
+            "id": "sha_east",
+            "yearTriad": [
+              "si",
+              "you",
+              "chou"
+            ],
+            "shaBranches": [
+              "yin",
+              "mao",
+              "chen"
+            ],
+            "direction": "E",
+            "ru": "Год Металла (Сы-Ю-Чоу) → Три Ша на Востоке"
+          },
+          {
+            "id": "sha_north",
+            "yearTriad": [
+              "yin",
+              "wu",
+              "xu"
+            ],
+            "shaBranches": [
+              "hai",
+              "zi",
+              "chou"
+            ],
+            "direction": "N",
+            "ru": "Год Огня (Инь-У-Сюй) → Три Ша на Севере"
+          },
+          {
+            "id": "sha_west",
+            "yearTriad": [
+              "hai",
+              "mao",
+              "wei"
+            ],
+            "shaBranches": [
+              "shen",
+              "you",
+              "xu"
+            ],
+            "direction": "W",
+            "ru": "Год Дерева (Хай-Мао-Вэй) → Три Ша на Западе"
+          }
+        ]
+      },
+      "taiSui": {
+        "ru": "Тай Суй (太歲, Юпитер) и Суй По (歲破)",
+        "status": "VERIFIED",
+        "rule": "Тай Суй занимает гору, соответствующую ветви года; Суй По — противоположную гору (180°)."
+      }
+    },
+    "gua": {
+      "$id": "gua",
+      "title": "Число Гуа и восемь направлений (八宅)",
+      "status": "VERIFIED (формула и таблица направлений)",
+      "sources": [
+        "fengshuimestari.fi/Chinese_Calendar_and_Astrology.html (ming gua от года рождения)",
+        "Классическая школа Ба Чжай (八宅) — таблица четырёх благоприятных и четырёх неблагоприятных направлений",
+        "astrologjia.com/nine-star-ki.html (год начинается около 4 февраля — Ли Чунь)"
+      ],
+      "note": "Год берётся СОЛНЕЧНЫЙ (смена на Ли Чунь), а не григорианский. Формула цифрового корня работает и для годов ≥ 2000 (проверено на 1984 и 2000 в тестах).",
+      "formula": {
+        "status": "VERIFIED",
+        "digitRoot": "s = цифровой корень солнечного года, приведённый к 1..9",
+        "male": "gua = 11 - s, привести в 1..9; если 5 → 2",
+        "female": "gua = s + 4, привести в 1..9; если 5 → 8"
+      },
+      "guaTypes": {
+        "east": [
+          1,
+          3,
+          4,
+          9
+        ],
+        "west": [
+          2,
+          6,
+          7,
+          8
+        ],
+        "ru": {
+          "east": "Восточная группа",
+          "west": "Западная группа"
+        }
+      },
+      "directionsByGua": {
+        "1": {
+          "shengQi": "SE",
+          "tianYi": "E",
+          "yanNian": "S",
+          "fuWei": "N",
+          "huoHai": "W",
+          "wuGui": "NE",
+          "liuSha": "NW",
+          "jueMing": "SW"
+        },
+        "2": {
+          "shengQi": "NE",
+          "tianYi": "W",
+          "yanNian": "NW",
+          "fuWei": "SW",
+          "huoHai": "E",
+          "wuGui": "SE",
+          "liuSha": "S",
+          "jueMing": "N"
+        },
+        "3": {
+          "shengQi": "S",
+          "tianYi": "N",
+          "yanNian": "SE",
+          "fuWei": "E",
+          "huoHai": "SW",
+          "wuGui": "NW",
+          "liuSha": "NE",
+          "jueMing": "W"
+        },
+        "4": {
+          "shengQi": "N",
+          "tianYi": "S",
+          "yanNian": "E",
+          "fuWei": "SE",
+          "huoHai": "NW",
+          "wuGui": "SW",
+          "liuSha": "W",
+          "jueMing": "NE"
+        },
+        "6": {
+          "shengQi": "W",
+          "tianYi": "NE",
+          "yanNian": "SW",
+          "fuWei": "NW",
+          "huoHai": "SE",
+          "wuGui": "N",
+          "liuSha": "E",
+          "jueMing": "S"
+        },
+        "7": {
+          "shengQi": "NW",
+          "tianYi": "SW",
+          "yanNian": "NE",
+          "fuWei": "W",
+          "huoHai": "N",
+          "wuGui": "S",
+          "liuSha": "SE",
+          "jueMing": "E"
+        },
+        "8": {
+          "shengQi": "SW",
+          "tianYi": "NW",
+          "yanNian": "W",
+          "fuWei": "NE",
+          "huoHai": "S",
+          "wuGui": "E",
+          "liuSha": "N",
+          "jueMing": "SE"
+        },
+        "9": {
+          "shengQi": "E",
+          "tianYi": "SE",
+          "yanNian": "N",
+          "fuWei": "S",
+          "huoHai": "NE",
+          "wuGui": "W",
+          "liuSha": "SW",
+          "jueMing": "NW"
+        },
+        "status": "VERIFIED",
+        "note": "sheng-qi (生氣) / tian-yi (天醫) / yan-nian (延年) / fu-wei (伏位) — благоприятные; huo-hai (禍害) / wu-gui (五鬼) / liu-sha (六煞) / jue-ming (絕命) — неблагоприятные."
+      },
+      "directionLabels": {
+        "shengQi": {
+          "ru": "Шэн Ци (生氣) — процветание",
+          "quality": "auspicious",
+          "rank": 1
+        },
+        "tianYi": {
+          "ru": "Тянь И (天醫) — здоровье",
+          "quality": "auspicious",
+          "rank": 2
+        },
+        "yanNian": {
+          "ru": "Янь Нянь (延年) — отношения",
+          "quality": "auspicious",
+          "rank": 3
+        },
+        "fuWei": {
+          "ru": "Фу Вэй (伏位) — стабильность",
+          "quality": "auspicious",
+          "rank": 4
+        },
+        "huoHai": {
+          "ru": "Хо Хай (禍害) — неудачи",
+          "quality": "inauspicious",
+          "rank": 5
+        },
+        "wuGui": {
+          "ru": "У Гуй (五鬼) — «пять духов»",
+          "quality": "inauspicious",
+          "rank": 6
+        },
+        "liuSha": {
+          "ru": "Лю Ша (六煞) — «шесть убийц»",
+          "quality": "inauspicious",
+          "rank": 7
+        },
+        "jueMing": {
+          "ru": "Цзюэ Мин (絕命) — «конец судьбы»",
+          "quality": "inauspicious",
+          "rank": 8
+        }
+      }
+    },
+    "weights": {
+      "$id": "weights",
+      "title": "Весовые коэффициенты расчётной модели",
+      "status": "INFERRED",
+      "criticalNote": "ЭТО САМЫЙ ВАЖНЫЙ ФАЙЛ ДЛЯ АУДИТА. Ни один из этих коэффициентов не опубликован автором референсной программы «Фэн-Шуй Удачи». Они являются ЯВНОЙ, ДЕКЛАРИРОВАННОЙ модельной гипотезой данной реализации, а не восстановленным оригиналом. Все они вынесены сюда, чтобы их можно было менять без правки кода и чтобы результат нельзя было выдать за VERIFIED. Изменение любого числа здесь меняет форму графиков — это ожидаемо и задокументировано.",
+      "rationale": {
+        "positionWeights": "Классическая иерархия Ба-цзы: столп месяца (令) сильнее прочих, столп дня (日主) — вторая по значимости позиция, год и час слабее. Иерархия качественная и общепринята; конкретные числа — наши.",
+        "stemBase_branchBase": "Ветвь несёт скрытые стволы и в большинстве школ считается «более весомой», чем открытый ствол; отношение 1.0 : 1.2 — наша гипотеза.",
+        "transformRatio": "Доля силы участников слияния, переносимая в порождаемую стихию, когда включён режим «с учётом слияний»."
+      },
+      "positionWeights": {
+        "year": {
+          "stem": 0.8,
+          "branch": 0.9
+        },
+        "month": {
+          "stem": 1.4,
+          "branch": 1.8
+        },
+        "day": {
+          "stem": 1.2,
+          "branch": 1.3
+        },
+        "hour": {
+          "stem": 0.8,
+          "branch": 0.9
+        },
+        "luck": {
+          "stem": 1,
+          "branch": 1.1
+        },
+        "annual": {
+          "stem": 0.9,
+          "branch": 1
+        },
+        "monthly": {
+          "stem": 0.6,
+          "branch": 0.7
+        },
+        "daily": {
+          "stem": 0.4,
+          "branch": 0.45
+        }
+      },
+      "stemBase": 10,
+      "branchBase": 12,
+      "transformRatio": 0.5,
+      "meridian": {
+        "status": "INFERRED",
+        "note": "Распределение силы стихии между парными органами Инь (цзан) и Ян (фу). Огонь делится ещё и между главным (сердце/тонкий кишечник) и министерским (перикард/тройной обогреватель) огнём.",
+        "yinShare": 0.5,
+        "yangShare": 0.5,
+        "fireImperialShare": 0.6,
+        "fireMinisterialShare": 0.4,
+        "scale": 100
+      },
+      "harmony": {
+        "status": "INFERRED",
+        "note": "Индекс гармоничности 0..100. Референс приводит значения такого порядка («8» после «85»), что подтверждает шкалу 0..100, но не формулу. Мы используем нормированное среднее абсолютное отклонение меридианов от их среднего.",
+        "method": "1 - (среднее |x_i - mean| / mean), обрезано в [0,1], умножено на 100"
+      }
+    }
+  }
+}

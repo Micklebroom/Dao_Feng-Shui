@@ -1,0 +1,36 @@
+{
+  "$id": "solar-terms",
+  "title": "24 Solar Terms / 二十四节气 / 24 сезона",
+  "status": "VERIFIED",
+  "sources": [
+    "Definition by apparent solar longitude in 15-degree steps (standard modern Chinese calendar definition, GB/T 33661-2017)",
+    "nouahsark.com/en/infocenter/culture/astrology/four_pillar.php (month branch boundaries at the 12 sectional terms)"
+  ],
+  "note": "type=jie (節, sectional) terms START a solar month and therefore START a new month pillar. type=qi (氣, middle) terms fall inside a month. longitude is the apparent geocentric solar longitude in degrees.",
+  "items": [
+    { "index": 0,  "id": "lichun",      "han": "立春", "ru": "Начало весны",     "en": "Start of Spring",   "longitude": 315, "type": "jie", "startsMonthBranch": "yin" },
+    { "index": 1,  "id": "yushui",      "han": "雨水", "ru": "Дождевая вода",    "en": "Rain Water",        "longitude": 330, "type": "qi",  "startsMonthBranch": null },
+    { "index": 2,  "id": "jingzhe",     "han": "惊蛰", "ru": "Пробуждение",      "en": "Awakening Insects", "longitude": 345, "type": "jie", "startsMonthBranch": "mao" },
+    { "index": 3,  "id": "chunfen",     "han": "春分", "ru": "Весеннее равноденствие", "en": "Spring Equinox", "longitude": 0, "type": "qi", "startsMonthBranch": null },
+    { "index": 4,  "id": "qingming",    "han": "清明", "ru": "Ясная погода",     "en": "Pure Brightness",   "longitude": 15,  "type": "jie", "startsMonthBranch": "chen" },
+    { "index": 5,  "id": "guyu",        "han": "谷雨", "ru": "Хлебные дожди",    "en": "Grain Rain",        "longitude": 30,  "type": "qi",  "startsMonthBranch": null },
+    { "index": 6,  "id": "lixia",       "han": "立夏", "ru": "Начало лета",      "en": "Start of Summer",   "longitude": 45,  "type": "jie", "startsMonthBranch": "si" },
+    { "index": 7,  "id": "xiaoman",     "han": "小满", "ru": "Малое изобилие",   "en": "Grain Full",        "longitude": 60,  "type": "qi",  "startsMonthBranch": null },
+    { "index": 8,  "id": "mangzhong",   "han": "芒种", "ru": "Колошение",        "en": "Grain in Ear",      "longitude": 75,  "type": "jie", "startsMonthBranch": "wu" },
+    { "index": 9,  "id": "xiazhi",      "han": "夏至", "ru": "Летнее солнцестояние", "en": "Summer Solstice", "longitude": 90, "type": "qi", "startsMonthBranch": null },
+    { "index": 10, "id": "xiaoshu",     "han": "小暑", "ru": "Малая жара",       "en": "Minor Heat",        "longitude": 105, "type": "jie", "startsMonthBranch": "wei" },
+    { "index": 11, "id": "dashu",       "han": "大暑", "ru": "Большая жара",     "en": "Major Heat",        "longitude": 120, "type": "qi",  "startsMonthBranch": null },
+    { "index": 12, "id": "liqiu",       "han": "立秋", "ru": "Начало осени",     "en": "Start of Autumn",   "longitude": 135, "type": "jie", "startsMonthBranch": "shen" },
+    { "index": 13, "id": "chushu",      "han": "处暑", "ru": "Конец жары",       "en": "Limit of Heat",     "longitude": 150, "type": "qi",  "startsMonthBranch": null },
+    { "index": 14, "id": "bailu",       "han": "白露", "ru": "Белые росы",       "en": "White Dew",         "longitude": 165, "type": "jie", "startsMonthBranch": "you" },
+    { "index": 15, "id": "qiufen",      "han": "秋分", "ru": "Осеннее равноденствие", "en": "Autumn Equinox", "longitude": 180, "type": "qi", "startsMonthBranch": null },
+    { "index": 16, "id": "hanlu",       "han": "寒露", "ru": "Холодные росы",    "en": "Cold Dew",          "longitude": 195, "type": "jie", "startsMonthBranch": "xu" },
+    { "index": 17, "id": "shuangjiang", "han": "霜降", "ru": "Выпадение инея",   "en": "Frost Descent",     "longitude": 210, "type": "qi",  "startsMonthBranch": null },
+    { "index": 18, "id": "lidong",      "han": "立冬", "ru": "Начало зимы",      "en": "Start of Winter",   "longitude": 225, "type": "jie", "startsMonthBranch": "hai" },
+    { "index": 19, "id": "xiaoxue",     "han": "小雪", "ru": "Малые снега",      "en": "Minor Snow",        "longitude": 240, "type": "qi",  "startsMonthBranch": null },
+    { "index": 20, "id": "daxue",       "han": "大雪", "ru": "Большие снега",    "en": "Major Snow",        "longitude": 255, "type": "jie", "startsMonthBranch": "zi" },
+    { "index": 21, "id": "dongzhi",     "han": "冬至", "ru": "Зимнее солнцестояние", "en": "Winter Solstice", "longitude": 270, "type": "qi", "startsMonthBranch": null },
+    { "index": 22, "id": "xiaohan",     "han": "小寒", "ru": "Малые холода",     "en": "Minor Cold",        "longitude": 285, "type": "jie", "startsMonthBranch": "chou" },
+    { "index": 23, "id": "dahan",       "han": "大寒", "ru": "Большие холода",   "en": "Major Cold",        "longitude": 300, "type": "qi",  "startsMonthBranch": null }
+  ]
+}

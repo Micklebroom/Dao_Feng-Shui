@@ -1,0 +1,24 @@
+{
+  "name": "dao-feng-shui",
+  "version": "0.4.0-mvp",
+  "description": "MVP browser-based traditional Chinese Feng Shui cyclic calculation engine (JSON-driven). Experimental - not production ready.",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build:data": "node tools/build-data-bundle.js",
+    "build:standalone": "node tools/build-standalone.js",
+    "build": "npm run build:data && npm run build:standalone",
+    "validate": "node tools/validate-data.js",
+    "test:unit": "node --test tests/unit",
+    "test:integration": "node --test tests/integration",
+    "test": "npm run validate && node --test tests/unit tests/integration",
+    "test:browser": "node tools/browser-test.js",
+    "serve": "node tools/serve.js",
+    "dist": "node tools/make-zip.js",
+    "all": "npm run build && npm run test && npm run test:browser && npm run dist"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
