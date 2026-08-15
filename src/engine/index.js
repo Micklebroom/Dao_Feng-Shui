@@ -5,7 +5,10 @@
  * Этот модуль не знает ничего о DOM, SVG, цветах разметки и локализации UI.
  */
 
-import { mod, splitSexagenary, yearIndexFromSolarYear, jieTermsForYear, dayIndexForDate, jdnAtNoon } from './ganzhi.js';
+import {
+  mod, splitSexagenary, yearIndexFromSolarYear, jieTermsForYear, dayIndexForDate,
+  jdnAtNoon, hourBranchIndex, hourStemIndex
+} from './ganzhi.js';
 import { computeFourPillars, computeLuckPillars, normalizeInput } from './pillars.js';
 import { computeElementStrength, applyCombinations, toPercent } from './elements.js';
 import { computeMeridians, computeHarmony, computeYinYang } from './meridians.js';
@@ -29,7 +32,7 @@ export const ENGINE_VERSION = '0.4.0-mvp';
 export function computeProfile(birth, tables, options = {}) {
   const { applyCombos = true } = options;
 
-  const fp = computeFourPillars(birth);
+  const fp = computeFourPillars(birth, tables.anchors);
   const roles = ['year', 'month', 'day', 'hour'];
   const pillarArr = roles.map((r) => ({ ...fp.pillars[r], role: r }));
 
@@ -104,11 +107,11 @@ export function computeTimeSeries(birth, tables, options = {}) {
 
   let luck = null;
   if (includeLuck && (birth.gender === 'male' || birth.gender === 'female')) {
-    luck = computeLuckPillars(birth, { count: 12 });
+    luck = computeLuckPillars(birth, { count: 12, rules: tables.luckRules });
   }
 
   const points = [];
-  const steps = buildSteps(scale, from, count, birth, profile);
+  const steps = buildSteps(scale, from, count, birth, profile, tables);
 
   for (const step of steps) {
     const extra = [];
@@ -152,7 +155,8 @@ export function computeTimeSeries(birth, tables, options = {}) {
 }
 
 /** Построение шагов временной шкалы. */
-function buildSteps(scale, from, count, birth, profile) {
+function buildSteps(scale, from, count, birth, profile, tables) {
+  const anchors = tables.anchors;
   const steps = [];
   const startYear = from ?? profile.solarYear;
 
@@ -160,7 +164,7 @@ function buildSteps(scale, from, count, birth, profile) {
     const n = count ?? 10;
     for (let i = 0; i < n; i++) {
       const y = startYear + i * 10;
-      const idx = yearIndexFromSolarYear(y);
+      const idx = yearIndexFromSolarYear(y, anchors);
       const sp = splitSexagenary(idx);
       steps.push({
         key: 'D' + y,
@@ -174,7 +178,7 @@ function buildSteps(scale, from, count, birth, profile) {
     const n = count ?? 30;
     for (let i = 0; i < n; i++) {
       const y = startYear + i;
-      const idx = yearIndexFromSolarYear(y);
+      const idx = yearIndexFromSolarYear(y, anchors);
       const sp = splitSexagenary(idx);
       steps.push({
         key: 'Y' + y,
@@ -190,7 +194,7 @@ function buildSteps(scale, from, count, birth, profile) {
     for (let i = 0; i < n; i++) {
       const y = y0 + Math.floor(i / 12);
       const ord = mod(i, 12);
-      const yIdx = yearIndexFromSolarYear(y);
+      const yIdx = yearIndexFromSolarYear(y, anchors);
       const ySp = splitSexagenary(yIdx);
       const mStem = mod(ySp.stem * 2 + ord + 2, 10);
       const mBranch = mod(ord + 2, 12);
@@ -214,7 +218,7 @@ function buildSteps(scale, from, count, birth, profile) {
       const dIdx = mod(jdn - 11, 60);
       const sp = splitSexagenary(dIdx);
       const g = utcFromJulianDay(jdn - 0.5);
-      const yIdx = yearIndexFromSolarYear(g.year);
+      const yIdx = yearIndexFromSolarYear(g.year, anchors);
       const ySp = splitSexagenary(yIdx);
       steps.push({
         key: 'd' + jdn,
@@ -225,6 +229,38 @@ function buildSteps(scale, from, count, birth, profile) {
           { stem: sp.stem, branch: sp.branch, role: 'daily' }
         ],
         transitLabels: { date: `${g.day}.${g.month}.${g.year}` }
+      });
+    }
+  } else if (scale === 'hour') {
+    // ШАГ 1 ЧАС. Столп часа выводится правилом «пяти крыс» (五鼠遁) —
+    // алгоритм B4, статус VERIFIED. Ветвь часа: mod(floor((h+1)/2), 12).
+    const n = count ?? 24;
+    const y = startYear;
+    const d0 = birth.day ?? 1;
+    const m0 = birth.month ?? 1;
+    const baseJdn = jdnAtNoon(y, m0, d0);
+    for (let i = 0; i < n; i++) {
+      const hourAbs = (birth.hour ?? 0) + i;
+      const dayOffset = Math.floor(hourAbs / 24);
+      const h = mod(hourAbs, 24);
+      const jdn = baseJdn + dayOffset;
+      const dIdx = mod(jdn - 11, 60);
+      const dSp = splitSexagenary(dIdx);
+      const hBranch = hourBranchIndex(h);
+      const hStem = hourStemIndex(dSp.stem, hBranch);
+      const g = utcFromJulianDay(jdn - 0.5);
+      const yIdx = yearIndexFromSolarYear(g.year, anchors);
+      const ySp = splitSexagenary(yIdx);
+      steps.push({
+        key: 'h' + jdn + '-' + h,
+        label: String(h).padStart(2, '0') + ':00',
+        decimalYear: g.year + (g.month - 1) / 12 + (g.day + h / 24) / 365,
+        transitPillars: [
+          { stem: ySp.stem, branch: ySp.branch, role: 'annual' },
+          { stem: dSp.stem, branch: dSp.branch, role: 'daily' },
+          { stem: hStem, branch: hBranch, role: 'hourly' }
+        ],
+        transitLabels: { date: `${g.day}.${g.month}.${g.year}`, hour: h }
       });
     }
   }
@@ -247,7 +283,7 @@ export function computeFlyingStarsView(building, moment, tables) {
   const mp = computeFourPillars({ ...moment, gender: undefined });
   const yBranch = tables.branches.items[mp.pillars.year.branch];
 
-  const yStar = annualStar(mp.solarYear);
+  const yStar = annualStar(mp.solarYear, tables.anchors);
   const mStar = monthlyStar(mp.pillars.year.branch, mp.solarMonth.ordinal);
   const dStar = computeDayStar(moment, tables);
 

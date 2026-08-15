@@ -30,22 +30,31 @@
             <div class="row3" style="flex:1">
               <input type="number" id="b-day" value="5" min="1" max="31" title="день">
               <input type="number" id="b-month" value="6" min="1" max="12" title="месяц">
-              <input type="number" id="b-year" value="1967" min="1900" max="2100" title="год">
+              <input type="number" id="b-year" value="1967" min="1700" max="2200" title="год">
             </div>
           </div>
           <div class="field wide"><label>Время</label>
             <div class="row3" style="flex:1">
               <input type="number" id="b-hour" value="12" min="0" max="23" title="час">
               <input type="number" id="b-min" value="0" min="0" max="59" title="минута">
-              <input type="number" id="b-tz" value="3" min="-12" max="14" step="1" title="часовой пояс">
+              <input type="number" id="b-tz" value="3" min="-12" max="14" step="0.5" title="часовой пояс (UTC±)">
             </div>
           </div>
-          <div class="field wide"><label>Пол</label>
-            <select id="b-gender">
-              <option value="male">мужской</option>
-              <option value="female">женский</option>
+          <div class="field wide"><label>Место</label>
+            <select id="b-place" title="Место рождения задаёт часовой пояс и долготу">
             </select>
           </div>
+          <div class="field wide"><label>Долгота</label>
+            <div class="row3" style="flex:1">
+              <input type="number" id="b-lon" value="37.6" min="-180" max="180" step="0.1" title="долгота, ° в. д.">
+              <input type="number" id="b-lat" value="55.75" min="-90" max="90" step="0.1" title="широта, ° с. ш.">
+              <select id="b-gender" title="пол">
+                <option value="male">муж.</option>
+                <option value="female">жен.</option>
+              </select>
+            </div>
+          </div>
+          <div class="note" id="place-note">Долгота учитывается только справочно: столпы считаются по указанному часовому поясу (правила TZ-1…TZ-6).</div>
         </div>
       </div>
 
@@ -84,6 +93,9 @@
             <label><input type="radio" name="cmode" value="meridians" checked> меридианы</label>
             <label><input type="radio" name="cmode" value="elements"> стихии</label>
             <label><input type="radio" name="cmode" value="index"> индексы</label>
+            <label><input type="radio" name="cmode" value="yinyang"> Инь/Ян</label>
+            <span class="sep"></span>
+            <select id="cmode-unverified" title="Показатели, алгоритм которых не подтверждён"></select>
           </span>
         </div>
         <div style="display:flex;gap:8px;align-items:center;padding:2px 6px;background:#e4e1db;border-bottom:1px solid #c4c0b9">
@@ -92,12 +104,14 @@
           <label><input type="radio" name="scale" value="year" checked> годы</label>
           <label><input type="radio" name="scale" value="month"> месяцы</label>
           <label><input type="radio" name="scale" value="day"> дни</label>
+          <label><input type="radio" name="scale" value="hour"> часы</label>
           <span class="sep"></span>
           <span>с</span><input type="number" id="s-from" value="2000" style="width:56px">
           <span>кол-во</span><input type="number" id="s-count" value="30" style="width:46px">
           <label title="Учитывать слияния стихий"><input type="checkbox" id="chk-combos" checked> слияния</label>
         </div>
         <svg id="main-chart" class="chart" height="300"></svg>
+        <div id="unverified-holder" style="display:none"></div>
         <div class="legend" id="legend"></div>
         <div style="padding:2px 6px;background:#e4e1db;border-top:1px solid #c4c0b9">
           <button class="btn" id="btn-all-on">Все серии</button>
@@ -129,6 +143,13 @@
 
     <!-- ПРАВАЯ КОЛОНКА -->
     <div class="column">
+      <div class="panel">
+        <h2>Показатели <span class="badge">статусы</span></h2>
+        <div class="body" style="max-height:300px;overflow:auto">
+          <div id="indicator-list"></div>
+        </div>
+      </div>
+
       <div class="panel">
         <h2>Помещение <span class="badge">玄空</span></h2>
         <div class="body">

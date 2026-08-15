@@ -42,7 +42,7 @@ export function normalizeInput(input) {
  * Полный расчёт четырёх столпов.
  * @returns {{year,month,day,hour}} каждый — {stem,branch,index}
  */
-export function computeFourPillars(input) {
+export function computeFourPillars(input, anchors = null) {
   const norm = normalizeInput(input);
   const { year, month, day, hour = 12, minute = 0 } = input;
   const { lateZiNewDay = true } = input;
@@ -51,7 +51,7 @@ export function computeFourPillars(input) {
   const sm = solarMonthAt(norm.jdUTC, year);
   if (!sm) throw new Error('Не удалось определить солнечный месяц');
 
-  const yIdx = yearIndexFromSolarYear(sm.solarYear);
+  const yIdx = yearIndexFromSolarYear(sm.solarYear, anchors);
   const ySplit = splitSexagenary(yIdx);
 
   const mStem = monthStemIndex(ySplit.stem, sm.ordinal);
@@ -94,9 +94,10 @@ export function computeLuckPillars(input, options = {}) {
   if (gender !== 'male' && gender !== 'female') {
     throw new Error("gender должен быть 'male' или 'female'");
   }
-  const { count = 10, rounding = 'exact' } = options;
+  // ARCH-1: rules приходит из data/luck_pillars.json через движок.
+  const { count = 10, rounding = 'exact', rules = null } = options;
 
-  const fp = computeFourPillars(input);
+  const fp = computeFourPillars(input, options.anchors || null);
   const yearStem = fp.pillars.year.stem;
   const yearStemIsYang = mod(yearStem, 2) === 0;
   const forward = (gender === 'male') === yearStemIsYang;
@@ -119,7 +120,11 @@ export function computeLuckPillars(input, options = {}) {
     deltaDays = birthJD - prev.jd;
   }
 
-  let startAge = deltaDays / 3;
+  // ARCH-1: 3 дня = 1 год и длина столпа 10 лет приходят из
+  // data/luck_pillars.json, а не зашиты числами.
+  const daysPerYear = rules ? rules.daysPerYear : 3;
+  const pillarYears = rules ? rules.pillarYears : 10;
+  let startAge = deltaDays / daysPerYear;
   if (rounding === 'floor') startAge = Math.floor(startAge);
   else if (rounding === 'round') startAge = Math.round(startAge);
 
@@ -133,8 +138,8 @@ export function computeLuckPillars(input, options = {}) {
       ordinal: i,
       stem: mod(mStem + step, 10),
       branch: mod(mBranch + step, 12),
-      startAge: startAge + (i - 1) * 10,
-      endAge: startAge + i * 10
+      startAge: startAge + (i - 1) * pillarYears,
+      endAge: startAge + i * pillarYears
     });
   }
 

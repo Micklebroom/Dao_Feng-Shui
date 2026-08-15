@@ -8,6 +8,9 @@ import {
   computeLuckPillars, solarTermTable, ENGINE_VERSION, mountainForDegrees, periodForYear
 } from '../engine/index.js';
 import { renderLineChart, renderBarChart } from '../chart/chart.js';
+import { buildProfile, buildTimeSeries } from '../model/profile.js';
+import { INDICATOR_CATALOG } from '../model/indicators.js';
+import { STATUS_RU } from '../core/provenance.js';
 
 const T = TABLES;
 const $ = (s, r = document) => r.querySelector(s);
@@ -47,15 +50,17 @@ function tag(status) {
 function recalc() {
   const t0 = performance.now();
   try {
-    state.result = computeTimeSeries(state.birth, T, {
+    // Слой 3 (Result Model): UI не обращается к движку напрямую.
+    state.result = buildTimeSeries(state.birth, T, {
       scale: state.scale, from: state.from, count: state.count,
       applyCombos: state.applyCombos
     });
-    state.luck = computeLuckPillars(state.birth, { count: 12 });
+    state.model = buildProfile(state.birth, T, { applyCombos: state.applyCombos });
+    state.luck = computeLuckPillars(state.birth, { count: 12, rules: T.luckRules });
     state.stars = computeFlyingStarsView(state.building, state.moment, T);
     setStatus('Расчёт выполнен за ' + (performance.now() - t0).toFixed(1) + ' мс', '');
   } catch (e) {
-    setStatus('ОШИБКА РАСЧЁТА: ' + e.message, 'err');
+    setStatus('ОШИБКА РАСЧЁТА: ' + (e.userMessage || e.message), 'err');
     console.error(e);
     return;
   }
@@ -157,6 +162,18 @@ function seriesForMode() {
       accessor: (p) => p.elements[e.id]
     }));
   }
+  if (state.chartMode === 'yinyang') {
+    // Суммы Инь и Ян по 10 меридианам. Значения INFERRED: они наследуют
+    // статус исходных величин меридианов (формула референса не опубликована).
+    return [
+      { id: 'yin', label: 'Сумма Инь', color: T.colors.palettes.polarity.byId.yin, width: 2,
+        accessor: (p) => p.yinYang.yin },
+      { id: 'yang', label: 'Сумма Ян', color: T.colors.palettes.polarity.byId.yang, width: 2,
+        accessor: (p) => p.yinYang.yang },
+      { id: 'yinPct', label: 'Инь %', color: '#5b8db8', accessor: (p) => p.yinYang.yinPercent },
+      { id: 'yangPct', label: 'Ян %', color: '#d08a8a', accessor: (p) => p.yinYang.yangPercent }
+    ];
+  }
   return [
     { id: 'harmony', label: 'Гармоничность', color: '#16325c', width: 2, accessor: (p) => p.harmony },
     { id: 'yin', label: 'Инь %', color: '#1565c0', accessor: (p) => p.yinYang.yinPercent },
@@ -164,14 +181,96 @@ function seriesForMode() {
   ];
 }
 
+/** Показатель, алгоритм которого не подтверждён: вместо графика — объяснение. */
+function renderUnverified(cat) {
+  const svg = $('#main-chart');
+  svg.innerHTML = '';
+  $('#legend').innerHTML = '';
+  const box = document.createElement('div');
+  box.className = 'unverified-box';
+  box.innerHTML =
+    `<div class="unverified-title">Алгоритм не подтверждён</div>
+     <div class="unverified-name">${cat.ru}</div>
+     <p>${cat.note}</p>
+     <p class="unverified-refs">
+       ${cat.placeholderRef ? 'Заглушка: <b>' + cat.placeholderRef + '</b>. ' : ''}
+       Статус: <b>${STATUS_RU[cat.status] || cat.status}</b>.
+     </p>
+     <p class="unverified-policy">
+       График не строится намеренно. Подстановка правдоподобных чисел вместо
+       неизвестной формулы referenсe-программы означала бы выдумывание алгоритма.
+     </p>`;
+  const holder = $('#unverified-holder');
+  holder.innerHTML = '';
+  holder.appendChild(box);
+  holder.style.display = 'block';
+  svg.style.display = 'none';
+}
+
+/** Панель «Показатели»: честный список того, что подтверждено, а что нет. */
+function renderIndicatorList() {
+  const rows = INDICATOR_CATALOG.map((c) => {
+    const computable = c.status !== 'NOT_VERIFIED';
+    return `<tr class="ind-row ${computable ? '' : 'ind-off'}" data-ind="${c.id}" title="${c.note.replace(/"/g, '&quot;')}">
+      <td class="l">${c.ru}</td>
+      <td>${tag(c.status)}</td>
+      <td>${c.placeholderRef || (c.algorithmRef || '—')}</td>
+    </tr>`;
+  }).join('');
+  $('#indicator-list').innerHTML =
+    `<table class="grid"><tr><th>Показатель</th><th>Статус</th><th>Ссылка</th></tr>${rows}</table>
+     <div class="note">Строки без расчёта: формула референсной программы не опубликована.
+     Нажмите на строку, чтобы увидеть причину.</div>`;
+
+  $$('#indicator-list .ind-row').forEach((tr) => tr.addEventListener('click', () => {
+    const cat = INDICATOR_CATALOG.find((c) => c.id === tr.dataset.ind);
+    if (!cat) return;
+    if (cat.status === 'NOT_VERIFIED') {
+      state.chartMode = 'unverified';
+      state.unverifiedId = cat.id;
+      $$('input[name="cmode"]').forEach((r) => { r.checked = false; });
+      $('#cmode-unverified').value = cat.id;
+      renderChart();
+    }
+  }));
+}
+
+/** Заполнение списка мест рождения из data/places.json. */
+function fillPlaces() {
+  const sel = $('#b-place');
+  sel.innerHTML = T.places.items
+    .map((p) => `<option value="${p.id}">${p.ru}${p.tz === null ? '' : ' (UTC' + (p.tz >= 0 ? '+' : '') + p.tz + ')'}</option>`)
+    .join('');
+  sel.value = 'moscow';
+}
+
+/** Заполнение списка неподтверждённых показателей. */
+function fillUnverifiedSelect() {
+  const sel = $('#cmode-unverified');
+  const list = INDICATOR_CATALOG.filter((c) => c.status === 'NOT_VERIFIED');
+  sel.innerHTML = '<option value="">— не подтверждённые —</option>' +
+    list.map((c) => `<option value="${c.id}">${c.ru}</option>`).join('');
+}
+
 function visibleSet() {
   if (state.chartMode === 'meridians') return state.visibleMeridians;
   if (state.chartMode === 'elements') return state.visibleElements;
+  if (state.chartMode === 'yinyang') {
+    if (!state.visibleYinYang) state.visibleYinYang = new Set(['yin', 'yang', 'yinPct', 'yangPct']);
+    return state.visibleYinYang;
+  }
   if (!state.visibleIndex) state.visibleIndex = new Set(['harmony', 'yin', 'yang']);
   return state.visibleIndex;
 }
 
 function renderChart() {
+  // Показатели без опубликованной формулы не рисуются — показывается причина.
+  if (state.chartMode === 'unverified') {
+    const cat = INDICATOR_CATALOG.find((c) => c.id === state.unverifiedId);
+    if (cat) { renderUnverified(cat); return; }
+  }
+  $('#unverified-holder').style.display = 'none';
+  $('#main-chart').style.display = '';
   const pts = state.result.points;
   const series = seriesForMode();
   const visible = visibleSet();
@@ -344,6 +443,27 @@ function bind() {
     };
   };
 
+  // Место рождения подставляет часовой пояс и координаты.
+  $('#b-place').addEventListener('change', (e) => {
+    const pl = T.places.items.find((x) => x.id === e.target.value);
+    if (!pl || pl.tz === null) {
+      $('#place-note').textContent = 'Ручной режим: задайте часовой пояс самостоятельно.';
+      return;
+    }
+    $('#b-tz').value = pl.tz;
+    $('#b-lon').value = pl.lon;
+    $('#b-lat').value = pl.lat;
+    $('#place-note').textContent = T.places.limitation;
+    readBirth(); recalc();
+  });
+
+  // Выбор неподтверждённого показателя.
+  $('#cmode-unverified').addEventListener('change', (e) => {
+    if (!e.target.value) { state.chartMode = 'meridians'; $('input[name="cmode"][value="meridians"]').checked = true; }
+    else { state.chartMode = 'unverified'; state.unverifiedId = e.target.value; }
+    renderChart();
+  });
+
   $('#btn-calc').addEventListener('click', () => { readBirth(); readBuilding(); readMoment(); recalc(); });
   $('#btn-today').addEventListener('click', () => {
     const d = new Date();
@@ -362,6 +482,7 @@ function bind() {
   $('#chk-combos').addEventListener('change', (e) => { state.applyCombos = e.target.checked; recalc(); });
 
   $$('input[name="cmode"]').forEach((r) => r.addEventListener('change', () => {
+    $('#cmode-unverified').value = '';
     state.chartMode = r.value; renderChart();
   }));
 
@@ -420,8 +541,11 @@ function exportJSON() {
 /* ============================ СТАРТ ============================ */
 
 export function boot() {
+  fillPlaces();
+  fillUnverifiedSelect();
   bind();
   recalc();
+  renderIndicatorList();
   $('#engine-ver').textContent = ENGINE_VERSION;
   $('#data-ver').textContent = Object.keys(T).length + ' таблиц';
 }

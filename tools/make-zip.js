@@ -26,15 +26,15 @@ const copy = (rel) => {
  'src', 'data', 'tests', 'tools', 'docs'].forEach(copy);
 
 fs.mkdirSync(path.join(stage, 'dist'), { recursive: true });
-fs.copyFileSync(path.join(dist, 'fengshui-standalone.html'),
-  path.join(stage, 'dist', 'fengshui-standalone.html'));
+fs.copyFileSync(path.join(dist, 'feng_shui_mvp.html'),
+  path.join(stage, 'dist', 'feng_shui_mvp.html'));
 
 fs.writeFileSync(path.join(stage, 'START.txt'),
 `ФЭН-ШУЙ: РАСЧЁТНЫЙ ДВИЖОК ЦИКЛОВ
 Статус: MVP / экспериментальное приложение. НЕ production-ready.
 
 БЫСТРЫЙ ЗАПУСК БЕЗ УСТАНОВКИ
-  Откройте в браузере: dist/fengshui-standalone.html
+  Откройте в браузере: dist/feng_shui_mvp.html
   (один файл, без сервера и без интернета)
 
 ПОЛНАЯ ВЕРСИЯ

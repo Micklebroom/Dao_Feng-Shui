@@ -202,3 +202,30 @@ svg.chart { display: block; width: 100%; background: #ece9e4; }
 .tabs button.active { background: #ece9e4; font-weight: bold; color: #16325c; }
 .tabpage { display: none; }
 .tabpage.active { display: block; }
+
+/* ---- Показатель без подтверждённого алгоритма ----
+   Намеренно НЕ похоже на график: пользователь должен видеть,
+   что расчёт не выполнен, а не принять заглушку за результат. */
+.unverified-box {
+  margin: 6px; padding: 10px 12px;
+  background: repeating-linear-gradient(45deg, #efece6, #efece6 8px, #e9e5de 8px, #e9e5de 16px);
+  border: 1px solid #a09a90;
+  color: #2a2a2a;
+}
+.unverified-title {
+  font-weight: bold; font-size: 12px; color: #8a2b2b;
+  letter-spacing: .4px; text-transform: uppercase;
+  border-bottom: 1px solid #c3bcb0; padding-bottom: 3px; margin-bottom: 5px;
+}
+.unverified-name { font-weight: bold; margin-bottom: 4px; }
+.unverified-box p { margin: 4px 0; max-width: 720px; }
+.unverified-refs { color: #333; }
+.unverified-policy {
+  border-left: 3px solid #a8a094; padding-left: 7px;
+  color: #4a4a4a; font-style: italic;
+}
+
+/* ---- Строки панели показателей ---- */
+.ind-row { cursor: default; }
+.ind-row.ind-off { color: #6a6a6a; background: #e6e3dd; cursor: pointer; }
+.ind-row.ind-off:hover { background: #dcd8d0; }

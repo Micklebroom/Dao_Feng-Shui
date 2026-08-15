@@ -33,7 +33,7 @@ const okIfClean = (m) => { if (errors === sectionStart) ok(m); };
 /* Таблицы пакета. bundle.json — производный артефакт сборки, не источник. */
 const TABLES = [
   'stems_branches', 'calendar', 'elements', 'bazi', 'luck_pillars',
-  'gua', 'meridians', 'indicators', 'colors', 'luoshu', 'mountains24'
+  'gua', 'meridians', 'indicators', 'colors', 'luoshu', 'mountains24', 'places'
 ];
 
 /* ============================== [1] JSON validity ============================== */

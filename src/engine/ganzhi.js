@@ -55,8 +55,12 @@ export function dayIndexForDate(year, month, day, hour = 12, opts = {}) {
  * Source: masterseanchan.com/bazi-60-jiazi ("Cycle anchor: 1984 = 甲子"), and
  * aa.quae.nl (n = mod(a+56,60)+1 gives 1984 -> 1).
  */
-export function yearIndexFromSolarYear(solarYear) {
-  return mod(solarYear - 1984, 60);
+export function yearIndexFromSolarYear(solarYear, anchors = null) {
+  // ARCH-1 / CONST-1: якорь берётся из data/calendar.json (epochs.yearPillarAnchor).
+  // Значение по умолчанию сохранено ТОЛЬКО для обратной совместимости старых
+  // вызовов; рабочий путь всегда передаёт anchors из данных.
+  const anchor = anchors ? anchors.yearPillar : 1984;
+  return mod(solarYear - anchor, 60);
 }
 
 /**

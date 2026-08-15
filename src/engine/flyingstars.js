@@ -29,9 +29,12 @@ export function periodForYear(solarYear, luoshu) {
   const p = luoshu.periods.items.find((x) => solarYear >= x.start && solarYear <= x.end);
   if (p) return p.period;
   // Расширение за пределы таблицы по 180-летнему циклу.
-  const base = 1864;
-  const offset = mod(solarYear - base, 180);
-  return Math.floor(offset / 20) + 1;
+  // ARCH-1: якорь и длины циклов — из data/luoshu.json, а не литералы.
+  const base = luoshu.periods.items[0].start;
+  const cycle = luoshu.periods.cycleYears;
+  const periodLen = cycle / luoshu.periods.items.length;
+  const offset = mod(solarYear - base, cycle);
+  return Math.floor(offset / periodLen) + 1;
 }
 
 /**
@@ -42,8 +45,11 @@ export function periodForYear(solarYear, luoshu) {
  * Проверка по независимому источнику: 2026 -> 1 (fengshuibalanz.com указывает
  * «Annual Flying Star 1 in the CENTRAL Palace» для 2026). Тест закрепляет оба.
  */
-export function annualStar(solarYear) {
-  return wrap9(3 - (solarYear - 2024));
+export function annualStar(solarYear, anchors = null) {
+  // ARCH-1: опорный год и звезда — из data/calendar.json (epochs.annualStarAnchor).
+  const y0 = anchors ? anchors.annualStarYear : 2024;
+  const s0 = anchors ? anchors.annualStarValue : 3;
+  return wrap9(s0 - (solarYear - y0));
 }
 
 /**

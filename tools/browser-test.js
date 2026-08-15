@@ -393,6 +393,41 @@ check('подсказка содержит значения', (tt.innerHTML || '
 overlay.dispatchEvent({ type: 'mouseleave', target: overlay });
 check('подсказка скрывается при уходе курсора', tt.style.display === 'none');
 
+/* ---------------- Показатели ТЗ и политика «не выдумывать» ---------------- */
+console.log('\n[BROWSER] Показатели и неподтверждённые алгоритмы');
+
+const indRows = document.querySelectorAll('#indicator-list .ind-row');
+check('панель показателей заполнена', indRows.length >= 14, 'строк: ' + indRows.length);
+
+const offRows = [...indRows].filter((r) => r.className.includes('ind-off'));
+check('9 показателей помечены как нерассчитываемые', offRows.length === 9, 'строк: ' + offRows.length);
+
+const placeOpts = document.querySelectorAll('#b-place option');
+check('справочник мест заполнен', placeOpts.length >= 20, 'вариантов: ' + placeOpts.length);
+
+const unvSel = document.querySelectorAll('#cmode-unverified option');
+check('список неподтверждённых показателей заполнен', unvSel.length >= 10, 'вариантов: ' + unvSel.length);
+
+// Клик по неподтверждённому показателю: вместо графика — объяснение.
+const desires = [...indRows].find((r) => r.dataset.ind === 'desires');
+desires.dispatchEvent({ type: 'click', target: desires });
+const uBox = document.querySelector('.unverified-box');
+check('показана панель «Алгоритм не подтверждён»', !!uBox);
+check('текст содержит требуемую формулировку',
+  !!uBox && /Алгоритм не подтверждён/.test(uBox.textContent));
+check('график скрыт, а не заполнен выдуманными данными',
+  document.querySelector('#main-chart').style.display === 'none');
+check('легенда очищена', document.querySelectorAll('#legend .item').length === 0);
+check('указана ссылка на заглушку PH-*', !!uBox && /PH-/.test(uBox.textContent));
+
+// Возврат к обычному режиму
+const merRadio = [...document.querySelectorAll('input[name="cmode"]')].find((r) => r.value === 'meridians');
+merRadio.checked = true;
+merRadio.dispatchEvent({ type: 'change', target: merRadio });
+check('возврат к графику меридианов работает',
+  document.querySelectorAll('#main-chart path').length === 10,
+  'путей: ' + document.querySelectorAll('#main-chart path').length);
+
 /* ---------------- Визуальные требования ---------------- */
 console.log('\n[BROWSER] Визуальная спецификация');
 const css = fs.readFileSync(path.join(root, 'src/ui/styles.css'), 'utf8');

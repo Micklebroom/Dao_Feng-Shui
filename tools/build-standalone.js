@@ -144,9 +144,9 @@ let out = html
 // Пометка автономной сборки
 out = out.replace('MVP / экспериментальный</span>', 'MVP / экспериментальный · автономная сборка</span>');
 
-const target = path.join(root, 'dist', 'fengshui-standalone.html');
+const target = path.join(root, 'dist', 'feng_shui_mvp.html');
 fs.mkdirSync(path.dirname(target), { recursive: true });
 fs.writeFileSync(target, out, 'utf8');
 
 const kb = (fs.statSync(target).size / 1024).toFixed(1);
-console.log(`OK: dist/fengshui-standalone.html (${kb} КБ, модулей: ${order.length})`);
+console.log(`OK: dist/feng_shui_mvp.html (${kb} КБ, модулей: ${order.length})`);

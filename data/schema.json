@@ -2220,6 +2220,83 @@
           }
         }
       }
+    },
+    "places": {
+      "type": "object",
+      "required": [
+        "$id",
+        "title",
+        "status",
+        "sources",
+        "items",
+        "limitation"
+      ],
+      "properties": {
+        "$id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "sources": {
+          "type": "array",
+          "minItems": 1
+        },
+        "note": {
+          "type": "string"
+        },
+        "limitation": {
+          "type": "string",
+          "minLength": 20
+        },
+        "placeholderRef": {
+          "type": "string",
+          "pattern": "^PH-"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "ru",
+              "tz",
+              "lon",
+              "lat"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "ru": {
+                "type": "string"
+              },
+              "tz": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "lon": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "lat": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

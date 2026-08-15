@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * standalone-test.js — проверка, что автономный HTML действительно исполняется.
- * Извлекает инлайн-скрипт из dist/fengshui-standalone.html и запускает его
+ * Извлекает инлайн-скрипт из dist/feng_shui_mvp.html и запускает его
  * в том же DOM-шиме, что и browser-test.js.
  */
 import fs from 'node:fs';
@@ -24,7 +24,7 @@ const shimCode = shim.slice(
   shim.indexOf('/* ---------------- Построение DOM из index.html ---------------- */')
 );
 
-const file = path.join(root, 'dist/fengshui-standalone.html');
+const file = path.join(root, 'dist/feng_shui_mvp.html');
 const html = fs.readFileSync(file, 'utf8');
 
 console.log('\n[STANDALONE] Структура файла');

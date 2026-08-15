@@ -11,7 +11,7 @@
 /** Физические файлы пакета (единственный источник истины). */
 export const DATA_FILES = [
   'stems_branches', 'calendar', 'elements', 'bazi', 'luck_pillars',
-  'gua', 'meridians', 'indicators', 'colors', 'luoshu', 'mountains24'
+  'gua', 'meridians', 'indicators', 'colors', 'luoshu', 'mountains24', 'places'
 ];
 
 /** Нормализация имени файла в ключ: stems_branches -> stemsBranches. */
@@ -70,6 +70,29 @@ export function assembleTables(map) {
     interpretationBands: ind.interpretationBands.ourBands,
     harmony: ind.harmonyIndex.ourModel
   };
+
+  // ARCH-1 / CONST-1: доменные константы извлекаются из данных ОДИН раз
+  // и передаются в расчётные функции. Литералов в engine/** быть не должно.
+  const cal = t.calendar;
+  const ep = Object.fromEntries(cal.epochs.items.map((e) => [e.id, e]));
+  t.anchors = Object.freeze({
+    yearPillar: ep.yearPillarAnchor.gregorianYear,
+    periodStart: t.luoshu.periods.items[0].start,
+    periodCycleYears: t.luoshu.periods.cycleYears,
+    annualStarYear: ep.annualStarAnchor.gregorianYear,
+    annualStarValue: ep.annualStarAnchor.star,
+    j2000: ep.j2000.jd
+  });
+  t.luckRules = Object.freeze({
+    daysPerYear: t.luckPillars.conversion.daysPerYear,
+    pillarYears: t.luckPillars.pillarLength.years,
+    termType: t.luckPillars.countingTarget.termType,
+    defaultRounding: t.luckPillars.rounding.default
+  });
+  t.dateRange = Object.freeze({
+    from: cal.range.engineSupported.from,
+    to: cal.range.engineSupported.to
+  });
 
   // Цвета подмешиваются в отображаемые сущности — ТОЛЬКО для UI/графики.
   // Расчётный движок не должен читать эти поля.
