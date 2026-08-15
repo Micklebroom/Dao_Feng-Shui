@@ -3,3 +3,4 @@ dist/dao-feng-shui-mvp/
 *.log
 .DS_Store
 image-search/
+tools/.qa-results.json
