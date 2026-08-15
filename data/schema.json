@@ -1,0 +1,2225 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Micklebroom/Dao_Feng-Shui/data/schema.json",
+  "title": "Схема JSON-пакета данных фэн-шуй",
+  "description": "Формальная схема всех таблиц data/*.json. Подмножество JSON Schema draft-07, поддерживаемое собственным валидатором tools/validate-json.js (проект принципиально без внешних зависимостей).",
+  "version": "1.0.0",
+  "definitions": {
+    "stems_branches": {
+      "type": "object",
+      "required": [
+        "$id",
+        "title",
+        "status",
+        "sources",
+        "stems",
+        "branches",
+        "hiddenStems"
+      ],
+      "properties": {
+        "$id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "$schema": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "VERIFIED",
+            "PARTIALLY VERIFIED",
+            "INFERRED",
+            "NOT_VERIFIED",
+            "NOT VERIFIED",
+            "UNRESOLVED"
+          ]
+        },
+        "statusDetail": {
+          "type": "object"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "note": {
+          "type": "string"
+        },
+        "auditRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^A-[0-9]{2}$"
+          }
+        },
+        "auditRef": {
+          "type": "string",
+          "pattern": "^A-[0-9]{2}$"
+        },
+        "conflictRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^K[0-9]+$"
+          }
+        },
+        "conflictRef": {
+          "type": "string",
+          "pattern": "^K[0-9]+$"
+        },
+        "algorithmRef": {
+          "type": "string"
+        },
+        "algorithmRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "placeholderRef": {
+          "type": "string",
+          "pattern": "^PH-"
+        },
+        "openQuestion": {
+          "type": "string",
+          "pattern": "^U-[0-9]{2}$"
+        },
+        "criticalNote": {
+          "type": "string"
+        },
+        "stems": {
+          "type": "array",
+          "minItems": 10,
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "index",
+              "id",
+              "han",
+              "pinyin",
+              "ru",
+              "element",
+              "polarity"
+            ],
+            "properties": {
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9
+              },
+              "id": {
+                "type": "string",
+                "enum": [
+                  "jia",
+                  "yi",
+                  "bing",
+                  "ding",
+                  "wu",
+                  "ji",
+                  "geng",
+                  "xin",
+                  "ren",
+                  "gui"
+                ]
+              },
+              "han": {
+                "type": "string"
+              },
+              "pinyin": {
+                "type": "string"
+              },
+              "ru": {
+                "type": "string"
+              },
+              "element": {
+                "type": "string",
+                "enum": [
+                  "wood",
+                  "fire",
+                  "earth",
+                  "metal",
+                  "water"
+                ]
+              },
+              "polarity": {
+                "type": "string",
+                "enum": [
+                  "yin",
+                  "yang"
+                ]
+              }
+            }
+          }
+        },
+        "branches": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12,
+          "items": {
+            "type": "object",
+            "required": [
+              "index",
+              "id",
+              "han",
+              "pinyin",
+              "ru",
+              "animal",
+              "element",
+              "polarity",
+              "hourStart",
+              "hourEnd",
+              "solarMonth"
+            ],
+            "properties": {
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 11
+              },
+              "id": {
+                "type": "string",
+                "enum": [
+                  "zi",
+                  "chou",
+                  "yin",
+                  "mao",
+                  "chen",
+                  "si",
+                  "wu",
+                  "wei",
+                  "shen",
+                  "you",
+                  "xu",
+                  "hai"
+                ]
+              },
+              "han": {
+                "type": "string"
+              },
+              "pinyin": {
+                "type": "string"
+              },
+              "ru": {
+                "type": "string"
+              },
+              "animal": {
+                "type": "string"
+              },
+              "ruAnimal": {
+                "type": "string"
+              },
+              "element": {
+                "type": "string",
+                "enum": [
+                  "wood",
+                  "fire",
+                  "earth",
+                  "metal",
+                  "water"
+                ]
+              },
+              "polarity": {
+                "type": "string",
+                "enum": [
+                  "yin",
+                  "yang"
+                ]
+              },
+              "hourStart": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 23
+              },
+              "hourEnd": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 23
+              },
+              "solarMonth": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 12
+              }
+            }
+          }
+        },
+        "hiddenStems": {
+          "type": "object",
+          "required": [
+            "status",
+            "byBranch"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "VERIFIED",
+                "PARTIALLY VERIFIED",
+                "INFERRED",
+                "NOT_VERIFIED",
+                "NOT VERIFIED",
+                "UNRESOLVED"
+              ]
+            },
+            "byBranch": {
+              "type": "object"
+            },
+            "sumMustEqual": {
+              "type": "integer"
+            }
+          }
+        },
+        "sexagenaryCycle": {
+          "type": "object",
+          "required": [
+            "length"
+          ],
+          "properties": {
+            "length": {
+              "type": "integer",
+              "const": 60
+            }
+          }
+        }
+      }
+    },
+    "calendar": {
+      "type": "object",
+      "required": [
+        "$id",
+        "title",
+        "status",
+        "sources",
+        "solarTerms",
+        "epochs",
+        "monthBoundary"
+      ],
+      "properties": {
+        "$id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "$schema": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "VERIFIED",
+            "PARTIALLY VERIFIED",
+            "INFERRED",
+            "NOT_VERIFIED",
+            "NOT VERIFIED",
+            "UNRESOLVED"
+          ]
+        },
+        "statusDetail": {
+          "type": "object"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "note": {
+          "type": "string"
+        },
+        "auditRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^A-[0-9]{2}$"
+          }
+        },
+        "auditRef": {
+          "type": "string",
+          "pattern": "^A-[0-9]{2}$"
+        },
+        "conflictRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^K[0-9]+$"
+          }
+        },
+        "conflictRef": {
+          "type": "string",
+          "pattern": "^K[0-9]+$"
+        },
+        "algorithmRef": {
+          "type": "string"
+        },
+        "algorithmRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "placeholderRef": {
+          "type": "string",
+          "pattern": "^PH-"
+        },
+        "openQuestion": {
+          "type": "string",
+          "pattern": "^U-[0-9]{2}$"
+        },
+        "criticalNote": {
+          "type": "string"
+        },
+        "solarTerms": {
+          "type": "array",
+          "minItems": 24,
+          "maxItems": 24,
+          "items": {
+            "type": "object",
+            "required": [
+              "index",
+              "id",
+              "han",
+              "ru",
+              "longitude",
+              "type"
+            ],
+            "properties": {
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 23
+              },
+              "id": {
+                "type": "string"
+              },
+              "han": {
+                "type": "string"
+              },
+              "ru": {
+                "type": "string"
+              },
+              "en": {
+                "type": "string"
+              },
+              "longitude": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 345
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "jie",
+                  "qi"
+                ]
+              },
+              "startsMonthBranch": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "zi",
+                  "chou",
+                  "yin",
+                  "mao",
+                  "chen",
+                  "si",
+                  "wu",
+                  "wei",
+                  "shen",
+                  "you",
+                  "xu",
+                  "hai",
+                  null
+                ]
+              }
+            }
+          }
+        },
+        "epochs": {
+          "type": "object",
+          "required": [
+            "items"
+          ],
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "ru"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "ru": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "monthBoundary": {
+          "type": "object",
+          "required": [
+            "rule",
+            "yearStartTermId"
+          ],
+          "properties": {
+            "rule": {
+              "type": "string"
+            },
+            "yearStartTermId": {
+              "type": "string"
+            }
+          }
+        },
+        "deltaT": {
+          "type": "object"
+        },
+        "range": {
+          "type": "object"
+        }
+      }
+    },
+    "elements": {
+      "type": "object",
+      "required": [
+        "$id",
+        "title",
+        "status",
+        "sources",
+        "items"
+      ],
+      "properties": {
+        "$id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "$schema": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "VERIFIED",
+            "PARTIALLY VERIFIED",
+            "INFERRED",
+            "NOT_VERIFIED",
+            "NOT VERIFIED",
+            "UNRESOLVED"
+          ]
+        },
+        "statusDetail": {
+          "type": "object"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "note": {
+          "type": "string"
+        },
+        "auditRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^A-[0-9]{2}$"
+          }
+        },
+        "auditRef": {
+          "type": "string",
+          "pattern": "^A-[0-9]{2}$"
+        },
+        "conflictRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^K[0-9]+$"
+          }
+        },
+        "conflictRef": {
+          "type": "string",
+          "pattern": "^K[0-9]+$"
+        },
+        "algorithmRef": {
+          "type": "string"
+        },
+        "algorithmRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "placeholderRef": {
+          "type": "string",
+          "pattern": "^PH-"
+        },
+        "openQuestion": {
+          "type": "string",
+          "pattern": "^U-[0-9]{2}$"
+        },
+        "criticalNote": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "han",
+              "ru",
+              "en",
+              "generates",
+              "controls"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "enum": [
+                  "wood",
+                  "fire",
+                  "earth",
+                  "metal",
+                  "water"
+                ]
+              },
+              "han": {
+                "type": "string"
+              },
+              "ru": {
+                "type": "string"
+              },
+              "en": {
+                "type": "string"
+              },
+              "generates": {
+                "type": "string",
+                "enum": [
+                  "wood",
+                  "fire",
+                  "earth",
+                  "metal",
+                  "water"
+                ]
+              },
+              "controls": {
+                "type": "string",
+                "enum": [
+                  "wood",
+                  "fire",
+                  "earth",
+                  "metal",
+                  "water"
+                ]
+              }
+            }
+          }
+        },
+        "cycles": {
+          "type": "object"
+        },
+        "seasonByMonthBranch": {
+          "type": "object"
+        },
+        "seasonalPhase": {
+          "type": "object",
+          "required": [
+            "phases"
+          ],
+          "properties": {
+            "phases": {
+              "type": "array",
+              "minItems": 5,
+              "maxItems": 5
+            },
+            "multipliersRef": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "bazi": {
+      "type": "object",
+      "required": [
+        "$id",
+        "title",
+        "status",
+        "sources",
+        "pillarRules",
+        "interactions",
+        "qiPhases"
+      ],
+      "properties": {
+        "$id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "$schema": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "VERIFIED",
+            "PARTIALLY VERIFIED",
+            "INFERRED",
+            "NOT_VERIFIED",
+            "NOT VERIFIED",
+            "UNRESOLVED"
+          ]
+        },
+        "statusDetail": {
+          "type": "object"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "note": {
+          "type": "string"
+        },
+        "auditRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^A-[0-9]{2}$"
+          }
+        },
+        "auditRef": {
+          "type": "string",
+          "pattern": "^A-[0-9]{2}$"
+        },
+        "conflictRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^K[0-9]+$"
+          }
+        },
+        "conflictRef": {
+          "type": "string",
+          "pattern": "^K[0-9]+$"
+        },
+        "algorithmRef": {
+          "type": "string"
+        },
+        "algorithmRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "placeholderRef": {
+          "type": "string",
+          "pattern": "^PH-"
+        },
+        "openQuestion": {
+          "type": "string",
+          "pattern": "^U-[0-9]{2}$"
+        },
+        "criticalNote": {
+          "type": "string"
+        },
+        "pillarRules": {
+          "type": "object",
+          "required": [
+            "year",
+            "month",
+            "day",
+            "hour"
+          ],
+          "properties": {
+            "year": {
+              "type": "object",
+              "required": [
+                "formula",
+                "boundary"
+              ]
+            },
+            "month": {
+              "type": "object",
+              "required": [
+                "stemFormula",
+                "branchFormula"
+              ]
+            },
+            "day": {
+              "type": "object",
+              "required": [
+                "formula"
+              ]
+            },
+            "hour": {
+              "type": "object",
+              "required": [
+                "branchFormula",
+                "stemFormula"
+              ]
+            }
+          }
+        },
+        "interactions": {
+          "type": "object",
+          "required": [
+            "stemCombinations",
+            "sixCombinations",
+            "threeHarmonies",
+            "clashes",
+            "harms",
+            "punishments"
+          ],
+          "properties": {
+            "stemCombinations": {
+              "type": "object",
+              "required": [
+                "items"
+              ]
+            },
+            "sixCombinations": {
+              "type": "object",
+              "required": [
+                "items"
+              ]
+            },
+            "threeHarmonies": {
+              "type": "object",
+              "required": [
+                "items"
+              ]
+            },
+            "directionalCombinations": {
+              "type": "object",
+              "required": [
+                "items"
+              ]
+            },
+            "clashes": {
+              "type": "object",
+              "required": [
+                "items"
+              ]
+            },
+            "harms": {
+              "type": "object",
+              "required": [
+                "items"
+              ]
+            },
+            "punishments": {
+              "type": "object",
+              "required": [
+                "items"
+              ]
+            },
+            "threeSha": {
+              "type": "object",
+              "required": [
+                "items"
+              ]
+            },
+            "taiSui": {
+              "type": "object"
+            }
+          }
+        },
+        "qiPhases": {
+          "type": "object",
+          "required": [
+            "status",
+            "phases",
+            "byStem",
+            "startBranch",
+            "coefficients"
+          ],
+          "properties": {
+            "phases": {
+              "type": "array",
+              "minItems": 12,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "required": [
+                  "index",
+                  "id",
+                  "han",
+                  "ru"
+                ]
+              }
+            },
+            "byStem": {
+              "type": "object"
+            },
+            "startBranch": {
+              "type": "object"
+            },
+            "coefficients": {
+              "type": "null",
+              "description": "ОБЯЗАТЕЛЬНО null: коэффициенты фаз Ци не опубликованы (конфликт K1). Схема запрещает их выдумывать."
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        },
+        "ziHourConflict": {
+          "type": "object"
+        }
+      }
+    },
+    "luck_pillars": {
+      "type": "object",
+      "required": [
+        "$id",
+        "title",
+        "status",
+        "sources",
+        "direction",
+        "conversion",
+        "pillarLength"
+      ],
+      "properties": {
+        "$id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "$schema": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "VERIFIED",
+            "PARTIALLY VERIFIED",
+            "INFERRED",
+            "NOT_VERIFIED",
+            "NOT VERIFIED",
+            "UNRESOLVED"
+          ]
+        },
+        "statusDetail": {
+          "type": "object"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "note": {
+          "type": "string"
+        },
+        "auditRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^A-[0-9]{2}$"
+          }
+        },
+        "auditRef": {
+          "type": "string",
+          "pattern": "^A-[0-9]{2}$"
+        },
+        "conflictRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^K[0-9]+$"
+          }
+        },
+        "conflictRef": {
+          "type": "string",
+          "pattern": "^K[0-9]+$"
+        },
+        "algorithmRef": {
+          "type": "string"
+        },
+        "algorithmRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "placeholderRef": {
+          "type": "string",
+          "pattern": "^PH-"
+        },
+        "openQuestion": {
+          "type": "string",
+          "pattern": "^U-[0-9]{2}$"
+        },
+        "criticalNote": {
+          "type": "string"
+        },
+        "direction": {
+          "type": "object",
+          "required": [
+            "rule",
+            "forwardWhen"
+          ]
+        },
+        "conversion": {
+          "type": "object",
+          "required": [
+            "daysPerYear",
+            "formula"
+          ],
+          "properties": {
+            "daysPerYear": {
+              "type": "integer",
+              "const": 3
+            },
+            "formula": {
+              "type": "string"
+            }
+          }
+        },
+        "countingTarget": {
+          "type": "object",
+          "required": [
+            "termType"
+          ],
+          "properties": {
+            "termType": {
+              "type": "string",
+              "enum": [
+                "jie",
+                "qi"
+              ]
+            }
+          }
+        },
+        "pillarLength": {
+          "type": "object",
+          "required": [
+            "years"
+          ],
+          "properties": {
+            "years": {
+              "type": "integer",
+              "const": 10
+            }
+          }
+        },
+        "rounding": {
+          "type": "object",
+          "required": [
+            "modes",
+            "default"
+          ]
+        }
+      }
+    },
+    "gua": {
+      "type": "object",
+      "required": [
+        "$id",
+        "title",
+        "status",
+        "sources",
+        "formula",
+        "guaTypes",
+        "directionsByGua",
+        "validityRange"
+      ],
+      "properties": {
+        "$id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "$schema": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "VERIFIED",
+            "PARTIALLY VERIFIED",
+            "INFERRED",
+            "NOT_VERIFIED",
+            "NOT VERIFIED",
+            "UNRESOLVED"
+          ]
+        },
+        "statusDetail": {
+          "type": "object"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "note": {
+          "type": "string"
+        },
+        "auditRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^A-[0-9]{2}$"
+          }
+        },
+        "auditRef": {
+          "type": "string",
+          "pattern": "^A-[0-9]{2}$"
+        },
+        "conflictRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^K[0-9]+$"
+          }
+        },
+        "conflictRef": {
+          "type": "string",
+          "pattern": "^K[0-9]+$"
+        },
+        "algorithmRef": {
+          "type": "string"
+        },
+        "algorithmRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "placeholderRef": {
+          "type": "string",
+          "pattern": "^PH-"
+        },
+        "openQuestion": {
+          "type": "string",
+          "pattern": "^U-[0-9]{2}$"
+        },
+        "criticalNote": {
+          "type": "string"
+        },
+        "validityRange": {
+          "type": "object",
+          "required": [
+            "from",
+            "to"
+          ],
+          "properties": {
+            "from": {
+              "type": "integer"
+            },
+            "to": {
+              "type": "integer"
+            }
+          }
+        },
+        "formula": {
+          "type": "object",
+          "required": [
+            "male",
+            "female"
+          ]
+        },
+        "guaTypes": {
+          "type": "object",
+          "required": [
+            "east",
+            "west"
+          ]
+        },
+        "directionsByGua": {
+          "type": "object"
+        },
+        "directionLabels": {
+          "type": "object"
+        },
+        "yearBoundary": {
+          "type": "object",
+          "required": [
+            "default",
+            "variants"
+          ]
+        }
+      }
+    },
+    "meridians": {
+      "type": "object",
+      "required": [
+        "$id",
+        "title",
+        "status",
+        "sources",
+        "composition",
+        "items"
+      ],
+      "properties": {
+        "$id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "$schema": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "VERIFIED",
+            "PARTIALLY VERIFIED",
+            "INFERRED",
+            "NOT_VERIFIED",
+            "NOT VERIFIED",
+            "UNRESOLVED"
+          ]
+        },
+        "statusDetail": {
+          "type": "object"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "note": {
+          "type": "string"
+        },
+        "auditRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^A-[0-9]{2}$"
+          }
+        },
+        "auditRef": {
+          "type": "string",
+          "pattern": "^A-[0-9]{2}$"
+        },
+        "conflictRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^K[0-9]+$"
+          }
+        },
+        "conflictRef": {
+          "type": "string",
+          "pattern": "^K[0-9]+$"
+        },
+        "algorithmRef": {
+          "type": "string"
+        },
+        "algorithmRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "placeholderRef": {
+          "type": "string",
+          "pattern": "^PH-"
+        },
+        "openQuestion": {
+          "type": "string",
+          "pattern": "^U-[0-9]{2}$"
+        },
+        "criticalNote": {
+          "type": "string"
+        },
+        "composition": {
+          "type": "object",
+          "required": [
+            "count",
+            "perElement",
+            "yinCount",
+            "yangCount"
+          ],
+          "properties": {
+            "count": {
+              "type": "integer",
+              "const": 10,
+              "description": "РОВНО 10 (аудит A-02). Перикард и тройной обогреватель исключены."
+            },
+            "perElement": {
+              "type": "integer",
+              "const": 2
+            },
+            "yinCount": {
+              "type": "integer",
+              "const": 5
+            },
+            "yangCount": {
+              "type": "integer",
+              "const": 5
+            },
+            "excluded": {
+              "type": "array"
+            }
+          }
+        },
+        "items": {
+          "type": "array",
+          "minItems": 10,
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "index",
+              "id",
+              "han",
+              "ru",
+              "en",
+              "element",
+              "polarity",
+              "organType",
+              "burner"
+            ],
+            "properties": {
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9
+              },
+              "id": {
+                "type": "string"
+              },
+              "han": {
+                "type": "string"
+              },
+              "ru": {
+                "type": "string"
+              },
+              "en": {
+                "type": "string"
+              },
+              "element": {
+                "type": "string",
+                "enum": [
+                  "wood",
+                  "fire",
+                  "earth",
+                  "metal",
+                  "water"
+                ]
+              },
+              "polarity": {
+                "type": "string",
+                "enum": [
+                  "yin",
+                  "yang"
+                ]
+              },
+              "organType": {
+                "type": "string",
+                "enum": [
+                  "zang",
+                  "fu"
+                ]
+              },
+              "burner": {
+                "type": "string",
+                "enum": [
+                  "upper",
+                  "middle",
+                  "lower"
+                ]
+              }
+            }
+          }
+        },
+        "tripleBurner": {
+          "type": "object",
+          "required": [
+            "groups",
+            "aggregation"
+          ],
+          "properties": {
+            "groups": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "aggregation": {
+              "type": "null",
+              "description": "ОБЯЗАТЕЛЬНО null: способ агрегации не опубликован (U-24)."
+            }
+          }
+        },
+        "strengthModel": {
+          "type": "object",
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "NOT_VERIFIED"
+            }
+          }
+        },
+        "medicalDisclaimer": {
+          "type": "string",
+          "minLength": 40
+        }
+      }
+    },
+    "luoshu": {
+      "type": "object",
+      "required": [
+        "$id",
+        "title",
+        "status",
+        "sources",
+        "palaces",
+        "flightPath",
+        "stars",
+        "periods"
+      ],
+      "properties": {
+        "$id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "$schema": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "VERIFIED",
+            "PARTIALLY VERIFIED",
+            "INFERRED",
+            "NOT_VERIFIED",
+            "NOT VERIFIED",
+            "UNRESOLVED"
+          ]
+        },
+        "statusDetail": {
+          "type": "object"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "note": {
+          "type": "string"
+        },
+        "auditRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^A-[0-9]{2}$"
+          }
+        },
+        "auditRef": {
+          "type": "string",
+          "pattern": "^A-[0-9]{2}$"
+        },
+        "conflictRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^K[0-9]+$"
+          }
+        },
+        "conflictRef": {
+          "type": "string",
+          "pattern": "^K[0-9]+$"
+        },
+        "algorithmRef": {
+          "type": "string"
+        },
+        "algorithmRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "placeholderRef": {
+          "type": "string",
+          "pattern": "^PH-"
+        },
+        "openQuestion": {
+          "type": "string",
+          "pattern": "^U-[0-9]{2}$"
+        },
+        "criticalNote": {
+          "type": "string"
+        },
+        "palaces": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "items": {
+            "type": "object",
+            "required": [
+              "index",
+              "number",
+              "direction",
+              "trigram",
+              "element",
+              "row",
+              "col"
+            ],
+            "properties": {
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 8
+              },
+              "number": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9
+              },
+              "direction": {
+                "type": "string",
+                "enum": [
+                  "N",
+                  "NE",
+                  "E",
+                  "SE",
+                  "S",
+                  "SW",
+                  "W",
+                  "NW",
+                  "C"
+                ]
+              },
+              "trigram": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "null для центрального дворца: у центра нет триграммы."
+              },
+              "element": {
+                "type": "string",
+                "enum": [
+                  "wood",
+                  "fire",
+                  "earth",
+                  "metal",
+                  "water"
+                ]
+              },
+              "row": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2
+              },
+              "col": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2
+              }
+            }
+          }
+        },
+        "flightPath": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "items": {
+            "type": "string",
+            "enum": [
+              "N",
+              "NE",
+              "E",
+              "SE",
+              "S",
+              "SW",
+              "W",
+              "NW",
+              "C"
+            ]
+          }
+        },
+        "stars": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "items": {
+            "type": "object",
+            "required": [
+              "number",
+              "id",
+              "element",
+              "nature"
+            ],
+            "properties": {
+              "number": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9
+              },
+              "id": {
+                "type": "string"
+              },
+              "element": {
+                "type": "string",
+                "enum": [
+                  "wood",
+                  "fire",
+                  "earth",
+                  "metal",
+                  "water"
+                ]
+              },
+              "nature": {
+                "type": "string",
+                "enum": [
+                  "auspicious",
+                  "inauspicious",
+                  "neutral"
+                ]
+              }
+            }
+          }
+        },
+        "periods": {
+          "type": "object",
+          "required": [
+            "items",
+            "cycleYears"
+          ],
+          "properties": {
+            "cycleYears": {
+              "type": "integer",
+              "const": 180
+            },
+            "items": {
+              "type": "array",
+              "minItems": 9,
+              "maxItems": 9
+            }
+          }
+        },
+        "orientation": {
+          "type": "object",
+          "required": [
+            "southUp"
+          ],
+          "properties": {
+            "southUp": {
+              "type": "boolean",
+              "const": true
+            }
+          }
+        }
+      }
+    },
+    "mountains24": {
+      "type": "object",
+      "required": [
+        "$id",
+        "title",
+        "status",
+        "sources",
+        "items"
+      ],
+      "properties": {
+        "$id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "$schema": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "VERIFIED",
+            "PARTIALLY VERIFIED",
+            "INFERRED",
+            "NOT_VERIFIED",
+            "NOT VERIFIED",
+            "UNRESOLVED"
+          ]
+        },
+        "statusDetail": {
+          "type": "object"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "note": {
+          "type": "string"
+        },
+        "auditRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^A-[0-9]{2}$"
+          }
+        },
+        "auditRef": {
+          "type": "string",
+          "pattern": "^A-[0-9]{2}$"
+        },
+        "conflictRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^K[0-9]+$"
+          }
+        },
+        "conflictRef": {
+          "type": "string",
+          "pattern": "^K[0-9]+$"
+        },
+        "algorithmRef": {
+          "type": "string"
+        },
+        "algorithmRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "placeholderRef": {
+          "type": "string",
+          "pattern": "^PH-"
+        },
+        "openQuestion": {
+          "type": "string",
+          "pattern": "^U-[0-9]{2}$"
+        },
+        "criticalNote": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 24,
+          "maxItems": 24,
+          "items": {
+            "type": "object",
+            "required": [
+              "index",
+              "code",
+              "id",
+              "han",
+              "start",
+              "end",
+              "sector",
+              "polarity"
+            ],
+            "properties": {
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 23
+              },
+              "code": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "han": {
+                "type": "string"
+              },
+              "start": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 360
+              },
+              "end": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 360
+              },
+              "sector": {
+                "type": "string",
+                "enum": [
+                  "N",
+                  "NE",
+                  "E",
+                  "SE",
+                  "S",
+                  "SW",
+                  "W",
+                  "NW",
+                  "C"
+                ]
+              },
+              "polarity": {
+                "type": "string",
+                "enum": [
+                  "yin",
+                  "yang"
+                ]
+              }
+            }
+          }
+        },
+        "sectorSize": {
+          "type": "object",
+          "required": [
+            "degrees"
+          ],
+          "properties": {
+            "degrees": {
+              "type": "number",
+              "const": 15
+            }
+          }
+        }
+      }
+    },
+    "indicators": {
+      "type": "object",
+      "required": [
+        "$id",
+        "title",
+        "status",
+        "sources",
+        "criticalNote"
+      ],
+      "properties": {
+        "$id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "$schema": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "VERIFIED",
+            "PARTIALLY VERIFIED",
+            "INFERRED",
+            "NOT_VERIFIED",
+            "NOT VERIFIED",
+            "UNRESOLVED"
+          ]
+        },
+        "statusDetail": {
+          "type": "object"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "note": {
+          "type": "string"
+        },
+        "auditRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^A-[0-9]{2}$"
+          }
+        },
+        "auditRef": {
+          "type": "string",
+          "pattern": "^A-[0-9]{2}$"
+        },
+        "conflictRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^K[0-9]+$"
+          }
+        },
+        "conflictRef": {
+          "type": "string",
+          "pattern": "^K[0-9]+$"
+        },
+        "algorithmRef": {
+          "type": "string"
+        },
+        "algorithmRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "placeholderRef": {
+          "type": "string",
+          "pattern": "^PH-"
+        },
+        "openQuestion": {
+          "type": "string",
+          "pattern": "^U-[0-9]{2}$"
+        },
+        "criticalNote": {
+          "type": "string",
+          "minLength": 200
+        },
+        "positionWeights": {
+          "type": "object",
+          "required": [
+            "status",
+            "values"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "INFERRED"
+            },
+            "values": {
+              "type": "object"
+            }
+          }
+        },
+        "pillarBase": {
+          "type": "object",
+          "required": [
+            "status",
+            "stemBase",
+            "branchBase"
+          ]
+        },
+        "transformRatio": {
+          "type": "object",
+          "required": [
+            "status",
+            "value"
+          ]
+        },
+        "seasonalPhaseMultipliers": {
+          "type": "object",
+          "required": [
+            "status",
+            "values"
+          ]
+        },
+        "harmonyIndex": {
+          "type": "object",
+          "required": [
+            "status",
+            "referenceFormulaKnown",
+            "formula",
+            "referenceValues"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "INFERRED",
+                "NOT_VERIFIED"
+              ]
+            },
+            "referenceFormulaKnown": {
+              "type": "boolean",
+              "const": false,
+              "description": "Формула референса неизвестна; допускается лишь наша гипотеза со статусом INFERRED."
+            },
+            "formula": {
+              "type": "null",
+              "description": "ОБЯЗАТЕЛЬНО null: формула референса не опубликована (аудит A-09). Наша гипотеза живёт в ourModel."
+            },
+            "ourModel": {
+              "type": "object"
+            },
+            "referenceValues": {
+              "type": "array",
+              "minItems": 1
+            }
+          }
+        },
+        "meridianStrength": {
+          "type": "object",
+          "required": [
+            "status",
+            "referenceFormulaKnown",
+            "placeholderRef"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "INFERRED",
+                "NOT_VERIFIED"
+              ]
+            },
+            "referenceFormulaKnown": {
+              "type": "boolean",
+              "const": false
+            },
+            "placeholderRef": {
+              "type": "string",
+              "pattern": "^PH-"
+            }
+          }
+        },
+        "yinYangIndices": {
+          "type": "object",
+          "required": [
+            "formula"
+          ],
+          "properties": {
+            "formula": {
+              "type": "null"
+            }
+          }
+        },
+        "healthIndex": {
+          "type": "object",
+          "required": [
+            "formula"
+          ],
+          "properties": {
+            "formula": {
+              "type": "null"
+            }
+          }
+        },
+        "qiPhaseCoefficients": {
+          "type": "object",
+          "required": [
+            "values"
+          ],
+          "properties": {
+            "values": {
+              "type": "null"
+            }
+          }
+        },
+        "interpretationBands": {
+          "type": "object",
+          "required": [
+            "status",
+            "referenceFormulaKnown",
+            "thresholds"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "INFERRED",
+                "NOT_VERIFIED"
+              ]
+            },
+            "referenceFormulaKnown": {
+              "type": "boolean",
+              "const": false
+            },
+            "thresholds": {
+              "type": "null",
+              "description": "ОБЯЗАТЕЛЬНО null: пороги референса не опубликованы. Наши полосы — в ourBands."
+            },
+            "ourBands": {
+              "type": "array",
+              "minItems": 5
+            }
+          }
+        },
+        "aggregationModes": {
+          "type": "object",
+          "required": [
+            "status",
+            "modes"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "VERIFIED"
+            },
+            "modes": {
+              "type": "array",
+              "minItems": 2
+            }
+          }
+        },
+        "modelPolicy": {
+          "type": "object",
+          "required": [
+            "status",
+            "rule"
+          ]
+        }
+      }
+    },
+    "colors": {
+      "type": "object",
+      "required": [
+        "$id",
+        "title",
+        "status",
+        "sources",
+        "palettes"
+      ],
+      "properties": {
+        "$id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "$schema": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "const": "INFERRED",
+          "description": "Цвета всегда INFERRED: это данные отображения, не расчёта."
+        },
+        "statusDetail": {
+          "type": "object"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "note": {
+          "type": "string"
+        },
+        "auditRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^A-[0-9]{2}$"
+          }
+        },
+        "auditRef": {
+          "type": "string",
+          "pattern": "^A-[0-9]{2}$"
+        },
+        "conflictRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^K[0-9]+$"
+          }
+        },
+        "conflictRef": {
+          "type": "string",
+          "pattern": "^K[0-9]+$"
+        },
+        "algorithmRef": {
+          "type": "string"
+        },
+        "algorithmRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "placeholderRef": {
+          "type": "string",
+          "pattern": "^PH-"
+        },
+        "openQuestion": {
+          "type": "string",
+          "pattern": "^U-[0-9]{2}$"
+        },
+        "criticalNote": {
+          "type": "string"
+        },
+        "palettes": {
+          "type": "object",
+          "required": [
+            "elements",
+            "meridians",
+            "stars"
+          ],
+          "properties": {
+            "elements": {
+              "type": "object",
+              "required": [
+                "byId"
+              ]
+            },
+            "meridians": {
+              "type": "object",
+              "required": [
+                "byId"
+              ]
+            },
+            "stars": {
+              "type": "object",
+              "required": [
+                "byNumber"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -110,16 +110,24 @@ for (const f of uiFiles) {
 ok('в UI нет расчётных весов (все веса в JSON)');
 
 console.log('\n[RED TEAM 4] Отсутствие «магических чисел» вне JSON');
-const weightsPath = path.join(root, 'data/weights.json');
+// PHASE 4: weights.json поглощён indicators.json (единый файл всех числовых гипотез).
+const weightsPath = path.join(root, 'data/indicators.json');
 const weights = JSON.parse(fs.readFileSync(weightsPath, 'utf8'));
-if (weights.status !== 'INFERRED') violation('weights.json не помечен как INFERRED');
-else ok('weights.json честно помечен INFERRED');
+if (weights.status !== 'INFERRED') violation('indicators.json не помечен как INFERRED');
+else ok('indicators.json честно помечен INFERRED');
 if (!weights.criticalNote || weights.criticalNote.length < 100) {
-  violation('weights.json не содержит развёрнутого предупреждения об аудите');
-} else ok('weights.json содержит предупреждение для аудитора');
+  violation('indicators.json не содержит развёрнутого предупреждения об аудите');
+} else ok('indicators.json содержит предупреждение для аудитора');
+// Неизвестные формулы обязаны оставаться пустыми, а не заполняться числами.
+for (const k of ['harmonyIndex', 'yinYangIndices', 'healthIndex']) {
+  if (weights[k] && weights[k].formula !== null) {
+    violation(`indicators.${k}.formula не null — формула референса неизвестна`);
+  }
+}
+ok('неопубликованные формулы не заполнены выдуманными значениями');
 
 console.log('\n[RED TEAM 5] Статусы не подменены');
-const dataFiles = fs.readdirSync(path.join(root, 'data')).filter((f) => f.endsWith('.json') && f !== 'bundle.json');
+const dataFiles = fs.readdirSync(path.join(root, 'data')).filter((f) => f.endsWith('.json') && f !== 'bundle.json' && f !== 'schema.json');
 for (const f of dataFiles) {
   const j = JSON.parse(fs.readFileSync(path.join(root, 'data', f), 'utf8'));
   if (!j.status) { violation(`data/${f}: нет поля status`); continue; }

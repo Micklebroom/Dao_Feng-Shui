@@ -1,36 +1,208 @@
 {
   "$id": "meridians",
-  "title": "Twelve Organ Meridians mapped to Five Elements / 十二经络 / Двенадцать меридианов",
-  "status": "VERIFIED (organ-element-polarity mapping) / INFERRED (numeric strength model)",
+  "$schema": "./schema.json#/definitions/meridians",
+  "title": "Десять меридианов (5 цзан + 5 фу) / 臟腑",
+  "status": "VERIFIED",
+  "statusDetail": {
+    "composition": "VERIFIED",
+    "strengthFormula": "NOT_VERIFIED",
+    "interpretationBands": "NOT_VERIFIED"
+  },
   "sources": [
-    "Classical Zang-Fu (臟腑) five-element correspondence: Liver/Gallbladder=Wood, Heart+Pericardium/Small Intestine+Triple Burner=Fire, Spleen-Pancreas/Stomach=Earth, Lung/Large Intestine=Metal, Kidney/Bladder=Water",
-    "feng-shui.net.ru/progr3a.htm - reference program explicitly states its meridian graphs rest on Su Jok / Five Element theory",
-    "feng-shui.net.ru/analis7.htm - worked example naming liver, gallbladder, pancreas, heart meridians moving to deficiency/excess"
+    "feng-shui.net.ru/progV4_2.htm — автор референса перечисляет РОВНО 10 меридианов",
+    "feng-shui.net.ru/analis7.htm — рабочий пример (печень, желчный пузырь, поджелудочная, сердце)",
+    "Классическая теория Цзан-Фу (臟腑): 5 иньских органов цзан и 5 янских органов фу"
   ],
-  "note": "The ORGAN-TO-ELEMENT and YIN/YANG (zang/fu) correspondences below are classical and VERIFIED. How the reference program converts Four Pillars element strength into a per-meridian NUMBER is NOT published; our model is declared INFERRED and is documented in docs/ALGORITHMS.md#meridian-strength. Yin organs (zang) take the yin share of their element, yang organs (fu) the yang share.",
-  "items": [
-    { "index": 0,  "id": "liver",       "han": "肝",   "ru": "Печень",              "en": "Liver",            "element": "wood",  "polarity": "yin",  "color": "#1b7a2f" },
-    { "index": 1,  "id": "gallbladder", "han": "胆",   "ru": "Желчный пузырь",      "en": "Gallbladder",      "element": "wood",  "polarity": "yang", "color": "#7cb342" },
-    { "index": 2,  "id": "heart",       "han": "心",   "ru": "Сердце",              "en": "Heart",            "element": "fire",  "polarity": "yin",  "color": "#c62828" },
-    { "index": 3,  "id": "smallIntestine", "han": "小肠", "ru": "Тонкий кишечник",  "en": "Small Intestine",  "element": "fire",  "polarity": "yang", "color": "#ef6c00" },
-    { "index": 4,  "id": "pericardium", "han": "心包", "ru": "Перикард",            "en": "Pericardium",      "element": "fire",  "polarity": "yin",  "color": "#ad1457", "ministerial": true },
-    { "index": 5,  "id": "tripleBurner","han": "三焦", "ru": "Тройной обогреватель","en": "Triple Burner",    "element": "fire",  "polarity": "yang", "color": "#d81b60", "ministerial": true },
-    { "index": 6,  "id": "spleen",      "han": "脾",   "ru": "Селезёнка/Поджелудочная", "en": "Spleen-Pancreas", "element": "earth", "polarity": "yin", "color": "#8d6e26" },
-    { "index": 7,  "id": "stomach",     "han": "胃",   "ru": "Желудок",             "en": "Stomach",          "element": "earth", "polarity": "yang", "color": "#bda23a" },
-    { "index": 8,  "id": "lung",        "han": "肺",   "ru": "Лёгкие",              "en": "Lung",             "element": "metal", "polarity": "yin",  "color": "#546e7a" },
-    { "index": 9,  "id": "largeIntestine", "han": "大肠", "ru": "Толстый кишечник","en": "Large Intestine",  "element": "metal", "polarity": "yang", "color": "#90a4ae" },
-    { "index": 10, "id": "kidney",      "han": "肾",   "ru": "Почки",               "en": "Kidney",           "element": "water", "polarity": "yin",  "color": "#1565c0" },
-    { "index": 11, "id": "bladder",     "han": "膀胱", "ru": "Мочевой пузырь",      "en": "Bladder",          "element": "water", "polarity": "yang", "color": "#42a5f5" }
+  "note": "ИСПРАВЛЕНО по аудиту A-02 (КРИТИЧЕСКАЯ): было 12 меридианов, стало 10. Перикард и тройной обогреватель ИСКЛЮЧЕНЫ: референс их не использует. Аудит A-13: «Три обогревателя» — не меридианы, а способ ГРУППИРОВКИ тех же 10 меридианов (см. tripleBurner ниже). Аудит A-01: ссылка на Су Джок как доказательство традиционности ОТОЗВАНА; основанием служит только соответствие Цзан-Фу ↔ пять стихий.",
+  "auditRefs": [
+    "A-01",
+    "A-02",
+    "A-13"
   ],
-  "interpretation": {
-    "status": "INFERRED",
-    "note": "Bands used to label a meridian as deficient/balanced/excess. Reference program describes 'недостаток' (deficiency) and 'избыток' (excess) but publishes no numeric thresholds. Percent of the 12-meridian mean.",
-    "bands": [
-      { "id": "deficient", "ru": "Недостаток", "en": "Deficiency", "maxRatio": 0.72 },
-      { "id": "low",       "ru": "Пониженный", "en": "Low",        "maxRatio": 0.90 },
-      { "id": "balanced",  "ru": "Норма",      "en": "Balanced",   "maxRatio": 1.10 },
-      { "id": "high",      "ru": "Повышенный", "en": "High",       "maxRatio": 1.28 },
-      { "id": "excess",    "ru": "Избыток",    "en": "Excess",     "maxRatio": null }
+  "conflictRefs": [
+    "K6"
+  ],
+  "algorithmRefs": [
+    "F1",
+    "F6"
+  ],
+  "composition": {
+    "status": "VERIFIED",
+    "count": 10,
+    "perElement": 2,
+    "yinCount": 5,
+    "yangCount": 5,
+    "excluded": [
+      {
+        "id": "pericardium",
+        "ru": "Перикард",
+        "reason": "Не используется референсной программой (A-02)"
+      },
+      {
+        "id": "tripleBurner",
+        "ru": "Тройной обогреватель",
+        "reason": "В референсе это группировка, а не меридиан (A-13)"
+      }
     ]
-  }
+  },
+  "items": [
+    {
+      "index": 0,
+      "id": "gallbladder",
+      "han": "膽",
+      "ru": "Желчный пузырь",
+      "en": "Gallbladder",
+      "element": "wood",
+      "polarity": "yang",
+      "organType": "fu",
+      "burner": "middle"
+    },
+    {
+      "index": 1,
+      "id": "liver",
+      "han": "肝",
+      "ru": "Печень",
+      "en": "Liver",
+      "element": "wood",
+      "polarity": "yin",
+      "organType": "zang",
+      "burner": "middle"
+    },
+    {
+      "index": 2,
+      "id": "smallIntestine",
+      "han": "小腸",
+      "ru": "Тонкий кишечник",
+      "en": "Small Intestine",
+      "element": "fire",
+      "polarity": "yang",
+      "organType": "fu",
+      "burner": "lower"
+    },
+    {
+      "index": 3,
+      "id": "heart",
+      "han": "心",
+      "ru": "Сердце",
+      "en": "Heart",
+      "element": "fire",
+      "polarity": "yin",
+      "organType": "zang",
+      "burner": "upper"
+    },
+    {
+      "index": 4,
+      "id": "stomach",
+      "han": "胃",
+      "ru": "Желудок",
+      "en": "Желудок",
+      "element": "earth",
+      "polarity": "yang",
+      "organType": "fu",
+      "burner": "middle"
+    },
+    {
+      "index": 5,
+      "id": "spleenPancreas",
+      "han": "脾",
+      "ru": "Селезёнка и поджелудочная железа",
+      "en": "Spleen-Pancreas",
+      "element": "earth",
+      "polarity": "yin",
+      "organType": "zang",
+      "burner": "middle"
+    },
+    {
+      "index": 6,
+      "id": "largeIntestine",
+      "han": "大腸",
+      "ru": "Толстый кишечник",
+      "en": "Large Intestine",
+      "element": "metal",
+      "polarity": "yang",
+      "organType": "fu",
+      "burner": "lower"
+    },
+    {
+      "index": 7,
+      "id": "lung",
+      "han": "肺",
+      "ru": "Лёгкие",
+      "en": "Lung",
+      "element": "metal",
+      "polarity": "yin",
+      "organType": "zang",
+      "burner": "upper"
+    },
+    {
+      "index": 8,
+      "id": "bladder",
+      "han": "膀胱",
+      "ru": "Мочевой пузырь",
+      "en": "Bladder",
+      "element": "water",
+      "polarity": "yang",
+      "organType": "fu",
+      "burner": "lower"
+    },
+    {
+      "index": 9,
+      "id": "kidney",
+      "han": "腎",
+      "ru": "Почки",
+      "en": "Kidney",
+      "element": "water",
+      "polarity": "yin",
+      "organType": "zang",
+      "burner": "lower"
+    }
+  ],
+  "tripleBurner": {
+    "status": "PARTIALLY VERIFIED",
+    "algorithmRef": "F6",
+    "placeholderRef": "PH-F6",
+    "note": "СОСТАВ групп взят из прямого перечисления автором. СПОСОБ АГРЕГАЦИИ (сумма или среднее) НЕ опубликован — см. заглушку PH-F6 и открытый вопрос U-24.",
+    "openQuestion": "U-24",
+    "aggregation": null,
+    "aggregationStatus": "NOT_VERIFIED",
+    "groups": [
+      {
+        "id": "upper",
+        "han": "上焦",
+        "ru": "Верхний обогреватель",
+        "members": [
+          "heart",
+          "lung"
+        ]
+      },
+      {
+        "id": "middle",
+        "han": "中焦",
+        "ru": "Средний обогреватель",
+        "members": [
+          "gallbladder",
+          "liver",
+          "stomach",
+          "spleenPancreas"
+        ]
+      },
+      {
+        "id": "lower",
+        "han": "下焦",
+        "ru": "Нижний обогреватель",
+        "members": [
+          "smallIntestine",
+          "largeIntestine",
+          "bladder",
+          "kidney"
+        ]
+      }
+    ]
+  },
+  "strengthModel": {
+    "status": "NOT_VERIFIED",
+    "placeholderRef": "PH-F1",
+    "note": "Формула перевода силы стихии в силу меридиана НЕ опубликована автором. Числовая модель НЕ включена в данные намеренно. См. заглушку PH-F1."
+  },
+  "medicalDisclaimer": "Это традиционные метафизические показатели. Это НЕ медицинская диагностика, НЕ медицинский прогноз и НЕ основание для решений о здоровье."
 }

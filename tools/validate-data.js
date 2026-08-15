@@ -14,7 +14,10 @@ const T = loadTables();
 const VALID_STATUS = ['VERIFIED', 'PARTIALLY VERIFIED', 'INFERRED', 'NOT VERIFIED'];
 
 console.log('\n[1] Статусы и метаданные таблиц');
-for (const [k, v] of Object.entries(T)) {
+const REAL_TABLES = ['stemsBranches', 'calendar', 'elements', 'bazi', 'luckPillars',
+  'gua', 'meridians', 'indicators', 'colors', 'luoshu', 'mountains24'];
+const tableEntries = () => REAL_TABLES.map((k) => [k, T[k]]);
+for (const [k, v] of tableEntries()) {
   if (!v.$id) fail(`${k}: нет $id`);
   if (!v.status) fail(`${k}: нет status`);
   else {
@@ -146,24 +149,29 @@ if (T.gua.directionsByGua['5']) fail('Гуа 5 не должно существ�
 ok('все 8 чисел Гуа покрывают 8 направлений без повторов');
 
 console.log('\n[9] Меридианы и веса');
-if (T.meridians.items.length !== 12) fail('меридианов должно быть 12');
+// АУДИТ A-02: меридианов РОВНО 10 (5 цзан + 5 фу). Перикард и тройной
+// обогреватель исключены — референс их не использует.
+if (T.meridians.items.length !== 10) fail('меридианов должно быть 10 (аудит A-02)');
 const byEl = {};
 for (const m of T.meridians.items) { byEl[m.element] = (byEl[m.element] || 0) + 1; }
-if (byEl.fire !== 4) fail('огню должно соответствовать 4 меридиана (имп. + мин.)');
-for (const e of ['wood', 'earth', 'metal', 'water']) if (byEl[e] !== 2) fail(`стихии ${e} должно соответствовать 2 меридиана`);
+for (const e of ['wood', 'fire', 'earth', 'metal', 'water']) {
+  if (byEl[e] !== 2) fail(`стихии ${e} должно соответствовать 2 меридиана`);
+}
+if (T.meridians.items.some((m) => m.id === 'pericardium' || m.id === 'tripleBurner')) {
+  fail('перикард/тройной обогреватель не являются меридианами (аудит A-13)');
+}
 for (const m of T.meridians.items) if (!elIds.includes(m.element)) fail(`меридиан ${m.id}: неизвестная стихия`);
 const mw = T.weights.meridian;
 if (Math.abs(mw.yinShare + mw.yangShare - 1) > 1e-9) fail('yinShare + yangShare != 1');
-if (Math.abs(mw.fireImperialShare + mw.fireMinisterialShare - 1) > 1e-9) fail('доли огня != 1');
-if (T.weights.status !== 'INFERRED') fail('weights.json обязан иметь статус INFERRED');
-ok('12 меридианов, доли нормированы, веса помечены INFERRED');
+if (T.indicators.status !== 'INFERRED') fail('indicators.json обязан иметь статус INFERRED');
+ok('10 меридианов (A-02), доли нормированы, коэффициенты помечены INFERRED');
 
 console.log('\n[10] Дисциплина источников');
-for (const [k, v] of Object.entries(T)) {
+for (const [k, v] of tableEntries()) {
   if (v.status.startsWith('VERIFIED') && (!v.sources || v.sources.length < 1)) {
     fail(`${k}: статус VERIFIED без указания источников`);
   }
-  if (v.status.startsWith('VERIFIED') && v.sources && v.sources.length < 2 && k !== 'elements' && k !== 'gua') {
+  if (v.status.startsWith('VERIFIED') && v.sources && v.sources.length < 2 && k !== 'elements' && k !== 'gua' && k !== 'colors') {
     warn(`${k}: VERIFIED только с одним источником`);
   }
 }

@@ -203,10 +203,29 @@ const dataDir = path.join(root, 'data');
 const existing = new Set(fs.readdirSync(dataDir).filter((f) => f.endsWith('.json')).map((f) => f.replace('.json', '')));
 const referenced = new Set();
 for (const a of spec.algorithms) for (const t of (a.lookupTables || [])) referenced.add(t);
+/* PHASE 4: пакет данных реорганизован. Логическое имя таблицы в спецификации
+   больше не обязано совпадать с именем файла — здесь карта «логическое → файл».
+   Проверяется не только наличие файла, но и наличие самого раздела внутри него. */
+const TABLE_MAP = {
+  stems: ['stems_branches', 'stems'],
+  branches: ['stems_branches', 'branches'],
+  'solar-terms': ['calendar', 'solarTerms'],
+  interactions: ['bazi', 'interactions'],
+  'qi-phases': ['bazi', 'qiPhases'],
+  elements: ['elements', 'items'],
+  meridians: ['meridians', 'items'],
+  luoshu: ['luoshu', 'palaces'],
+  mountains24: ['mountains24', 'items'],
+  gua: ['gua', 'directionsByGua']
+};
 for (const t of referenced) {
-  if (!existing.has(t)) {
-    if (t === 'qi-phases') warn(`таблица «${t}» упомянута в спецификации, но ещё не создана (D1, планируется)`);
-    else fail(`таблица «${t}» упомянута в спецификации, но отсутствует в data/`);
+  const mapped = TABLE_MAP[t];
+  if (!mapped) { fail(`таблица «${t}» не описана в карте TABLE_MAP валидатора`); continue; }
+  const [file, section] = mapped;
+  if (!existing.has(file)) { fail(`таблица «${t}» ссылается на data/${file}.json, которого нет`); continue; }
+  const content = JSON.parse(fs.readFileSync(path.join(dataDir, file + '.json'), 'utf8'));
+  if (!(section in content)) {
+    fail(`таблица «${t}»: в data/${file}.json нет раздела «${section}»`);
   }
 }
 ok(`ссылки на таблицы данных проверены (${referenced.size} уникальных)`);

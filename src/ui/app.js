@@ -103,7 +103,8 @@ function renderPillars() {
 }
 
 const elRu = (id) => T.elements.items.find((e) => e.id === id).ru;
-const elColor = (id) => T.elements.items.find((e) => e.id === id).color;
+// Цвета берутся ТОЛЬКО из colors.json через проекции загрузчика (единственный источник цвета).
+const elColor = (id) => T.elementColor(id);
 
 function renderElements() {
   const p = state.result.profile;
@@ -146,13 +147,13 @@ function renderLuck() {
 function seriesForMode() {
   if (state.chartMode === 'meridians') {
     return T.meridians.items.map((m) => ({
-      id: m.id, label: m.ru, color: m.color,
+      id: m.id, label: m.ru, color: T.meridianColor(m.id),
       accessor: (p) => p.meridians.find((x) => x.id === m.id).value
     }));
   }
   if (state.chartMode === 'elements') {
     return T.elements.items.map((e) => ({
-      id: e.id, label: e.ru, color: e.color,
+      id: e.id, label: e.ru, color: T.elementColor(e.id),
       accessor: (p) => p.elements[e.id]
     }));
   }
@@ -282,7 +283,8 @@ const starEl = (n) => T.luoshu.stars.find((s) => s.number === n).element;
 function renderMeridianTable() {
   const pts = state.result.points;
   const cur = pts[Math.min(pts.length - 1, Math.floor(pts.length / 2))];
-  const bandRu = (id) => T.meridians.interpretation.bands.find((b) => b.id === id).ru;
+  // Полосы интерпретации INFERRED и живут в indicators.json (проекция weights).
+  const bandRu = (id) => T.weights.interpretationBands.find((b) => b.id === id).ru;
   $('#meridian-table').innerHTML =
     `<table class="grid"><tr><th>Меридиан</th><th>Стихия</th><th>Знач.</th><th>Отн.</th><th>Оценка</th></tr>` +
     cur.meridians.map((m) => {

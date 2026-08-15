@@ -247,7 +247,8 @@ check('в столпах есть иероглифы (8 знаков)', hanNodes
 
 const chart = document.querySelector('#main-chart');
 const paths = chart.querySelectorAll('path');
-check('на основном графике построены линии', paths.length >= 12, 'путей: ' + paths.length);
+// АУДИТ A-02: серий меридианов 10.
+check('на основном графике построены линии', paths.length >= 10, 'путей: ' + paths.length);
 check('линии имеют непустой атрибут d', paths.every((p) => (p.getAttribute('d') || '').length > 10));
 check('линии имеют цвет обводки', paths.every((p) => !!p.getAttribute('stroke')));
 
@@ -259,13 +260,14 @@ const rects = chart.querySelectorAll('rect');
 check('есть область построения и слой наведения', rects.length >= 2);
 
 const legendItems = document.querySelectorAll('#legend .item');
-check('легенда содержит 12 меридианов', legendItems.length === 12, 'элементов: ' + legendItems.length);
+// АУДИТ A-02: меридианов 10, а не 12.
+check('легенда содержит 10 меридианов', legendItems.length === 10, 'элементов: ' + legendItems.length);
 
 const palaces = document.querySelectorAll('#luoshu .palace');
 check('квадрат Ло Шу содержит 9 дворцов', palaces.length === 9, 'дворцов: ' + palaces.length);
 
 const merRows = document.querySelectorAll('#meridian-table table tr');
-check('таблица меридианов заполнена (12 строк + шапка)', merRows.length === 13, 'строк: ' + merRows.length);
+check('таблица меридианов заполнена (10 строк + шапка)', merRows.length === 11, 'строк: ' + merRows.length);
 
 const luckRows = document.querySelectorAll('#luck-table table tr');
 check('таблица столпов удачи заполнена', luckRows.length === 13, 'строк: ' + luckRows.length);
@@ -297,7 +299,7 @@ check('кнопка «Снять все» убирает все линии',
   document.querySelectorAll('#main-chart path').length === 0);
 document.querySelector('#btn-all-on').click();
 check('кнопка «Все серии» возвращает линии',
-  document.querySelectorAll('#main-chart path').length >= 12);
+  document.querySelectorAll('#main-chart path').length >= 10);
 
 // Переключение масштаба
 for (const sc of ['decade', 'month', 'day', 'year']) {

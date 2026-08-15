@@ -7,41 +7,286 @@
     "en.wikipedia.org/wiki/Flying_Star_Feng_Shui",
     "Classical Later Heaven (後天) bagua arrangement"
   ],
-  "note": "The Lo Shu flight path is invariant across every consulted source. Palace 'number' is the fixed Earth Base (地盤) number of that direction. Orientation convention of this application: SOUTH AT TOP, as used by the reference program «Фэн-шуй Удачи» (its Lo Shu window defaults to 'Юг сверху' = South on top).",
+  "note": "The Lo Shu flight path is invariant across every consulted source. Palace 'number' is the fixed Earth Base (地盤) number of that direction. Orientation convention of this application: SOUTH AT TOP, as used by the reference program «Фэн-шуй Удачи» (its Lo Shu window defaults to 'Юг сверху' = South on top). Цвета звёзд перенесены в colors.json (единственный источник цвета); здесь остаются только расчётные свойства.",
   "palaces": [
-    { "index": 0, "number": 4, "direction": "SE", "trigram": "xun",  "han": "巽", "ru": "ЮВ", "element": "wood",  "row": 0, "col": 0 },
-    { "index": 1, "number": 9, "direction": "S",  "trigram": "li",   "han": "離", "ru": "Ю",  "element": "fire",  "row": 0, "col": 1 },
-    { "index": 2, "number": 2, "direction": "SW", "trigram": "kun",  "han": "坤", "ru": "ЮЗ", "element": "earth", "row": 0, "col": 2 },
-    { "index": 3, "number": 3, "direction": "E",  "trigram": "zhen", "han": "震", "ru": "В",  "element": "wood",  "row": 1, "col": 0 },
-    { "index": 4, "number": 5, "direction": "C",  "trigram": null,   "han": "中", "ru": "Ц",  "element": "earth", "row": 1, "col": 1 },
-    { "index": 5, "number": 7, "direction": "W",  "trigram": "dui",  "han": "兌", "ru": "З",  "element": "metal", "row": 1, "col": 2 },
-    { "index": 6, "number": 8, "direction": "NE", "trigram": "gen",  "han": "艮", "ru": "СВ", "element": "earth", "row": 2, "col": 0 },
-    { "index": 7, "number": 1, "direction": "N",  "trigram": "kan",  "han": "坎", "ru": "С",  "element": "water", "row": 2, "col": 1 },
-    { "index": 8, "number": 6, "direction": "NW", "trigram": "qian", "han": "乾", "ru": "СЗ", "element": "metal", "row": 2, "col": 2 }
+    {
+      "index": 0,
+      "number": 4,
+      "direction": "SE",
+      "trigram": "xun",
+      "han": "巽",
+      "ru": "ЮВ",
+      "element": "wood",
+      "row": 0,
+      "col": 0
+    },
+    {
+      "index": 1,
+      "number": 9,
+      "direction": "S",
+      "trigram": "li",
+      "han": "離",
+      "ru": "Ю",
+      "element": "fire",
+      "row": 0,
+      "col": 1
+    },
+    {
+      "index": 2,
+      "number": 2,
+      "direction": "SW",
+      "trigram": "kun",
+      "han": "坤",
+      "ru": "ЮЗ",
+      "element": "earth",
+      "row": 0,
+      "col": 2
+    },
+    {
+      "index": 3,
+      "number": 3,
+      "direction": "E",
+      "trigram": "zhen",
+      "han": "震",
+      "ru": "В",
+      "element": "wood",
+      "row": 1,
+      "col": 0
+    },
+    {
+      "index": 4,
+      "number": 5,
+      "direction": "C",
+      "trigram": null,
+      "han": "中",
+      "ru": "Ц",
+      "element": "earth",
+      "row": 1,
+      "col": 1
+    },
+    {
+      "index": 5,
+      "number": 7,
+      "direction": "W",
+      "trigram": "dui",
+      "han": "兌",
+      "ru": "З",
+      "element": "metal",
+      "row": 1,
+      "col": 2
+    },
+    {
+      "index": 6,
+      "number": 8,
+      "direction": "NE",
+      "trigram": "gen",
+      "han": "艮",
+      "ru": "СВ",
+      "element": "earth",
+      "row": 2,
+      "col": 0
+    },
+    {
+      "index": 7,
+      "number": 1,
+      "direction": "N",
+      "trigram": "kan",
+      "han": "坎",
+      "ru": "С",
+      "element": "water",
+      "row": 2,
+      "col": 1
+    },
+    {
+      "index": 8,
+      "number": 6,
+      "direction": "NW",
+      "trigram": "qian",
+      "han": "乾",
+      "ru": "СЗ",
+      "element": "metal",
+      "row": 2,
+      "col": 2
+    }
   ],
-  "flightPath": ["C", "NW", "W", "NE", "S", "N", "SW", "E", "SE"],
+  "flightPath": [
+    "C",
+    "NW",
+    "W",
+    "NE",
+    "S",
+    "N",
+    "SW",
+    "E",
+    "SE"
+  ],
   "flightPathNote": "Order in which successive star numbers are placed. Index 0 is the center; the star placed at step k is (start + k) for forward flight and (start - k) for reverse flight, wrapped into 1..9.",
   "stars": [
-    { "number": 1, "id": "tanlang",   "han": "貪狼", "ru": "Тань Лан",   "en": "Greedy Wolf",      "element": "water", "color": "#ffffff", "colorName": "white",  "ruColor": "белая",     "nature": "auspicious" },
-    { "number": 2, "id": "jumen",     "han": "巨門", "ru": "Цзюй Мэнь",  "en": "Great Gate",       "element": "earth", "color": "#000000", "colorName": "black",  "ruColor": "чёрная",    "nature": "inauspicious" },
-    { "number": 3, "id": "lucun",     "han": "祿存", "ru": "Лу Цунь",    "en": "Jade Rank",        "element": "wood",  "color": "#1f8a3b", "colorName": "jade",   "ruColor": "нефритовая","nature": "inauspicious" },
-    { "number": 4, "id": "wenqu",     "han": "文曲", "ru": "Вэнь Цюй",   "en": "Literary Arts",    "element": "wood",  "color": "#2f8f2f", "colorName": "green",  "ruColor": "зелёная",   "nature": "auspicious" },
-    { "number": 5, "id": "lianzhen",  "han": "廉貞", "ru": "Лянь Чжэнь", "en": "Five Yellow",      "element": "earth", "color": "#d4a017", "colorName": "yellow", "ruColor": "жёлтая",    "nature": "inauspicious" },
-    { "number": 6, "id": "wuqu",      "han": "武曲", "ru": "У Цюй",      "en": "Military Arts",    "element": "metal", "color": "#eeeeee", "colorName": "white",  "ruColor": "белая",     "nature": "auspicious" },
-    { "number": 7, "id": "pojun",     "han": "破軍", "ru": "По Цзюнь",   "en": "Broken Soldier",   "element": "metal", "color": "#c62828", "colorName": "red",    "ruColor": "красная",   "nature": "inauspicious" },
-    { "number": 8, "id": "zuofu",     "han": "左輔", "ru": "Цзо Фу",     "en": "Left Assistant",   "element": "earth", "color": "#f5f5f5", "colorName": "white",  "ruColor": "белая",     "nature": "auspicious" },
-    { "number": 9, "id": "youbi",     "han": "右弼", "ru": "Ю Би",       "en": "Right Assistant",  "element": "fire",  "color": "#7b1fa2", "colorName": "purple", "ruColor": "пурпурная", "nature": "auspicious" }
+    {
+      "number": 1,
+      "id": "tanlang",
+      "han": "貪狼",
+      "ru": "Тань Лан",
+      "en": "Greedy Wolf",
+      "element": "water",
+      "colorName": "white",
+      "ruColor": "белая",
+      "nature": "auspicious"
+    },
+    {
+      "number": 2,
+      "id": "jumen",
+      "han": "巨門",
+      "ru": "Цзюй Мэнь",
+      "en": "Great Gate",
+      "element": "earth",
+      "colorName": "black",
+      "ruColor": "чёрная",
+      "nature": "inauspicious"
+    },
+    {
+      "number": 3,
+      "id": "lucun",
+      "han": "祿存",
+      "ru": "Лу Цунь",
+      "en": "Jade Rank",
+      "element": "wood",
+      "colorName": "jade",
+      "ruColor": "нефритовая",
+      "nature": "inauspicious"
+    },
+    {
+      "number": 4,
+      "id": "wenqu",
+      "han": "文曲",
+      "ru": "Вэнь Цюй",
+      "en": "Literary Arts",
+      "element": "wood",
+      "colorName": "green",
+      "ruColor": "зелёная",
+      "nature": "auspicious"
+    },
+    {
+      "number": 5,
+      "id": "lianzhen",
+      "han": "廉貞",
+      "ru": "Лянь Чжэнь",
+      "en": "Five Yellow",
+      "element": "earth",
+      "colorName": "yellow",
+      "ruColor": "жёлтая",
+      "nature": "inauspicious"
+    },
+    {
+      "number": 6,
+      "id": "wuqu",
+      "han": "武曲",
+      "ru": "У Цюй",
+      "en": "Military Arts",
+      "element": "metal",
+      "colorName": "white",
+      "ruColor": "белая",
+      "nature": "auspicious"
+    },
+    {
+      "number": 7,
+      "id": "pojun",
+      "han": "破軍",
+      "ru": "По Цзюнь",
+      "en": "Broken Soldier",
+      "element": "metal",
+      "colorName": "red",
+      "ruColor": "красная",
+      "nature": "inauspicious"
+    },
+    {
+      "number": 8,
+      "id": "zuofu",
+      "han": "左輔",
+      "ru": "Цзо Фу",
+      "en": "Left Assistant",
+      "element": "earth",
+      "colorName": "white",
+      "ruColor": "белая",
+      "nature": "auspicious"
+    },
+    {
+      "number": 9,
+      "id": "youbi",
+      "han": "右弼",
+      "ru": "Ю Би",
+      "en": "Right Assistant",
+      "element": "fire",
+      "colorName": "purple",
+      "ruColor": "пурпурная",
+      "nature": "auspicious"
+    }
   ],
   "periods": {
     "status": "VERIFIED",
     "note": "San Yuan Jiu Yun (三元九運). Each period is 20 years, anchored on the Li Chun of the start year.",
     "cycleYears": 180,
     "items": [
-      { "period": 1, "start": 1864, "end": 1883 }, { "period": 2, "start": 1884, "end": 1903 },
-      { "period": 3, "start": 1904, "end": 1923 }, { "period": 4, "start": 1924, "end": 1943 },
-      { "period": 5, "start": 1944, "end": 1963 }, { "period": 6, "start": 1964, "end": 1983 },
-      { "period": 7, "start": 1984, "end": 2003 }, { "period": 8, "start": 2004, "end": 2023 },
-      { "period": 9, "start": 2024, "end": 2043 }
+      {
+        "period": 1,
+        "start": 1864,
+        "end": 1883
+      },
+      {
+        "period": 2,
+        "start": 1884,
+        "end": 1903
+      },
+      {
+        "period": 3,
+        "start": 1904,
+        "end": 1923
+      },
+      {
+        "period": 4,
+        "start": 1924,
+        "end": 1943
+      },
+      {
+        "period": 5,
+        "start": 1944,
+        "end": 1963
+      },
+      {
+        "period": 6,
+        "start": 1964,
+        "end": 1983
+      },
+      {
+        "period": 7,
+        "start": 1984,
+        "end": 2003
+      },
+      {
+        "period": 8,
+        "start": 2004,
+        "end": 2023
+      },
+      {
+        "period": 9,
+        "start": 2024,
+        "end": 2043
+      }
     ]
+  },
+  "$schema": "./schema.json#/definitions/luoshu",
+  "algorithmRefs": [
+    "H1",
+    "H2",
+    "H3",
+    "H4",
+    "H5",
+    "H6",
+    "H7"
+  ],
+  "orientation": {
+    "status": "VERIFIED",
+    "note": "ЮГ ВВЕРХУ — традиционная ориентация карт Летящих звёзд. Строка 0 — южный ряд.",
+    "southUp": true
   }
 }

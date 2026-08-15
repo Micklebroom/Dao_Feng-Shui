@@ -39,7 +39,7 @@ export function computeElementStrength(pillarList, tables, opts = {}) {
 
   const seasonalMultiplier = (elementId) => {
     if (!applySeasonal || !seasonElement) return 1;
-    const m = elements.seasonalPhase.multipliers;
+    const m = weights.seasonalMultipliers;
     const el = (id) => elements.items.find((e) => e.id === id);
     const se = el(seasonElement);
     if (elementId === seasonElement) return m.wang;

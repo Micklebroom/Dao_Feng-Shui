@@ -79,10 +79,10 @@ const q = (expr) => vm.runInContext(expr, ctx);
 check('статус без ошибок', !/ОШИБКА/.test(q(`document.querySelector('#status-msg').textContent`)),
   q(`document.querySelector('#status-msg').textContent`));
 check('отрисованы 4 столпа', q(`document.querySelectorAll('#pillars .pillar').length`) === 4);
-check('график построен', q(`document.querySelectorAll('#main-chart path').length`) >= 12);
+check('график построен', q(`document.querySelectorAll('#main-chart path').length`) >= 10);
 check('9 дворцов Ло Шу', q(`document.querySelectorAll('#luoshu .palace').length`) === 9);
-check('легенда из 12 меридианов', q(`document.querySelectorAll('#legend .item').length`) === 12);
-check('таблица меридианов заполнена', q(`document.querySelectorAll('#meridian-table table tr').length`) === 13);
+check('легенда из 10 меридианов', q(`document.querySelectorAll('#legend .item').length`) === 10);
+check('таблица меридианов заполнена', q(`document.querySelectorAll('#meridian-table table tr').length`) === 11);
 check('таблица сезонов заполнена', q(`document.querySelectorAll('#terms-table table tr').length`) === 25);
 check('версия движка выведена', q(`document.querySelector('#engine-ver').textContent.length`) > 0);
 
@@ -90,7 +90,7 @@ console.log('\n[STANDALONE] Интерактивность в автономно
 q(`document.querySelector('#btn-all-off').click()`);
 check('«Снять все» работает', q(`document.querySelectorAll('#main-chart path').length`) === 0);
 q(`document.querySelector('#btn-all-on').click()`);
-check('«Все серии» работает', q(`document.querySelectorAll('#main-chart path').length`) >= 12);
+check('«Все серии» работает', q(`document.querySelectorAll('#main-chart path').length`) >= 10);
 
 q(`(() => { const r = document.querySelector('input[value="month"]'); r.checked = true;
    r.dispatchEvent({type:'change', target:r}); })()`);

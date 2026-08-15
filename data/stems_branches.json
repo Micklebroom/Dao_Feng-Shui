@@ -1,0 +1,435 @@
+{
+  "$id": "stems_branches",
+  "$schema": "./schema.json#/definitions/stems_branches",
+  "title": "Небесные стволы и земные ветви / 天干地支 / Heavenly Stems and Earthly Branches",
+  "status": "VERIFIED",
+  "statusDetail": {
+    "identity": "VERIFIED",
+    "hiddenStems": "PARTIALLY VERIFIED"
+  },
+  "sources": [
+    "ytliu0.github.io/ChineseCalendar/sexagenary.html",
+    "Baidu Baike: Ganzhi Conversion Method",
+    "en.wikipedia.org/wiki/Sexagenary_cycle",
+    "American Feng Shui Institute AS101 tables (amfengshui.com)",
+    "ba-zi.ai/en/blog/tian-gan-di-zhi (hidden stems table)",
+    "travelchinaguide.com/intro/astrology/four-pillar.htm (month/hour mapping)"
+  ],
+  "note": "Стволы и ветви объединены в ОДНУ таблицу, поскольку это одна система (干支): они индексируются согласованно и образуют 60-ричный цикл. Ранее данные были разнесены по stems.json и branches.json — это создавало риск рассинхронизации индексов. Цвета вынесены в colors.json, числовые веса — в indicators.json.",
+  "conflictRefs": [
+    "K5"
+  ],
+  "stems": [
+    {
+      "index": 0,
+      "id": "jia",
+      "han": "甲",
+      "pinyin": "Jiǎ",
+      "ru": "Цзя",
+      "element": "wood",
+      "polarity": "yang"
+    },
+    {
+      "index": 1,
+      "id": "yi",
+      "han": "乙",
+      "pinyin": "Yǐ",
+      "ru": "И",
+      "element": "wood",
+      "polarity": "yin"
+    },
+    {
+      "index": 2,
+      "id": "bing",
+      "han": "丙",
+      "pinyin": "Bǐng",
+      "ru": "Бин",
+      "element": "fire",
+      "polarity": "yang"
+    },
+    {
+      "index": 3,
+      "id": "ding",
+      "han": "丁",
+      "pinyin": "Dīng",
+      "ru": "Дин",
+      "element": "fire",
+      "polarity": "yin"
+    },
+    {
+      "index": 4,
+      "id": "wu",
+      "han": "戊",
+      "pinyin": "Wù",
+      "ru": "У",
+      "element": "earth",
+      "polarity": "yang"
+    },
+    {
+      "index": 5,
+      "id": "ji",
+      "han": "己",
+      "pinyin": "Jǐ",
+      "ru": "Цзи",
+      "element": "earth",
+      "polarity": "yin"
+    },
+    {
+      "index": 6,
+      "id": "geng",
+      "han": "庚",
+      "pinyin": "Gēng",
+      "ru": "Гэн",
+      "element": "metal",
+      "polarity": "yang"
+    },
+    {
+      "index": 7,
+      "id": "xin",
+      "han": "辛",
+      "pinyin": "Xīn",
+      "ru": "Синь",
+      "element": "metal",
+      "polarity": "yin"
+    },
+    {
+      "index": 8,
+      "id": "ren",
+      "han": "壬",
+      "pinyin": "Rén",
+      "ru": "Жэнь",
+      "element": "water",
+      "polarity": "yang"
+    },
+    {
+      "index": 9,
+      "id": "gui",
+      "han": "癸",
+      "pinyin": "Guǐ",
+      "ru": "Гуй",
+      "element": "water",
+      "polarity": "yin"
+    }
+  ],
+  "branches": [
+    {
+      "index": 0,
+      "id": "zi",
+      "han": "子",
+      "pinyin": "Zǐ",
+      "ru": "Цзы",
+      "animal": "rat",
+      "ruAnimal": "Крыса",
+      "element": "water",
+      "polarity": "yang",
+      "hourStart": 23,
+      "hourEnd": 1,
+      "solarMonth": 11
+    },
+    {
+      "index": 1,
+      "id": "chou",
+      "han": "丑",
+      "pinyin": "Chǒu",
+      "ru": "Чоу",
+      "animal": "ox",
+      "ruAnimal": "Бык",
+      "element": "earth",
+      "polarity": "yin",
+      "hourStart": 1,
+      "hourEnd": 3,
+      "solarMonth": 12
+    },
+    {
+      "index": 2,
+      "id": "yin",
+      "han": "寅",
+      "pinyin": "Yín",
+      "ru": "Инь",
+      "animal": "tiger",
+      "ruAnimal": "Тигр",
+      "element": "wood",
+      "polarity": "yang",
+      "hourStart": 3,
+      "hourEnd": 5,
+      "solarMonth": 1
+    },
+    {
+      "index": 3,
+      "id": "mao",
+      "han": "卯",
+      "pinyin": "Mǎo",
+      "ru": "Мао",
+      "animal": "rabbit",
+      "ruAnimal": "Кролик",
+      "element": "wood",
+      "polarity": "yin",
+      "hourStart": 5,
+      "hourEnd": 7,
+      "solarMonth": 2
+    },
+    {
+      "index": 4,
+      "id": "chen",
+      "han": "辰",
+      "pinyin": "Chén",
+      "ru": "Чэнь",
+      "animal": "dragon",
+      "ruAnimal": "Дракон",
+      "element": "earth",
+      "polarity": "yang",
+      "hourStart": 7,
+      "hourEnd": 9,
+      "solarMonth": 3
+    },
+    {
+      "index": 5,
+      "id": "si",
+      "han": "巳",
+      "pinyin": "Sì",
+      "ru": "Сы",
+      "animal": "snake",
+      "ruAnimal": "Змея",
+      "element": "fire",
+      "polarity": "yin",
+      "hourStart": 9,
+      "hourEnd": 11,
+      "solarMonth": 4
+    },
+    {
+      "index": 6,
+      "id": "wu",
+      "han": "午",
+      "pinyin": "Wǔ",
+      "ru": "У",
+      "animal": "horse",
+      "ruAnimal": "Лошадь",
+      "element": "fire",
+      "polarity": "yang",
+      "hourStart": 11,
+      "hourEnd": 13,
+      "solarMonth": 5
+    },
+    {
+      "index": 7,
+      "id": "wei",
+      "han": "未",
+      "pinyin": "Wèi",
+      "ru": "Вэй",
+      "animal": "goat",
+      "ruAnimal": "Коза",
+      "element": "earth",
+      "polarity": "yin",
+      "hourStart": 13,
+      "hourEnd": 15,
+      "solarMonth": 6
+    },
+    {
+      "index": 8,
+      "id": "shen",
+      "han": "申",
+      "pinyin": "Shēn",
+      "ru": "Шэнь",
+      "animal": "monkey",
+      "ruAnimal": "Обезьяна",
+      "element": "metal",
+      "polarity": "yang",
+      "hourStart": 15,
+      "hourEnd": 17,
+      "solarMonth": 7
+    },
+    {
+      "index": 9,
+      "id": "you",
+      "han": "酉",
+      "pinyin": "Yǒu",
+      "ru": "Ю",
+      "animal": "rooster",
+      "ruAnimal": "Петух",
+      "element": "metal",
+      "polarity": "yin",
+      "hourStart": 17,
+      "hourEnd": 19,
+      "solarMonth": 8
+    },
+    {
+      "index": 10,
+      "id": "xu",
+      "han": "戌",
+      "pinyin": "Xū",
+      "ru": "Сюй",
+      "animal": "dog",
+      "ruAnimal": "Собака",
+      "element": "earth",
+      "polarity": "yang",
+      "hourStart": 19,
+      "hourEnd": 21,
+      "solarMonth": 9
+    },
+    {
+      "index": 11,
+      "id": "hai",
+      "han": "亥",
+      "pinyin": "Hài",
+      "ru": "Хай",
+      "animal": "pig",
+      "ruAnimal": "Свинья",
+      "element": "water",
+      "polarity": "yin",
+      "hourStart": 21,
+      "hourEnd": 23,
+      "solarMonth": 10
+    }
+  ],
+  "hiddenStems": {
+    "status": "PARTIALLY VERIFIED",
+    "conflictRef": "K5",
+    "note": "Состав скрытых стволов (藏干) инвариантен во всех источниках. ЧИСЛОВЫЕ ДОЛИ (60/30/10, 70/30) — наиболее распространённая конвенция, но НЕ единственная: существуют схемы по числу дней владения. См. конфликт K5.",
+    "sumMustEqual": 100,
+    "byBranch": {
+      "zi": [
+        {
+          "stem": "gui",
+          "share": 100
+        }
+      ],
+      "chou": [
+        {
+          "stem": "ji",
+          "share": 60
+        },
+        {
+          "stem": "gui",
+          "share": 30
+        },
+        {
+          "stem": "xin",
+          "share": 10
+        }
+      ],
+      "yin": [
+        {
+          "stem": "jia",
+          "share": 60
+        },
+        {
+          "stem": "bing",
+          "share": 30
+        },
+        {
+          "stem": "wu",
+          "share": 10
+        }
+      ],
+      "mao": [
+        {
+          "stem": "yi",
+          "share": 100
+        }
+      ],
+      "chen": [
+        {
+          "stem": "wu",
+          "share": 60
+        },
+        {
+          "stem": "yi",
+          "share": 30
+        },
+        {
+          "stem": "gui",
+          "share": 10
+        }
+      ],
+      "si": [
+        {
+          "stem": "bing",
+          "share": 60
+        },
+        {
+          "stem": "wu",
+          "share": 30
+        },
+        {
+          "stem": "geng",
+          "share": 10
+        }
+      ],
+      "wu": [
+        {
+          "stem": "ding",
+          "share": 70
+        },
+        {
+          "stem": "ji",
+          "share": 30
+        }
+      ],
+      "wei": [
+        {
+          "stem": "ji",
+          "share": 60
+        },
+        {
+          "stem": "ding",
+          "share": 30
+        },
+        {
+          "stem": "yi",
+          "share": 10
+        }
+      ],
+      "shen": [
+        {
+          "stem": "geng",
+          "share": 60
+        },
+        {
+          "stem": "ren",
+          "share": 30
+        },
+        {
+          "stem": "wu",
+          "share": 10
+        }
+      ],
+      "you": [
+        {
+          "stem": "xin",
+          "share": 100
+        }
+      ],
+      "xu": [
+        {
+          "stem": "wu",
+          "share": 60
+        },
+        {
+          "stem": "xin",
+          "share": 30
+        },
+        {
+          "stem": "ding",
+          "share": 10
+        }
+      ],
+      "hai": [
+        {
+          "stem": "ren",
+          "share": 70
+        },
+        {
+          "stem": "jia",
+          "share": 30
+        }
+      ]
+    }
+  },
+  "sexagenaryCycle": {
+    "status": "VERIFIED",
+    "length": 60,
+    "note": "Пара (ствол, ветвь) с одинаковой чётностью индексов. Номер пары x по индексам ствола m и ветви n: x ≡ 6m − 5n (mod 60).",
+    "formula": "x ≡ 6*stemIndex − 5*branchIndex (mod 60)",
+    "inverse": "stemIndex = x mod 10; branchIndex = x mod 12"
+  }
+}

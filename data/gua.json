@@ -1,44 +1,189 @@
 {
   "$id": "gua",
+  "$schema": "./schema.json#/definitions/gua",
   "title": "Число Гуа и восемь направлений (八宅)",
-  "status": "VERIFIED (формула и таблица направлений)",
+  "status": "VERIFIED",
+  "statusDetail": {
+    "formula": "VERIFIED (1900–2099)",
+    "directions": "VERIFIED",
+    "yearBoundary": "UNRESOLVED (K8)"
+  },
   "sources": [
     "fengshuimestari.fi/Chinese_Calendar_and_Astrology.html (ming gua от года рождения)",
     "Классическая школа Ба Чжай (八宅) — таблица четырёх благоприятных и четырёх неблагоприятных направлений",
     "astrologjia.com/nine-star-ki.html (год начинается около 4 февраля — Ли Чунь)"
   ],
   "note": "Год берётся СОЛНЕЧНЫЙ (смена на Ли Чунь), а не григорианский. Формула цифрового корня работает и для годов ≥ 2000 (проверено на 1984 и 2000 в тестах).",
+  "conflictRefs": [
+    "K8"
+  ],
+  "auditRefs": [
+    "A-04",
+    "A-15"
+  ],
+  "validityRange": {
+    "from": 1900,
+    "to": 2099,
+    "note": "Аудит A-04: формула цифрового корня совпадает с канонической таблицей на 402/402 годах 1900–2099. В 2100 году ветви расходятся (8 против 9), поэтому VERIFIED объявлен ТОЛЬКО для 1900–2099."
+  },
   "formula": {
     "status": "VERIFIED",
     "digitRoot": "s = цифровой корень солнечного года, приведённый к 1..9",
     "male": "gua = 11 - s, привести в 1..9; если 5 → 2",
     "female": "gua = s + 4, привести в 1..9; если 5 → 8"
   },
-  "guaTypes": {
-    "east": [1, 3, 4, 9],
-    "west": [2, 6, 7, 8],
-    "ru": { "east": "Восточная группа", "west": "Западная группа" }
+  "yearBoundary": {
+    "status": "UNRESOLVED",
+    "conflictRef": "K8",
+    "note": "Источники расходятся: солнечный год (Ли Чунь, ~4 февраля) или лунный Новый год. Реализация по умолчанию использует Ли Чунь; выбор декларирован явно.",
+    "default": "lichun",
+    "variants": [
+      "lichun",
+      "lunarNewYear"
+    ]
   },
-  "directionsByGua": {
-    "status": "VERIFIED",
-    "note": "sheng-qi (生氣) / tian-yi (天醫) / yan-nian (延年) / fu-wei (伏位) — благоприятные; huo-hai (禍害) / wu-gui (五鬼) / liu-sha (六煞) / jue-ming (絕命) — неблагоприятные.",
-    "1": { "shengQi": "SE", "tianYi": "E",  "yanNian": "S",  "fuWei": "N",  "huoHai": "W",  "wuGui": "NE", "liuSha": "NW", "jueMing": "SW" },
-    "2": { "shengQi": "NE", "tianYi": "W",  "yanNian": "NW", "fuWei": "SW", "huoHai": "E",  "wuGui": "SE", "liuSha": "S",  "jueMing": "N"  },
-    "3": { "shengQi": "S",  "tianYi": "N",  "yanNian": "SE", "fuWei": "E",  "huoHai": "SW", "wuGui": "NW", "liuSha": "NE", "jueMing": "W"  },
-    "4": { "shengQi": "N",  "tianYi": "S",  "yanNian": "E",  "fuWei": "SE", "huoHai": "NW", "wuGui": "SW", "liuSha": "W",  "jueMing": "NE" },
-    "6": { "shengQi": "W",  "tianYi": "NE", "yanNian": "SW", "fuWei": "NW", "huoHai": "SE", "wuGui": "N",  "liuSha": "E",  "jueMing": "S"  },
-    "7": { "shengQi": "NW", "tianYi": "SW", "yanNian": "NE", "fuWei": "W",  "huoHai": "N",  "wuGui": "S",  "liuSha": "SE", "jueMing": "E"  },
-    "8": { "shengQi": "SW", "tianYi": "NW", "yanNian": "W",  "fuWei": "NE", "huoHai": "S",  "wuGui": "E",  "liuSha": "N",  "jueMing": "SE" },
-    "9": { "shengQi": "E",  "tianYi": "SE", "yanNian": "N",  "fuWei": "S",  "huoHai": "NE", "wuGui": "W",  "liuSha": "SW", "jueMing": "NW" }
+  "guaTypes": {
+    "east": [
+      1,
+      3,
+      4,
+      9
+    ],
+    "west": [
+      2,
+      6,
+      7,
+      8
+    ],
+    "ru": {
+      "east": "Восточная группа",
+      "west": "Западная группа"
+    }
   },
   "directionLabels": {
-    "shengQi": { "ru": "Шэн Ци (生氣) — процветание", "quality": "auspicious", "rank": 1 },
-    "tianYi":  { "ru": "Тянь И (天醫) — здоровье",    "quality": "auspicious", "rank": 2 },
-    "yanNian": { "ru": "Янь Нянь (延年) — отношения", "quality": "auspicious", "rank": 3 },
-    "fuWei":   { "ru": "Фу Вэй (伏位) — стабильность","quality": "auspicious", "rank": 4 },
-    "huoHai":  { "ru": "Хо Хай (禍害) — неудачи",     "quality": "inauspicious", "rank": 5 },
-    "wuGui":   { "ru": "У Гуй (五鬼) — «пять духов»", "quality": "inauspicious", "rank": 6 },
-    "liuSha":  { "ru": "Лю Ша (六煞) — «шесть убийц»","quality": "inauspicious", "rank": 7 },
-    "jueMing": { "ru": "Цзюэ Мин (絕命) — «конец судьбы»", "quality": "inauspicious", "rank": 8 }
+    "shengQi": {
+      "ru": "Шэн Ци (生氣) — процветание",
+      "quality": "auspicious",
+      "rank": 1
+    },
+    "tianYi": {
+      "ru": "Тянь И (天醫) — здоровье",
+      "quality": "auspicious",
+      "rank": 2
+    },
+    "yanNian": {
+      "ru": "Янь Нянь (延年) — отношения",
+      "quality": "auspicious",
+      "rank": 3
+    },
+    "fuWei": {
+      "ru": "Фу Вэй (伏位) — стабильность",
+      "quality": "auspicious",
+      "rank": 4
+    },
+    "huoHai": {
+      "ru": "Хо Хай (禍害) — неудачи",
+      "quality": "inauspicious",
+      "rank": 5
+    },
+    "wuGui": {
+      "ru": "У Гуй (五鬼) — «пять духов»",
+      "quality": "inauspicious",
+      "rank": 6
+    },
+    "liuSha": {
+      "ru": "Лю Ша (六煞) — «шесть убийц»",
+      "quality": "inauspicious",
+      "rank": 7
+    },
+    "jueMing": {
+      "ru": "Цзюэ Мин (絕命) — «конец судьбы»",
+      "quality": "inauspicious",
+      "rank": 8
+    }
+  },
+  "directionsByGua": {
+    "1": {
+      "shengQi": "SE",
+      "tianYi": "E",
+      "yanNian": "S",
+      "fuWei": "N",
+      "huoHai": "W",
+      "wuGui": "NE",
+      "liuSha": "NW",
+      "jueMing": "SW"
+    },
+    "2": {
+      "shengQi": "NE",
+      "tianYi": "W",
+      "yanNian": "NW",
+      "fuWei": "SW",
+      "huoHai": "E",
+      "wuGui": "SE",
+      "liuSha": "S",
+      "jueMing": "N"
+    },
+    "3": {
+      "shengQi": "S",
+      "tianYi": "N",
+      "yanNian": "SE",
+      "fuWei": "E",
+      "huoHai": "SW",
+      "wuGui": "NW",
+      "liuSha": "NE",
+      "jueMing": "W"
+    },
+    "4": {
+      "shengQi": "N",
+      "tianYi": "S",
+      "yanNian": "E",
+      "fuWei": "SE",
+      "huoHai": "NW",
+      "wuGui": "SW",
+      "liuSha": "W",
+      "jueMing": "NE"
+    },
+    "6": {
+      "shengQi": "W",
+      "tianYi": "NE",
+      "yanNian": "SW",
+      "fuWei": "NW",
+      "huoHai": "SE",
+      "wuGui": "N",
+      "liuSha": "E",
+      "jueMing": "S"
+    },
+    "7": {
+      "shengQi": "NW",
+      "tianYi": "SW",
+      "yanNian": "NE",
+      "fuWei": "W",
+      "huoHai": "N",
+      "wuGui": "S",
+      "liuSha": "SE",
+      "jueMing": "E"
+    },
+    "8": {
+      "shengQi": "SW",
+      "tianYi": "NW",
+      "yanNian": "W",
+      "fuWei": "NE",
+      "huoHai": "S",
+      "wuGui": "E",
+      "liuSha": "N",
+      "jueMing": "SE"
+    },
+    "9": {
+      "shengQi": "E",
+      "tianYi": "SE",
+      "yanNian": "N",
+      "fuWei": "S",
+      "huoHai": "NE",
+      "wuGui": "W",
+      "liuSha": "SW",
+      "jueMing": "NW"
+    },
+    "status": "VERIFIED",
+    "note": "sheng-qi (生氣) / tian-yi (天醫) / yan-nian (延年) / fu-wei (伏位) — благоприятные; huo-hai (禍害) / wu-gui (五鬼) / liu-sha (六煞) / jue-ming (絕命) — неблагоприятные."
   }
 }

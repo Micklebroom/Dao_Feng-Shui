@@ -1,0 +1,771 @@
+{
+  "$id": "bazi",
+  "$schema": "./schema.json#/definitions/bazi",
+  "title": "Ба-цзы: правила вывода столпов, взаимодействия, фазы Ци",
+  "status": "VERIFIED",
+  "statusDetail": {
+    "pillarRules": "VERIFIED",
+    "interactions": "VERIFIED",
+    "qiPhases": "PARTIALLY VERIFIED"
+  },
+  "sources": [
+    "American Feng Shui Institute AS101 (шесть слияний, три встречи)",
+    "divinefs.weebly.com/compatibility (слияния небесных стволов)",
+    "Классические таблицы Ба-цзы (六合/三合/三會/六沖/三刑/六害/三煞)",
+    "amfengshui.com AS101 (пять крыс 五鼠遁, пять тигров 五虎遁)",
+    "imlht.com/archives/256 (таблица 十二長生, все 10 стволов)",
+    "treybazi.blogspot.com/2013/01/twelve-qi-stages.html (правило «ян вперёд, инь назад»)",
+    "shaogn.com (мнемоника точек рождения стволов)"
+  ],
+  "note": "Файл поглотил interactions.json и добавил правила вывода столпов (ранее только в коде) и таблицу 12 фаз Ци (ранее отсутствовала).",
+  "pillarRules": {
+    "status": "VERIFIED",
+    "year": {
+      "formula": "index = mod(solarYear − 1984, 60)",
+      "boundary": "lichun",
+      "note": "Год меняется в Ли Чунь, а не 1 января."
+    },
+    "month": {
+      "stemFormula": "mod(yearStemIndex*2 + ordinalFromYin + 2, 10)",
+      "branchFormula": "mod(ordinalFromYin + 2, 12)",
+      "ruleName": "五虎遁 (пять тигров)",
+      "boundary": "jie"
+    },
+    "day": {
+      "formula": "index = (JD_полдень − 11) mod 60",
+      "note": "Считается от местного полудня; см. правило TZ-3."
+    },
+    "hour": {
+      "branchFormula": "mod(floor((localHour + 1) / 2), 12)",
+      "stemFormula": "mod(dayStemIndex*2 + hourBranchIndex, 10)",
+      "ruleName": "五鼠遁 (пять крыс)",
+      "conflictRef": "K4"
+    }
+  },
+  "ziHourConflict": {
+    "status": "UNRESOLVED",
+    "conflictRef": "K4",
+    "note": "23:00–24:00 — «ранний Цзы» (早子). Школы расходятся: одни меняют столп дня в 23:00, другие в 00:00. Реализация по умолчанию — смена в 00:00; выбор ЯВНО декларирован, а не скрыт.",
+    "modes": [
+      {
+        "id": "lateZi",
+        "ru": "Смена дня в 00:00 (поздний Цзы)",
+        "default": true
+      },
+      {
+        "id": "earlyZi",
+        "ru": "Смена дня в 23:00 (ранний Цзы)",
+        "default": false
+      }
+    ]
+  },
+  "interactions": {
+    "status": "VERIFIED",
+    "note": "Составы всех групп инвариантны во всех проверенных источниках. Ключи — стабильные ID (латиница), русские названия — только подписи (display labels).",
+    "stemCombinations": {
+      "ru": "Слияния небесных стволов (天干五合)",
+      "status": "VERIFIED",
+      "items": [
+        {
+          "id": "jia_ji",
+          "stems": [
+            "jia",
+            "ji"
+          ],
+          "produces": "earth",
+          "ru": "Цзя + Цзи → Земля"
+        },
+        {
+          "id": "yi_geng",
+          "stems": [
+            "yi",
+            "geng"
+          ],
+          "produces": "metal",
+          "ru": "И + Гэн → Металл"
+        },
+        {
+          "id": "bing_xin",
+          "stems": [
+            "bing",
+            "xin"
+          ],
+          "produces": "water",
+          "ru": "Бин + Синь → Вода"
+        },
+        {
+          "id": "ding_ren",
+          "stems": [
+            "ding",
+            "ren"
+          ],
+          "produces": "wood",
+          "ru": "Дин + Жэнь → Дерево"
+        },
+        {
+          "id": "wu_gui",
+          "stems": [
+            "wu",
+            "gui"
+          ],
+          "produces": "fire",
+          "ru": "У + Гуй → Огонь"
+        }
+      ]
+    },
+    "sixCombinations": {
+      "ru": "Шесть слияний ветвей (六合)",
+      "status": "VERIFIED",
+      "items": [
+        {
+          "id": "zi_chou",
+          "branches": [
+            "zi",
+            "chou"
+          ],
+          "produces": "earth",
+          "ru": "Цзы + Чоу → Земля"
+        },
+        {
+          "id": "yin_hai",
+          "branches": [
+            "yin",
+            "hai"
+          ],
+          "produces": "wood",
+          "ru": "Инь + Хай → Дерево"
+        },
+        {
+          "id": "mao_xu",
+          "branches": [
+            "mao",
+            "xu"
+          ],
+          "produces": "fire",
+          "ru": "Мао + Сюй → Огонь"
+        },
+        {
+          "id": "chen_you",
+          "branches": [
+            "chen",
+            "you"
+          ],
+          "produces": "metal",
+          "ru": "Чэнь + Ю → Металл"
+        },
+        {
+          "id": "si_shen",
+          "branches": [
+            "si",
+            "shen"
+          ],
+          "produces": "water",
+          "ru": "Сы + Шэнь → Вода"
+        },
+        {
+          "id": "wu_wei",
+          "branches": [
+            "wu",
+            "wei"
+          ],
+          "produces": "fire",
+          "ru": "У + Вэй → Огонь",
+          "conflictNote": "Часть школ даёт Землю вместо Огня — см. docs/CONFLICTS.md#wu-wei"
+        }
+      ]
+    },
+    "threeHarmonies": {
+      "ru": "Три гармонии / треугольники (三合)",
+      "status": "VERIFIED",
+      "items": [
+        {
+          "id": "shen_zi_chen",
+          "branches": [
+            "shen",
+            "zi",
+            "chen"
+          ],
+          "produces": "water",
+          "ru": "Шэнь + Цзы + Чэнь → Вода"
+        },
+        {
+          "id": "hai_mao_wei",
+          "branches": [
+            "hai",
+            "mao",
+            "wei"
+          ],
+          "produces": "wood",
+          "ru": "Хай + Мао + Вэй → Дерево"
+        },
+        {
+          "id": "yin_wu_xu",
+          "branches": [
+            "yin",
+            "wu",
+            "xu"
+          ],
+          "produces": "fire",
+          "ru": "Инь + У + Сюй → Огонь"
+        },
+        {
+          "id": "si_you_chou",
+          "branches": [
+            "si",
+            "you",
+            "chou"
+          ],
+          "produces": "metal",
+          "ru": "Сы + Ю + Чоу → Металл"
+        }
+      ]
+    },
+    "directionalCombinations": {
+      "ru": "Три встречи / сезонные объединения (三會)",
+      "status": "VERIFIED",
+      "items": [
+        {
+          "id": "yin_mao_chen",
+          "branches": [
+            "yin",
+            "mao",
+            "chen"
+          ],
+          "produces": "wood",
+          "ru": "Инь + Мао + Чэнь → Дерево (весна)"
+        },
+        {
+          "id": "si_wu_wei",
+          "branches": [
+            "si",
+            "wu",
+            "wei"
+          ],
+          "produces": "fire",
+          "ru": "Сы + У + Вэй → Огонь (лето)"
+        },
+        {
+          "id": "shen_you_xu",
+          "branches": [
+            "shen",
+            "you",
+            "xu"
+          ],
+          "produces": "metal",
+          "ru": "Шэнь + Ю + Сюй → Металл (осень)"
+        },
+        {
+          "id": "hai_zi_chou",
+          "branches": [
+            "hai",
+            "zi",
+            "chou"
+          ],
+          "produces": "water",
+          "ru": "Хай + Цзы + Чоу → Вода (зима)"
+        }
+      ]
+    },
+    "clashes": {
+      "ru": "Шесть столкновений (六沖)",
+      "status": "VERIFIED",
+      "items": [
+        {
+          "id": "zi_wu",
+          "branches": [
+            "zi",
+            "wu"
+          ],
+          "ru": "Цзы ↔ У"
+        },
+        {
+          "id": "chou_wei",
+          "branches": [
+            "chou",
+            "wei"
+          ],
+          "ru": "Чоу ↔ Вэй"
+        },
+        {
+          "id": "yin_shen",
+          "branches": [
+            "yin",
+            "shen"
+          ],
+          "ru": "Инь ↔ Шэнь"
+        },
+        {
+          "id": "mao_you",
+          "branches": [
+            "mao",
+            "you"
+          ],
+          "ru": "Мао ↔ Ю"
+        },
+        {
+          "id": "chen_xu",
+          "branches": [
+            "chen",
+            "xu"
+          ],
+          "ru": "Чэнь ↔ Сюй"
+        },
+        {
+          "id": "si_hai",
+          "branches": [
+            "si",
+            "hai"
+          ],
+          "ru": "Сы ↔ Хай"
+        }
+      ]
+    },
+    "harms": {
+      "ru": "Шесть вредов (六害)",
+      "status": "VERIFIED",
+      "items": [
+        {
+          "id": "zi_wei",
+          "branches": [
+            "zi",
+            "wei"
+          ],
+          "ru": "Цзы ↔ Вэй"
+        },
+        {
+          "id": "chou_wu",
+          "branches": [
+            "chou",
+            "wu"
+          ],
+          "ru": "Чоу ↔ У"
+        },
+        {
+          "id": "yin_si",
+          "branches": [
+            "yin",
+            "si"
+          ],
+          "ru": "Инь ↔ Сы"
+        },
+        {
+          "id": "mao_chen",
+          "branches": [
+            "mao",
+            "chen"
+          ],
+          "ru": "Мао ↔ Чэнь"
+        },
+        {
+          "id": "shen_hai",
+          "branches": [
+            "shen",
+            "hai"
+          ],
+          "ru": "Шэнь ↔ Хай"
+        },
+        {
+          "id": "you_xu",
+          "branches": [
+            "you",
+            "xu"
+          ],
+          "ru": "Ю ↔ Сюй"
+        }
+      ]
+    },
+    "punishments": {
+      "ru": "Наказания (三刑)",
+      "status": "VERIFIED",
+      "items": [
+        {
+          "id": "yin_si_shen",
+          "kind": "triple",
+          "branches": [
+            "yin",
+            "si",
+            "shen"
+          ],
+          "ru": "Инь + Сы + Шэнь — «неблагодарности»"
+        },
+        {
+          "id": "chou_xu_wei",
+          "kind": "triple",
+          "branches": [
+            "chou",
+            "xu",
+            "wei"
+          ],
+          "ru": "Чоу + Сюй + Вэй — «power/притеснения»"
+        },
+        {
+          "id": "zi_mao",
+          "kind": "double",
+          "branches": [
+            "zi",
+            "mao"
+          ],
+          "ru": "Цзы + Мао — «невежливости»"
+        },
+        {
+          "id": "chen_chen",
+          "kind": "self",
+          "branches": [
+            "chen",
+            "chen"
+          ],
+          "ru": "Чэнь + Чэнь — самонаказание"
+        },
+        {
+          "id": "wu_wu",
+          "kind": "self",
+          "branches": [
+            "wu",
+            "wu"
+          ],
+          "ru": "У + У — самонаказание"
+        },
+        {
+          "id": "you_you",
+          "kind": "self",
+          "branches": [
+            "you",
+            "you"
+          ],
+          "ru": "Ю + Ю — самонаказание"
+        },
+        {
+          "id": "hai_hai",
+          "kind": "self",
+          "branches": [
+            "hai",
+            "hai"
+          ],
+          "ru": "Хай + Хай — самонаказание"
+        }
+      ]
+    },
+    "threeSha": {
+      "ru": "Три Ша (三煞)",
+      "status": "VERIFIED",
+      "note": "Определяется треугольником года. Ша занимает три горы сектора, противоположного стихии треугольника.",
+      "items": [
+        {
+          "id": "sha_south",
+          "yearTriad": [
+            "shen",
+            "zi",
+            "chen"
+          ],
+          "shaBranches": [
+            "si",
+            "wu",
+            "wei"
+          ],
+          "direction": "S",
+          "ru": "Год Воды (Шэнь-Цзы-Чэнь) → Три Ша на Юге"
+        },
+        {
+          "id": "sha_east",
+          "yearTriad": [
+            "si",
+            "you",
+            "chou"
+          ],
+          "shaBranches": [
+            "yin",
+            "mao",
+            "chen"
+          ],
+          "direction": "E",
+          "ru": "Год Металла (Сы-Ю-Чоу) → Три Ша на Востоке"
+        },
+        {
+          "id": "sha_north",
+          "yearTriad": [
+            "yin",
+            "wu",
+            "xu"
+          ],
+          "shaBranches": [
+            "hai",
+            "zi",
+            "chou"
+          ],
+          "direction": "N",
+          "ru": "Год Огня (Инь-У-Сюй) → Три Ша на Севере"
+        },
+        {
+          "id": "sha_west",
+          "yearTriad": [
+            "hai",
+            "mao",
+            "wei"
+          ],
+          "shaBranches": [
+            "shen",
+            "you",
+            "xu"
+          ],
+          "direction": "W",
+          "ru": "Год Дерева (Хай-Мао-Вэй) → Три Ша на Западе"
+        }
+      ]
+    },
+    "taiSui": {
+      "ru": "Тай Суй (太歲, Юпитер) и Суй По (歲破)",
+      "status": "VERIFIED",
+      "rule": "Тай Суй занимает гору, соответствующую ветви года; Суй По — противоположную гору (180°)."
+    }
+  },
+  "qiPhases": {
+    "status": "PARTIALLY VERIFIED",
+    "conflictRef": "K1",
+    "algorithmRef": "D1",
+    "placeholderRef": "PH-D3",
+    "note": "ПОСЛЕДОВАТЕЛЬНОСТЬ фаз и точка старта каждого ствола — VERIFIED (сверено с 4 независимыми источниками, 120/120 совпадений с опубликованной таблицей). ЧИСЛОВОЙ КОЭФФИЦИЕНТ каждой фазы НЕ ОПРЕДЕЛЁН: референс использует знаки (+/0/−) по школам Кубни и Игельника, которые расходятся в 5 из 12 фаз (конфликт K1). Коэффициенты НЕ выдуманы и отсутствуют здесь намеренно — см. заглушку PH-D3.",
+    "rule": "Ян-стволы идут по ветвям ВПЕРЁД от своей точки рождения, инь-стволы — НАЗАД.",
+    "startBranch": {
+      "jia": "hai",
+      "yi": "wu",
+      "bing": "yin",
+      "ding": "you",
+      "wu": "yin",
+      "ji": "you",
+      "geng": "si",
+      "xin": "zi",
+      "ren": "shen",
+      "gui": "mao"
+    },
+    "phases": [
+      {
+        "index": 0,
+        "id": "changsheng",
+        "han": "長生",
+        "ru": "Рождение",
+        "en": "Birth"
+      },
+      {
+        "index": 1,
+        "id": "muyu",
+        "han": "沐浴",
+        "ru": "Купание",
+        "en": "Bath"
+      },
+      {
+        "index": 2,
+        "id": "guandai",
+        "han": "冠帶",
+        "ru": "Шапка и пояс",
+        "en": "Crown"
+      },
+      {
+        "index": 3,
+        "id": "linguan",
+        "han": "臨官",
+        "ru": "Служба",
+        "en": "Officer"
+      },
+      {
+        "index": 4,
+        "id": "diwang",
+        "han": "帝旺",
+        "ru": "Расцвет",
+        "en": "Peak"
+      },
+      {
+        "index": 5,
+        "id": "shuai",
+        "han": "衰",
+        "ru": "Ослабление",
+        "en": "Decline"
+      },
+      {
+        "index": 6,
+        "id": "bing",
+        "han": "病",
+        "ru": "Болезнь",
+        "en": "Sickness"
+      },
+      {
+        "index": 7,
+        "id": "si",
+        "han": "死",
+        "ru": "Смерть",
+        "en": "Death"
+      },
+      {
+        "index": 8,
+        "id": "mu",
+        "han": "墓",
+        "ru": "Могила",
+        "en": "Tomb"
+      },
+      {
+        "index": 9,
+        "id": "jue",
+        "han": "絕",
+        "ru": "Исчезновение",
+        "en": "Extinction"
+      },
+      {
+        "index": 10,
+        "id": "tai",
+        "han": "胎",
+        "ru": "Эмбрион",
+        "en": "Embryo"
+      },
+      {
+        "index": 11,
+        "id": "yang",
+        "han": "養",
+        "ru": "Питание",
+        "en": "Nurture"
+      }
+    ],
+    "byStem": {
+      "jia": {
+        "hai": "changsheng",
+        "zi": "muyu",
+        "chou": "guandai",
+        "yin": "linguan",
+        "mao": "diwang",
+        "chen": "shuai",
+        "si": "bing",
+        "wu": "si",
+        "wei": "mu",
+        "shen": "jue",
+        "you": "tai",
+        "xu": "yang"
+      },
+      "yi": {
+        "wu": "changsheng",
+        "si": "muyu",
+        "chen": "guandai",
+        "mao": "linguan",
+        "yin": "diwang",
+        "chou": "shuai",
+        "zi": "bing",
+        "hai": "si",
+        "xu": "mu",
+        "you": "jue",
+        "shen": "tai",
+        "wei": "yang"
+      },
+      "bing": {
+        "yin": "changsheng",
+        "mao": "muyu",
+        "chen": "guandai",
+        "si": "linguan",
+        "wu": "diwang",
+        "wei": "shuai",
+        "shen": "bing",
+        "you": "si",
+        "xu": "mu",
+        "hai": "jue",
+        "zi": "tai",
+        "chou": "yang"
+      },
+      "ding": {
+        "you": "changsheng",
+        "shen": "muyu",
+        "wei": "guandai",
+        "wu": "linguan",
+        "si": "diwang",
+        "chen": "shuai",
+        "mao": "bing",
+        "yin": "si",
+        "chou": "mu",
+        "zi": "jue",
+        "hai": "tai",
+        "xu": "yang"
+      },
+      "wu": {
+        "yin": "changsheng",
+        "mao": "muyu",
+        "chen": "guandai",
+        "si": "linguan",
+        "wu": "diwang",
+        "wei": "shuai",
+        "shen": "bing",
+        "you": "si",
+        "xu": "mu",
+        "hai": "jue",
+        "zi": "tai",
+        "chou": "yang"
+      },
+      "ji": {
+        "you": "changsheng",
+        "shen": "muyu",
+        "wei": "guandai",
+        "wu": "linguan",
+        "si": "diwang",
+        "chen": "shuai",
+        "mao": "bing",
+        "yin": "si",
+        "chou": "mu",
+        "zi": "jue",
+        "hai": "tai",
+        "xu": "yang"
+      },
+      "geng": {
+        "si": "changsheng",
+        "wu": "muyu",
+        "wei": "guandai",
+        "shen": "linguan",
+        "you": "diwang",
+        "xu": "shuai",
+        "hai": "bing",
+        "zi": "si",
+        "chou": "mu",
+        "yin": "jue",
+        "mao": "tai",
+        "chen": "yang"
+      },
+      "xin": {
+        "zi": "changsheng",
+        "hai": "muyu",
+        "xu": "guandai",
+        "you": "linguan",
+        "shen": "diwang",
+        "wei": "shuai",
+        "wu": "bing",
+        "si": "si",
+        "chen": "mu",
+        "mao": "jue",
+        "yin": "tai",
+        "chou": "yang"
+      },
+      "ren": {
+        "shen": "changsheng",
+        "you": "muyu",
+        "xu": "guandai",
+        "hai": "linguan",
+        "zi": "diwang",
+        "chou": "shuai",
+        "yin": "bing",
+        "mao": "si",
+        "chen": "mu",
+        "si": "jue",
+        "wu": "tai",
+        "wei": "yang"
+      },
+      "gui": {
+        "mao": "changsheng",
+        "yin": "muyu",
+        "chou": "guandai",
+        "zi": "linguan",
+        "hai": "diwang",
+        "xu": "shuai",
+        "you": "bing",
+        "shen": "si",
+        "wei": "mu",
+        "wu": "jue",
+        "si": "tai",
+        "chen": "yang"
+      }
+    },
+    "coefficients": null,
+    "coefficientsStatus": "NOT_VERIFIED"
+  }
+}

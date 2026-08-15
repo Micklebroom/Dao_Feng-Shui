@@ -24,7 +24,10 @@ test('Профиль: структура результата полна и де
     assert.ok(a.pillars[role].branch >= 0 && a.pillars[role].branch < 12);
     assert.ok(a.pillarLabels[role].han.length === 2);
   }
-  assert.ok(a.meridians.length === 12);
+  // РЕГРЕССИЯ (аудит A-02): меридианов РОВНО 10, а не 12.
+  // Перикард и тройной обогреватель референсом не используются.
+  assert.equal(a.meridians.length, 10);
+  assert.ok(!a.meridians.some((m) => m.id === 'pericardium' || m.id === 'tripleBurner'));
   assert.ok(a.harmony >= 0 && a.harmony <= 100);
 });
 
@@ -50,7 +53,7 @@ test('Профиль: Инь и Ян в сумме дают 100%', () => {
 
 test('Меридианы: значения неотрицательны и полосы назначены', () => {
   const p = computeProfile(SUBJECT, T);
-  const validBands = T.meridians.interpretation.bands.map((b) => b.id);
+  const validBands = T.weights.interpretationBands.map((b) => b.id);
   for (const m of p.meridians) {
     assert.ok(m.value >= 0, `${m.id} отрицателен`);
     assert.ok(validBands.includes(m.band), `${m.id}: неизвестная полоса ${m.band}`);
@@ -90,7 +93,7 @@ test('Временной ряд: годовой масштаб даёт запр
   assert.equal(ts.points[0].label, '2000');
   assert.equal(ts.points[24].label, '2024');
   for (const pt of ts.points) {
-    assert.equal(pt.meridians.length, 12);
+    assert.equal(pt.meridians.length, 10);
     assert.ok(pt.harmony >= 0 && pt.harmony <= 100);
   }
 });
@@ -99,7 +102,7 @@ test('Временной ряд: все четыре масштаба работ
   for (const [scale, count] of [['decade', 8], ['year', 12], ['month', 24], ['day', 30]]) {
     const ts = computeTimeSeries(SUBJECT, T, { scale, from: 2005, count });
     assert.equal(ts.points.length, count, `масштаб ${scale}`);
-    assert.ok(ts.points.every((p) => p.meridians.length === 12));
+    assert.ok(ts.points.every((p) => p.meridians.length === 10));
   }
 });
 

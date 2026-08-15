@@ -5,19 +5,24 @@
   "type": "module",
   "license": "MIT",
   "private": true,
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build:data": "node tools/build-data-bundle.js",
     "build:standalone": "node tools/build-standalone.js",
     "build": "npm run build:data && npm run build:standalone",
-    "validate": "node tools/validate-data.js",
+    "validate": "node tools/validate-data.js && node tools/validate-json.js && node tools/validate-spec.js",
     "test:unit": "node --test tests/unit",
     "test:integration": "node --test tests/integration",
-    "test": "npm run validate && node --test tests/unit tests/integration",
+    "test": "npm run validate && node --test tests/unit/*.test.js tests/integration/*.test.js",
     "test:browser": "node tools/browser-test.js",
     "serve": "node tools/serve.js",
     "dist": "node tools/make-zip.js",
-    "all": "npm run build && npm run test && npm run test:browser && npm run dist"
+    "all": "npm run build && npm run test && npm run test:browser && npm run test:mutation && npm run dist",
+    "validate:json": "node tools/validate-json.js",
+    "validate:spec": "node tools/validate-spec.js",
+    "test:mutation": "node tools/mutation-test.cjs"
   },
   "dependencies": {},
   "devDependencies": {}

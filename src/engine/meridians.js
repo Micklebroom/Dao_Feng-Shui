@@ -1,6 +1,9 @@
 /**
- * meridians.js — Перевод силы пяти стихий в силу 12 меридианов + индекс гармоничности.
- * STATUS: INFERRED.
+ * meridians.js — Перевод силы пяти стихий в силу 10 меридианов + индекс гармоничности.
+ * STATUS: INFERRED (формула референса неизвестна, см. indicators.json -> modelPolicy).
+ *
+ * ИСПРАВЛЕНО по аудиту A-02/A-13: меридианов 10, а не 12. Перикард и тройной
+ * обогреватель исключены; «Три обогревателя» — группировка тех же 10.
  *
  * ОГРАНИЧЕНИЕ: это традиционные метафизические/энергетические расчётные
  * показатели. Это НЕ медицинская диагностика и НЕ медицинский прогноз.
@@ -21,13 +24,8 @@ export function computeMeridians(totals, tables) {
   const values = {};
   for (const m of meridians.items) {
     const elementValue = pct[m.element];
-    let share = m.polarity === 'yin' ? w.yinShare : w.yangShare;
-    if (m.element === 'fire') {
-      // Огонь делится между императорским и министерским огнём,
-      // затем внутри каждого — между инь и ян органом.
-      const fireSplit = m.ministerial ? w.fireMinisterialShare : w.fireImperialShare;
-      share = fireSplit * (m.polarity === 'yin' ? w.yinShare : w.yangShare) * 2;
-    }
+    // На каждую стихию приходится ровно 2 меридиана (цзан + фу): делим поровну.
+    const share = m.polarity === 'yin' ? w.yinShare : w.yangShare;
     values[m.id] = elementValue * share * (w.scale / 100);
   }
 
@@ -36,7 +34,7 @@ export function computeMeridians(totals, tables) {
 
   return arr.map((x) => {
     const ratio = mean > 0 ? x.value / mean : 0;
-    const band = meridians.interpretation.bands.find(
+    const band = tables.weights.interpretationBands.find(
       (b) => b.maxRatio === null || ratio <= b.maxRatio
     );
     return { ...x, ratio, band: band.id };

@@ -1,0 +1,68 @@
+{
+  "$id": "luck_pillars",
+  "$schema": "./schema.json#/definitions/luck_pillars",
+  "title": "Столпы удачи (大運) — правила счёта",
+  "status": "VERIFIED",
+  "statusDetail": {
+    "direction": "VERIFIED",
+    "conversion": "VERIFIED",
+    "termType": "PARTIALLY VERIFIED",
+    "rounding": "INFERRED"
+  },
+  "sources": [
+    "amfengshui.com AS101 (направление по полярности года и полу)",
+    "fengshuied.com (правило 3 дня = 1 год)",
+    "Аудит A-06 данного проекта (проверка эквивалентности констант)"
+  ],
+  "note": "Ранее эти правила существовали только как код в src/engine/pillars.js. Вынесены в JSON согласно архитектуре JSON → ДВИЖОК.",
+  "auditRefs": [
+    "A-06"
+  ],
+  "algorithmRef": "B7",
+  "direction": {
+    "status": "VERIFIED",
+    "rule": "Вперёд, если полярность небесного ствола ГОДА совпадает с полом (ян+мужчина или инь+женщина); иначе назад.",
+    "forwardWhen": [
+      {
+        "yearStemPolarity": "yang",
+        "gender": "male"
+      },
+      {
+        "yearStemPolarity": "yin",
+        "gender": "female"
+      }
+    ]
+  },
+  "conversion": {
+    "status": "VERIFIED",
+    "note": "Аудит A-06: все четыре константы эквивалентны одному коэффициенту (1 день = 4 месяца).",
+    "daysPerYear": 3,
+    "rules": [
+      "3 дня = 1 год",
+      "1 день = 4 месяца",
+      "1 двойной час (時辰) = 10 дней",
+      "1 час = 5 дней"
+    ],
+    "formula": "startAge = deltaDays / 3"
+  },
+  "countingTarget": {
+    "status": "PARTIALLY VERIFIED",
+    "note": "Считать до СЕКТОРНОГО термина 節 (jie), а не до серединного 氣. Открытый вопрос U-21: референс не уточняет тип термина явно.",
+    "termType": "jie",
+    "openQuestion": "U-21"
+  },
+  "pillarLength": {
+    "status": "VERIFIED",
+    "years": 10
+  },
+  "rounding": {
+    "status": "INFERRED",
+    "note": "Способ округления начального возраста НЕ опубликован. Режимы объявлены явно; по умолчанию округление не применяется (точное дробное значение).",
+    "modes": [
+      "exact",
+      "floor",
+      "round"
+    ],
+    "default": "exact"
+  }
+}
